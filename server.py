@@ -10,7 +10,7 @@ app.secret_key = "BleepBloop"
 def return_homepage():
     """Display the app's homepage"""
 
-    return render_template('base.html')
+    return render_template('homepage.html')
 
 
 if __name__ == '__main__':

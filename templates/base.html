@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>
-        {% block title %}
-            Page Title Missing
-        {% endblock %}
-    </title>
+  <title>
+    {% block title %}
+      Page Title Missing
+    {% endblock %}
+  </title>
+  <script src="http://code.jquery.com/jquery.js"></script>
 </head>
 <body>
-    {% block content %}
-        Page content missing
-    {% endblock %}
+  {% block content %}
+    Page content missing
+  {% endblock %}
+
+  {% block js %}
+    alert("This is the only javascript on this page")
+  {% endblock %}
 </body>
 </html>
