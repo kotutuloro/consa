@@ -13,6 +13,13 @@ def return_homepage():
     return render_template('homepage.html')
 
 
+@app.route('/login', methods=["GET"])
+def return_login_form():
+    """Display the login form"""
+
+    return render_template('login.html')
+
+
 if __name__ == '__main__':
     app.debug = True
 
