@@ -2,19 +2,38 @@
 <html>
 <head>
   <title>
-    {% block title %}
-      Page Title Missing
+    [[ App Name ]]
+    {% block subtitle %}
+      : Page Subtitle Missing
     {% endblock %}
   </title>
   <script src="http://code.jquery.com/jquery.js"></script>
 </head>
 <body>
+
+  <div id="navbar">
+    Navbar Links:
+    <ul>
+      <li>
+        <a href="/">Home</a>
+      </li>
+      <li>
+        <a href="/login">Login</a>
+      </li>
+      <li>
+        <a href="/profile">Profile</a>
+      </li>
+    </ul>
+  </div>
+
   {% block content %}
     Page content missing
   {% endblock %}
-
+  
   {% block js %}
-    alert("This is the only javascript on this page")
+    <script>
+      alert("This is the only javascript on this page")
+    </script>
   {% endblock %}
 </body>
 </html>

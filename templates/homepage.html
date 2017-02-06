@@ -1,32 +1,23 @@
 {% extends 'base.html' %}
 
-<!-- {% block title %}
-  [[ APP NAME ]]
-{% endblock %} -->
+{% block subtitle %}
+{% endblock %}
 
 {% block content %}
-  <div id="navbar">
-      Navbar Links:
-      <ul>
-          <li>
-              <a href="/login">Login</a>
-          </li>
-          <!-- <li>
-              <a href="/profile">Profile</a>
-          </li> -->
-      </ul>
-  </div>
 
   <div id="search-form">
-      <form action="/location-search">
-          <label for="location-input">Location: </label>
-              <input type="text" id="location-input" name="location" value="San Francisco">
-          <input type="submit" value="Search">
-      </form>
+    <form action="/location-search">
+      <label for="location-input">Location:</label>
+        <input type="text" id="location-input" name="location" value="San Francisco">
+      <input type="submit" value="Search">
+    </form>
 
-      <button id="spotify-auth" type="button">Authorize your Spotify account</button>
+    <a href="/spotify-auth"><button id="spotify-auth" type="button">Authorize your Spotify account</button></a>
   </div>
+  
 {% endblock %}
 
 {% block js %}
+  <script>
+  </script>
 {% endblock %}
