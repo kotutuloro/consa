@@ -26,6 +26,16 @@
     </ul>
   </div>
 
+  {% if get_flashed_messages() %}
+    <div id="flashed-messages">
+      {% for message in get_flashed_messages() %}
+        <div id="flash-msg">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
   {% block content %}
     Page content missing
   {% endblock %}

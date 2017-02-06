@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, flash, redirect
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -18,6 +18,16 @@ def return_login_form():
     """Display the login form"""
 
     return render_template('login.html')
+
+
+@app.route('/login', methods=["POST"])
+def log_in():
+    """Log user in"""
+
+    # Not implemented yet
+
+    flash('Log in feature not implemented yet')
+    return redirect('/')
 
 
 if __name__ == '__main__':
