@@ -2,6 +2,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyOauthError
 
 from spotify_oauth_tools import get_spotify_oauth
+from analyzation import *
 
 from flask import Flask, render_template, flash, redirect, request
 from flask_debugtoolbar import DebugToolbarExtension
@@ -71,9 +72,19 @@ def return_results():
     # Create Spotify API object using access_token
     spotify = spotipy.Spotify(auth=access_token)
 
-    ### DO SOMETHING WITH RESULTS
-    results = spotify.current_user_saved_tracks()
-    print results
+    # Get user's top artists
+    top_artists_response = spotify.current_user_top_artists(limit=10,
+                                                            time_range='medium_term')
+    top_artists_dict = parse_artist_response(top_artists_response)
+
+    # Get artists related to user's top artists
+    related_artists_dict = {}
+
+    for artist_id in top_artists_dict.keys():
+        rel_artists_response = spotify.artist_related_artists(artist_id)
+        related_artists_dict = add_artists_to_dict(rel_artists_response, related_artists_dict)
+
+    print related_artists_dict
 
     ### RETURN TEMPLATE WITH RESULTS
     flash('Results feature not implemented yet')
@@ -83,6 +94,6 @@ def return_results():
 if __name__ == '__main__':
     app.debug = True
 
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
 
     app.run(host='0.0.0.0')
