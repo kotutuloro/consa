@@ -1,6 +1,7 @@
-import os
 import spotipy
-from spotipy import oauth2
+from spotipy.oauth2 import SpotifyOauthError
+
+from spotify_oauth_tools import get_spotify_oauth
 
 from flask import Flask, render_template, flash, redirect, request
 from flask_debugtoolbar import DebugToolbarExtension
@@ -9,25 +10,7 @@ app = Flask(__name__)
 
 app.secret_key = "BleepBloop"
 
-
-# Move into a different file
-def get_spotify_oauth():
-    """Reconfigured from Spotipy's util.prompt_for_user_token to return SpotifyOAuth object"""
-
-    # Set variables for authorization
-    client_id = os.getenv('SPOTIPY_CLIENT_ID')
-    client_secret = os.getenv('SPOTIPY_CLIENT_SECRET')
-    redirect_uri = os.getenv('SPOTIPY_REDIRECT_URI')
-    scope = 'user-library-read'
-
-    # Create Spotipy SpotifyOauth object
-    sp_oauth = oauth2.SpotifyOAuth(client_id,
-                                   client_secret,
-                                   redirect_uri,
-                                   scope=scope)
-
-    return sp_oauth
-
+# Create Spotify OAuth object for use with spotipy
 SPOTIFY_OAUTH = get_spotify_oauth()
 
 
@@ -81,7 +64,7 @@ def return_results():
         access_token = token_info.get('access_token')
 
     # Flash error message & return home if getting access token fails
-    except oauth2.SpotifyOauthError, error:
+    except SpotifyOauthError, error:
         flash('Unable to authorize: ' + str(error))
         return redirect('/')
 
@@ -93,6 +76,7 @@ def return_results():
     print results
 
     ### RETURN TEMPLATE WITH RESULTS
+    flash('Results feature not implemented yet')
     return redirect('/')
 
 
