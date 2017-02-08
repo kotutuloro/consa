@@ -1,11 +1,13 @@
+from flask import (Flask, render_template, flash, redirect, request, session)
+# from flask_debugtoolbar import DebugToolbarExtension
+
 import spotipy
 from spotipy.oauth2 import SpotifyOauthError
 
+from model import (User, Concert, UserConcert, db, connect_to_db)
 from spotify_oauth_tools import get_spotify_oauth
-from analyzation import *
+from analyzation import (parse_artist_response, add_artists_to_dict)
 
-from flask import Flask, render_template, flash, redirect, request
-from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
 
@@ -19,6 +21,7 @@ SPOTIFY_OAUTH = get_spotify_oauth()
 def return_homepage():
     """Displays the app's homepage"""
 
+    print session.get('user_id')
     return render_template('homepage.html')
 
 
@@ -33,9 +36,21 @@ def return_login_form():
 def log_in():
     """Logs user in"""
 
-    ### NOT IMPLEMENTED YET
-    flash('Log in feature not implemented yet')
-    return redirect('/')
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    user = User.query.filter_by(email=email).first()
+
+    # If user exists in database and password is correct
+    if user and user.password == password:
+        session['user_id'] = user.user_id
+        flash('Login successful')
+        return redirect('/')
+
+    # If email doesn't exist or incorrect password, inform user
+    else:
+        flash('Email/password combo not found in database')
+        return redirect('/login')
 
 
 @app.route('/spotify-auth')
@@ -94,6 +109,8 @@ def return_results():
 
 if __name__ == '__main__':
     app.debug = True
+
+    connect_to_db(app)
 
     # DebugToolbarExtension(app)
 
