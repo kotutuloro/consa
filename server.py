@@ -21,7 +21,6 @@ SPOTIFY_OAUTH = get_spotify_oauth()
 def return_homepage():
     """Displays the app's homepage"""
 
-    print session.get('user_id')
     return render_template('homepage.html')
 
 
@@ -54,7 +53,7 @@ def log_in():
         # Set session and redirect to homepage
         session['user_id'] = user.user_id
         flash('Login successful')
-        return redirect('/')
+        return redirect('/my-profile')
 
     # If email doesn't exist or incorrect password, inform user
     else:
@@ -115,7 +114,21 @@ def register():
         session['user_id'] = new_user.user_id
 
         flash('Registration successful')
-        return redirect('/')
+        return redirect('/my-profile')
+
+
+@app.route('/my-profile')
+def return_user_profile():
+    """Displays the profile page for the logged in user"""
+
+    # Display user's profile page if logged in
+    if session.get('user_id'):
+        return render_template('profile.html')
+
+    # Return redirect to login page if not logged in
+    else:
+        flash('You must be logged in to view your profile.')
+        return redirect('/login')
 
 
 @app.route('/spotify-auth')
