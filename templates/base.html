@@ -17,12 +17,16 @@
       <li>
         <a href="/">Home</a>
       </li>
-      <li>
-        <a href="/login">Login</a>
-      </li>
-      <li>
-        <a href="/profile">Profile</a>
-      </li>
+
+      {% if session.get('user_id') %}
+        <li>
+          <a href="/profile">Profile</a>
+        </li>
+      {% else %}
+        <li>
+          <a href="/login">Login</a>
+        </li>
+      {% endif %}
     </ul>
   </div>
 

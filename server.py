@@ -29,7 +29,14 @@ def return_homepage():
 def return_login_form():
     """Displays the login form"""
 
-    return render_template('login.html')
+    # If user is logged in, redirect to homepage
+    if session.get('user_id'):
+        flash('You are already logged in.')
+        return redirect('/')
+
+    # If user not logged in, return login form
+    else:
+        return render_template('login.html')
 
 
 @app.route('/login', methods=["POST"])
@@ -43,6 +50,8 @@ def log_in():
 
     # If user exists in database and password is correct
     if user and user.password == password:
+
+        # Set session and redirect to homepage
         session['user_id'] = user.user_id
         flash('Login successful')
         return redirect('/')
