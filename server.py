@@ -62,6 +62,22 @@ def log_in():
         return redirect('/login')
 
 
+@app.route('/logout')
+def log_out():
+    """Logs user out, removing them from the Flask session"""
+
+    # Remove id from session if logged in
+    if session.get('user_id'):
+        del session['user_id']
+        flash('Logged out')
+
+    # Display message if no user logged in
+    else:
+        flash('No user currently logged in.')
+
+    return redirect('/')
+
+
 @app.route('/spotify-auth')
 def request_authorization():
     """Redirects to user authorization for Spotify account"""
