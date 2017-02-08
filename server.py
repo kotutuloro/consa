@@ -43,7 +43,7 @@ def return_login_form():
 def log_in():
     """Logs user in"""
 
-    email = request.form.get("email")
+    email = request.form.get("email").lower()
     password = request.form.get("password")
 
     user = User.query.filter_by(email=email).first()
@@ -58,7 +58,7 @@ def log_in():
 
     # If email doesn't exist or incorrect password, inform user
     else:
-        flash('Email/password combo not found in database')
+        flash('Invalid username or password')
         return redirect('/login')
 
 
@@ -76,6 +76,46 @@ def log_out():
         flash('No user currently logged in.')
 
     return redirect('/')
+
+
+@app.route('/register', methods=["GET"])
+def return_registration_form():
+    """Displays the registration form"""
+
+    # If user is logged in, redirect to homepage
+    if session.get('user_id'):
+        flash('You are already logged in.')
+        return redirect('/')
+
+    # If user not logged in, return registration form
+    else:
+        return render_template('registration.html')
+
+
+@app.route('/register', methods=["POST"])
+def register():
+    """Adds user to database"""
+
+    # Get registration form data
+    email = request.form.get("email").lower()
+    password = request.form.get("password")
+
+    user = User.query.filter_by(email=email).first()
+
+    # If user already exists in database, inform user
+    if user:
+        flash('An account with this username already exists.')
+        return redirect('/register')
+
+    # Else add user to database
+    else:
+        new_user = User(email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        session['user_id'] = new_user.user_id
+
+        flash('Registration successful')
+        return redirect('/')
 
 
 @app.route('/spotify-auth')
