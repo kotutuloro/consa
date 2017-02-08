@@ -73,18 +73,19 @@ def return_results():
     spotify = spotipy.Spotify(auth=access_token)
 
     # Get user's top artists
-    top_artists_response = spotify.current_user_top_artists(limit=10,
-                                                            time_range='medium_term')
-    top_artists_dict = parse_artist_response(top_artists_response)
+    top_artists_resp = spotify.current_user_top_artists(limit=10,
+                                                        time_range='medium_term')
+    top_artists_dict = parse_artist_response(top_artists_resp)
 
     # Get artists related to user's top artists
     related_artists_dict = {}
 
     for artist_id in top_artists_dict.keys():
-        rel_artists_response = spotify.artist_related_artists(artist_id)
-        related_artists_dict = add_artists_to_dict(rel_artists_response, related_artists_dict)
+        rel_artists_resp = spotify.artist_related_artists(artist_id)
+        print len(rel_artists_resp['artists'])
+        add_artists_to_dict(rel_artists_resp, related_artists_dict)
 
-    print related_artists_dict
+    print len(related_artists_dict)
 
     ### RETURN TEMPLATE WITH RESULTS
     flash('Results feature not implemented yet')
