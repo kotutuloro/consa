@@ -31,21 +31,19 @@ class Concert(db.Model):
 
     __tablename__ = "concerts"
 
-    concert_id = db.Column(db.Integer,
-                           primary_key=True,
-                           autoincrement=True)
     songkick_id = db.Column(db.Integer,
-                            nullable=False)
+                            primary_key=True)
     songkick_url = db.Column(db.String(256))
     artist = db.Column(db.String(64),
                        nullable=False)
+    spotify_id = db.Column(db.String(64))
     venue = db.Column(db.String(64))
     city = db.Column(db.String(64))
     start_datetime = db.Column(db.DateTime)
 
     def __repr__(self):
-        return ("<Concert concert_id={} artist={}>"
-                .format(self.concert_id, self.artist))
+        return ("<Concert songkick_id={} artist={}>"
+                .format(self.songkick_id, self.artist))
 
 
 class UserConcert(db.Model):
@@ -59,13 +57,13 @@ class UserConcert(db.Model):
     user_id = db.Column(db.Integer,
                         db.ForeignKey('users.user_id'),
                         nullable=False)
-    concert_id = db.Column(db.Integer,
-                           db.ForeignKey('concerts.concert_id'),
-                           nullable=False)
+    songkick_id = db.Column(db.Integer,
+                            db.ForeignKey('concerts.songkick_id'),
+                            nullable=False)
 
     def __repr__(self):
-        return ("<UserConcert user_id={} concert_id={}>"
-                .format(self.user_id, self.concert_id))
+        return ("<UserConcert user_id={} songkick_id={}>"
+                .format(self.user_id, self.songkick_id))
 
 
 ##############################################################################
