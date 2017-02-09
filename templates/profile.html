@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block subtitle %}
+  : Your Profile
+{% endblock %}
+
+{% block content %}
+  
+  <h1>Your profile</h1>
+
+  <div id="user-info">
+    Email: {{ current_user.email }}
+  </div>
+
+  <h3>Your saved concerts</h3>
+  <div id="saved-concerts-list">
+    {% for concert in current_user.concerts %}
+      <div class="saved-concert">
+
+        <b>{{ concert.artist }}</b>
+        <br>
+
+        {% if concert.city %}
+          {% if concert.venue %}
+            {{ concert.venue }} in
+          {% endif %}
+          
+          {{ concert.city }}
+          <br>
+        {% endif %}
+
+        {% if concert.start_datetime %}
+          {{ concert.start_datetime.strftime("%a %b %d, %Y at %-I:%M %p") }}
+          <br>
+        {% endif %}
+
+        {% if concert.songkick_url %}
+          <a href="{{ concert.songkick_url }}">
+            View this event on Songkick
+          </a>
+        {% endif %}
+
+      </div>
+      <br>
+    {% endfor %}
+  </div>
+
+{% endblock %}
+
+{% block js %}
+  <script>
+  </script>
+{% endblock %}
