@@ -22,6 +22,23 @@ class User(db.Model):
                                secondary="users_concerts",
                                backref="users")
 
+    def add_concert(self, songkick_id):
+        """Add concert to user's list of saved concerts
+
+        Adds association betwen user and the concert from the UserConcert table
+        """
+
+        new_assoc = UserConcert(songkick_id=songkick_id,
+                                user_id=self.user_id)
+
+        try:
+            db.session.add(new_assoc)
+            db.session.commit()
+            return True
+        except:
+            db.session.rollback()
+            return False
+
     def remove_concert(self, songkick_id):
         """Removes concert from user's list of saved concerts
 

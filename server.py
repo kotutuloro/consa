@@ -133,6 +133,21 @@ def return_user_profile():
         return redirect('/login')
 
 
+# @app.route('/add-concert', methods=["POST"])
+# def add_saved_concert():
+#     """Adds concert to user's saved list"""
+
+#     songkick_id = request.form.get('songkick-id')
+#     artist = request.form.get('artist')
+
+#     user_id = session.get('user_id')
+#     current_user = User.query.get(user_id)
+
+#     current_user.add_concert(songkick_id)
+
+#     return redirect('/profile')
+
+
 @app.route('/remove-concert', methods=["POST"])
 def remove_saved_concert():
     """Removes concert from user's saved list"""
