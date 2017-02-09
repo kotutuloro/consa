@@ -1,5 +1,5 @@
 from flask import (Flask, render_template, flash, redirect, request, session)
-# from flask_debugtoolbar import DebugToolbarExtension
+from flask_debugtoolbar import DebugToolbarExtension
 
 import spotipy
 from spotipy.oauth2 import SpotifyOauthError
@@ -123,7 +123,10 @@ def return_user_profile():
 
     # Display user's profile page if logged in
     if session.get('user_id'):
-        return render_template('profile.html')
+        current_user = User.query.get(session['user_id'])
+        print current_user
+        return render_template('profile.html',
+                               current_user=current_user)
 
     # Return redirect to login page if not logged in
     else:
@@ -190,6 +193,6 @@ if __name__ == '__main__':
 
     connect_to_db(app)
 
-    # DebugToolbarExtension(app)
+    DebugToolbarExtension(app)
 
     app.run(host='0.0.0.0')
