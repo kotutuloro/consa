@@ -124,7 +124,6 @@ def return_user_profile():
     # Display user's profile page if logged in
     if session.get('user_id'):
         current_user = User.query.get(session['user_id'])
-        print current_user
         return render_template('profile.html',
                                current_user=current_user)
 
@@ -132,6 +131,16 @@ def return_user_profile():
     else:
         flash('You must be logged in to view your profile.')
         return redirect('/login')
+
+
+@app.route('/remove-concert', methods=["POST"])
+def remove_saved_concert():
+    """Removes concert from user's saved list"""
+
+    songkick_id = request.form.get('songkick-id')
+
+    print songkick_id
+    return redirect('/profile')
 
 
 @app.route('/spotify-auth')
@@ -193,6 +202,6 @@ if __name__ == '__main__':
 
     connect_to_db(app)
 
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
 
     app.run(host='0.0.0.0')
