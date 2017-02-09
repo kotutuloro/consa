@@ -40,8 +40,9 @@ class User(db.Model):
             return True
 
         # Rollback transaction and return False if not successful
-        except:
+        except Exception, msg:
             db.session.rollback()
+            print msg
             return False
 
     def remove_concert(self, songkick_id):
@@ -52,16 +53,17 @@ class User(db.Model):
         """
 
         # Delete all associations in users_concerts table between this user and concert
+        # Return True if successful
         try:
             UserConcert.query.filter(UserConcert.songkick_id == songkick_id,
                                      UserConcert.user_id == self.user_id).delete()
             db.session.commit()
-            # Return True if successful
             return True
 
         # Rollback transaction and return False if not successful
-        except Exception:
+        except Exception, msg:
             db.session.rollback()
+            print msg
             return False
 
     def __repr__(self):
@@ -83,6 +85,41 @@ class Concert(db.Model):
     venue = db.Column(db.String(64))
     city = db.Column(db.String(64))
     start_datetime = db.Column(db.DateTime)
+
+    @classmethod
+    def create_from_form(cls, form):
+        """Instantiate a new Concert using concert information from a form"""
+
+        # Get concert data from form
+        songkick_id = form.get('songkick-id')
+        songkick_url = form.get('songkick-url')
+        artist = form.get('artist')
+        spotify_id = form.get('spotify-id')
+        venue = form.get('venue')
+        city = form.get('city')
+        start_datetime = form.get('start_datetime')
+
+        # Create new concert object from data
+        new_concert = cls(songkick_id=songkick_id,
+                          songkick_url=songkick_url,
+                          artist=artist,
+                          spotify_id=spotify_id,
+                          venue=venue,
+                          city=city,
+                          start_datetime=start_datetime
+                          )
+
+        # Add and commit new concert and return True if successful
+        try:
+            db.session.add(new_concert)
+            db.session.commit()
+            return True
+
+        # Rollback session and return False if unsuccessful
+        except Exception, msg:
+            db.session.rollback()
+            print msg
+            return False
 
     def __repr__(self):
         return ("<Concert songkick_id={} artist={}>"

@@ -134,19 +134,28 @@ def return_user_profile():
         return redirect('/login')
 
 
-# @app.route('/add-concert', methods=["POST"])
-# def add_saved_concert():
-#     """Adds concert to user's saved list"""
+@app.route('/add-concert', methods=["POST"])
+def add_saved_concert():
+    """Adds concert to user's saved list"""
 
-#     songkick_id = request.form.get('songkick-id')
-#     artist = request.form.get('artist')
+    # Get concert data
+    songkick_id = request.form.get('songkick-id')
 
-#     user_id = session.get('user_id')
-#     current_user = User.query.get(user_id)
+    # If songkick id not already in database, insert information from post request form
+    if Concert.query.get(songkick_id) is None:
+        create_success = Concert.create_from_form(request.form)
+    else:
+        create_success = True
 
-#     current_user.add_concert(songkick_id)
+    # Get current user data
+    user_id = session.get('user_id')
+    current_user = User.query.get(user_id)
 
-#     return redirect('/profile')
+    # Add association between concert and current user
+    add_success = current_user.add_concert(songkick_id)
+
+    # Return T/F if successful or unsuccessful
+    return add_success and create_success
 
 
 @app.route('/remove-concert', methods=["POST"])
