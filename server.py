@@ -45,13 +45,13 @@ def log_in():
     email = request.form.get("email").lower()
     password = request.form.get("password")
 
-    user = User.query.filter_by(email=email).first()
+    current_user = User.query.filter_by(email=email).first()
 
     # If user exists in database and password is correct
-    if user and user.password == password:
+    if current_user and current_user.password == password:
 
         # Set session and redirect to homepage
-        session['user_id'] = user.user_id
+        session['user_id'] = current_user.user_id
         flash('Login successful')
         return redirect('/my-profile')
 

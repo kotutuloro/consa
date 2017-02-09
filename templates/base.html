@@ -38,12 +38,14 @@
 
   {% if get_flashed_messages() %}
     <div id="flashed-messages">
+      Flashed messages:
       {% for message in get_flashed_messages() %}
         <div id="flash-msg">
           {{ message }}
         </div>
       {% endfor %}
     </div>
+    <br>
   {% endif %}
 
   {% block content %}

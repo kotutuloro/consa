@@ -18,6 +18,7 @@ class User(db.Model):
                          nullable=False)
 
     concerts = db.relationship("Concert",
+                               order_by="Concert.start_datetime",
                                secondary="users_concerts",
                                backref="users")
 
