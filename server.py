@@ -42,6 +42,7 @@ def return_login_form():
 def log_in():
     """Logs user in"""
 
+    # Get login form data
     email = request.form.get("email").lower()
     password = request.form.get("password")
 
@@ -152,14 +153,17 @@ def return_user_profile():
 def remove_saved_concert():
     """Removes concert from user's saved list"""
 
+    # Get concert data from AJAX request
     songkick_id = request.form.get('songkick-id')
 
     user_id = session.get('user_id')
     current_user = User.query.get(user_id)
 
-    current_user.remove_concert(songkick_id)
+    # Remove association between concert and current user
+    success = current_user.remove_concert(songkick_id)
 
-    return redirect('/profile')
+    # Return T/F if successful or unsuccessful
+    return success
 
 
 @app.route('/spotify-auth')

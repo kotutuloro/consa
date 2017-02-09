@@ -26,15 +26,20 @@ class User(db.Model):
         """Add concert to user's list of saved concerts
 
         Adds association betwen user and the concert from the UserConcert table
+        Return True if successful, False if unsuccessful
         """
 
+        # Create new row in users_concerts table
         new_assoc = UserConcert(songkick_id=songkick_id,
                                 user_id=self.user_id)
 
+        # Add and commit new association and return True if successful
         try:
             db.session.add(new_assoc)
             db.session.commit()
             return True
+
+        # Rollback transaction and return False if not successful
         except:
             db.session.rollback()
             return False
@@ -43,12 +48,21 @@ class User(db.Model):
         """Removes concert from user's list of saved concerts
 
         Removes association betwen user and the concert from the UserConcert table
+        Return True if successful, False if unsuccessful
         """
 
-        UserConcert.query.filter(UserConcert.songkick_id == songkick_id,
-                                 UserConcert.user_id == self.user_id).delete()
+        # Delete all associations in users_concerts table between this user and concert
+        try:
+            UserConcert.query.filter(UserConcert.songkick_id == songkick_id,
+                                     UserConcert.user_id == self.user_id).delete()
+            db.session.commit()
+            # Return True if successful
+            return True
 
-        db.session.commit()
+        # Rollback transaction and return False if not successful
+        except Exception:
+            db.session.rollback()
+            return False
 
     def __repr__(self):
         return ("<User user_id={} email={}>"
