@@ -22,6 +22,17 @@ class User(db.Model):
                                secondary="users_concerts",
                                backref="users")
 
+    def remove_concert(self, songkick_id):
+        """Removes concert from user's list of saved concerts
+
+        Removes association betwen user and the concert from the UserConcert table
+        """
+
+        UserConcert.query.filter(UserConcert.songkick_id == songkick_id,
+                                 UserConcert.user_id == self.user_id).delete()
+
+        db.session.commit()
+
     def __repr__(self):
         return ("<User user_id={} email={}>"
                 .format(self.user_id, self.email))

@@ -139,7 +139,11 @@ def remove_saved_concert():
 
     songkick_id = request.form.get('songkick-id')
 
-    print songkick_id
+    user_id = session.get('user_id')
+    current_user = User.query.get(user_id)
+
+    current_user.remove_concert(songkick_id)
+
     return redirect('/profile')
 
 
@@ -202,6 +206,6 @@ if __name__ == '__main__':
 
     connect_to_db(app)
 
-    # DebugToolbarExtension(app)
+    DebugToolbarExtension(app)
 
     app.run(host='0.0.0.0')
