@@ -155,7 +155,7 @@ def add_saved_concert():
     add_success = current_user.add_concert(songkick_id)
 
     # Return T/F if successful or unsuccessful
-    return add_success and create_success
+    return str(add_success and create_success)
 
 
 @app.route('/remove-concert', methods=["POST"])
@@ -172,7 +172,7 @@ def remove_saved_concert():
     success = current_user.remove_concert(songkick_id)
 
     # Return T/F if successful or unsuccessful
-    return success
+    return str(success)
 
 
 @app.route('/spotify-auth')
