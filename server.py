@@ -225,8 +225,9 @@ def return_results():
     print len(related_artists_dict)
 
     ### RETURN TEMPLATE WITH RESULTS
+
     flash('Results feature not implemented yet')
-    return redirect('/')
+    return render_template('results.html', concert_recs=top_artists_dict)
 
 
 if __name__ == '__main__':

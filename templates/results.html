@@ -5,26 +5,21 @@
 {% endblock %}
 
 {% block content %}
-  
-  <h1>Your profile</h1>
 
-  <div id="user-info">
-    Email: {{ current_user.email }}
-  </div>
+  <h1>Results</h1>
+  <h3>Concerts you might be interested in</h3>
 
-  <h3>Your saved concerts</h3>
-  <div id="saved-concerts-list">
-    {% for concert in current_user.concerts %}
+  <div id="concert-results">
+    {% for spotify_id, artist_name in concert_recs.items() %}
       <div class="saved-concert">
 
-        <b>{{ concert.artist }}</b> 
+        <b>{{ artist_name }}</b> 
 
-        <form action="/remove-concert">
-          <input type="hidden" class="songkick-id" value="{{ concert.songkick_id }}">
-          <input type="submit" class="remove-concert" value="Remove this concert">
+        <form action="/add-concert">
+          <input type="submit" class="add-concert" value="Add this concert">
         </form>
         
-        {% if concert.city %}
+        <!-- {# {% if concert.city %}
           {% if concert.venue %}
             {{ concert.venue }} in
           {% endif %}
@@ -43,7 +38,7 @@
             View this event on Songkick
           </a>
           <br>
-        {% endif %}
+        {% endif %} #} -->
         <br>
 
       </div>
@@ -54,6 +49,7 @@
 
 {% block js %}
   <script>
+    $("input.add-concert").on("click", addConcert);
     $("input.remove-concert").on("click", removeConcert);
   </script>
 {% endblock %}
