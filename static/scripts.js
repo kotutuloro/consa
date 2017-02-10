@@ -1,3 +1,31 @@
+// Sends concert data to server via AJAX request for addition to database
+function addConcert(evt){
+    evt.preventDefault();
+
+    // Get hidden values of concert data in form
+    var formInputs = {
+        "songkick-id": $(this).siblings("input.songkick-id").val(),
+        "songkick-url": $(this).siblings("input.songkick-url").val(),
+        "artist": $(this).siblings("input.artist").val(),
+        "spotify-id": $(this).siblings("input.spotify-id").val(),
+        "venue": $(this).siblings("input.venue").val(),
+        "city": $(this).siblings("input.songkick-id").val(),
+        "start-datetime": $(this).siblings("input.start-datetime").val(),
+    };
+
+    // POST AJAX request to server
+    $.post("/add-concert", formInputs, function(data) {
+        // If the removal is successful, alert success
+        if (data == "True") {
+            alert('Successful');
+        } else {
+            // Alert user if unsuccessful
+            alert('Cannot remove this concert at this time.');
+        }
+    });
+}
+
+
 // Sends concert data to server via AJAX request for removal
 function removeConcert(evt){
     evt.preventDefault();
