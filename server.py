@@ -4,7 +4,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 import spotipy
 from spotipy.oauth2 import SpotifyOauthError
 
-from model import (User, Concert, UserConcert, db, connect_to_db)
+from model import (User, Concert, db, connect_to_db)
 from spotify_oauth_tools import get_spotify_oauth
 from analyzation import (parse_artist_response, add_artists_to_dict)
 
@@ -142,7 +142,7 @@ def add_saved_concert():
     songkick_id = request.form.get('songkick-id')
 
     # If songkick id not already in database, insert information from post request form
-    if Concert.query.get(songkick_id) is None:
+    if not Concert.query.get(songkick_id):
         create_success = Concert.create_from_form(request.form)
     else:
         create_success = True
