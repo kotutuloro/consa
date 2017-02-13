@@ -6,7 +6,7 @@ from spotipy.oauth2 import SpotifyOauthError
 
 from model import (User, Concert, db, connect_to_db)
 from spotify_oauth_tools import get_spotify_oauth
-from analyzation import (parse_artist_response, add_artists_to_dict)
+from analyzation import get_concert_recs
 
 
 app = Flask(__name__)
@@ -209,25 +209,11 @@ def return_results():
     # Create Spotify API object using access_token
     spotify = spotipy.Spotify(auth=access_token)
 
-    # Get user's top artists
-    top_artists_resp = spotify.current_user_top_artists(limit=10,
-                                                        time_range='medium_term')
-    top_artists_dict = parse_artist_response(top_artists_resp)
-
-    # Get artists related to user's top artists
-    related_artists_dict = {}
-
-    for artist_id in top_artists_dict.keys():
-        rel_artists_resp = spotify.artist_related_artists(artist_id)
-        print len(rel_artists_resp['artists'])
-        add_artists_to_dict(rel_artists_resp, related_artists_dict)
-
-    print len(related_artists_dict)
-
-    ### RETURN TEMPLATE WITH RESULTS
+    # Get concert recommendations
+    concert_recs = get_concert_recs(spotify)
 
     flash('Results feature not implemented yet')
-    return render_template('results.html', concert_recs=top_artists_dict)
+    return render_template('results.html', concert_recs=concert_recs)
 
 
 if __name__ == '__main__':
@@ -235,6 +221,6 @@ if __name__ == '__main__':
 
     connect_to_db(app)
 
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
 
     app.run(host='0.0.0.0')

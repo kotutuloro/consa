@@ -1,3 +1,24 @@
+def get_concert_recs(spotify):
+    """Returns list of concert recommendation dictionaries using Spotify API object"""
+
+    # Get user's top artists
+    top_artists_response = spotify.current_user_top_artists(limit=3,
+                                                            time_range='short_term')
+    top_artists_dict = parse_artist_response(top_artists_response)
+
+    # Get artists related to user's top artists
+    related_artists_dict = {}
+
+    for artist_id in top_artists_dict.keys():
+        rel_artists_resp = spotify.artist_related_artists(artist_id)
+        add_artists_to_dict(rel_artists_resp, related_artists_dict)
+        print len(rel_artists_resp['artists'])
+
+    print len(related_artists_dict)
+
+    return related_artists_dict
+
+
 def parse_artist_response(artists_response):
     """Takes results of API call for top artists and returns a dictionary of artists
 
@@ -28,3 +49,6 @@ def add_artists_to_dict(artists_response, original_dict):
         artist_id = artist['id']
         artist_name = artist['name']
         original_dict[artist_id] = artist_name
+
+
+
