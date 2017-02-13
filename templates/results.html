@@ -10,20 +10,19 @@
   <h3>Concerts you might be interested in</h3>
 
   <div id="concert-results">
-    {% for spotify_id, artist_name in concert_recs.items() %}
+    {% for concert in concert_recs %}
       <div class="saved-concert">
 
-        <b>{{ artist_name }}</b> 
+        <b>{{ concert.artist }}</b> 
+        <br>
+        {{ concert.display_name }}
+        <br>
 
-        <form action="/add-concert">
-          <input type="submit" class="add-concert" value="Add this concert">
-        </form>
-        
-        <!-- {# {% if concert.city %}
+        {% if concert.city %}
           {% if concert.venue %}
             {{ concert.venue }} in
           {% endif %}
-          
+
           {{ concert.city }}
           <br>
         {% endif %}
@@ -38,7 +37,12 @@
             View this event on Songkick
           </a>
           <br>
-        {% endif %} #} -->
+        {% endif %}
+
+        <form action="/add-concert">
+          <input type="submit" class="add-concert" value="Add this concert">
+        </form>
+        
         <br>
 
       </div>
