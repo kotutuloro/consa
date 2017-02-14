@@ -6,10 +6,13 @@
 {% block content %}
 
   <div id="search-form">
-    <form action="/location-search">
+    <form id="loc-search-form">
       <label for="location-input">Location:</label>
         <input type="text" id="location-input" name="location" value="San Francisco">
-      <input type="submit" value="Search">
+      <input type="submit" id="loc-search-button" value="Search">
+      <br>
+
+      
     </form>
 
     <a href="/spotify-auth"><button id="spotify-auth" type="button">Authorize your Spotify account</button></a>
@@ -19,5 +22,68 @@
 
 {% block js %}
   <script>
+    // Send location search to Songkick API via GET request
+    function searchSongkickLoc(evt) {
+      evt.preventDefault();
+
+      // Create fieldset for locations
+      var locSelection = '\
+        <fieldset id="loc-selection">\
+          <legend>Choose your area:</legend>\
+        </fieldset>';
+
+      // Remove the previous fieldset and append new fieldset to form
+      $("#loc-selection").remove();
+      $("#loc-search-form").append(locSelection);
+
+      // Get the location search value
+      var searchTerm = $("#location-input").val();
+
+      // Create payload for GET request
+      var payload = {
+        'query': searchTerm,
+        'apikey': 'XXXXX',
+      };
+
+      // Make GET request to Songkick location search and display locations
+      $.get("http://api.songkick.com/api/3.0/search/locations.json", payload, displayLocs)
+    }
+
+    // Display locations from JSON response from Songkick API
+    function displayLocs(data) {
+      // Get list of locations from JSON response
+      var locations = data.resultsPage.results.location;
+
+      // If locations found
+      if (locations) {
+
+        // Iterate through list of locations
+        for (var i = 0; i < locations.length; i++) {
+
+          // Get the metro area's information
+          var metro = locations[i].metroArea;
+          var locID = metro.id;
+
+          // Create location's name from metro area's display name, county, and state (if available)
+          if (metro.state) {
+            var locName = metro.displayName + ", " + metro.state.displayName + ", " + metro.country.displayName;
+          } else {
+            var locName = metro.displayName + ", " + metro.country.displayName;
+          }
+
+          // Create a radio button using the location's ID and name
+          var locRadio = '<input type="radio" name="sk-loc" value="' + locID + '">' + locName + '<br>';
+
+          // Append radio button to location selection fieldset
+          $("#loc-selection").append(locRadio);
+        }
+
+      // If no locations found, inform user
+      } else {
+        $("#loc-selection").append("No matching areas found.");
+      }
+    }
+
+    $("#loc-search-button").on('click', searchSongkickLoc);
   </script>
 {% endblock %}

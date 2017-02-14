@@ -75,9 +75,10 @@ def find_songkick_concerts(related_artists_dict, location="sk:26330"):
     Makes requests to the Songkick API for upcoming events based on artists
     in the related artist dicitonary"""
 
+    songkick_key = os.getenv('SONGKICK_KEY')
+
     # Create empty recommendation list
     concert_recs_list = []
-    songkick_key = os.getenv('SONGKICK_KEY')
 
     # Iterate over items in dictionary
     for spotify_id, artist in related_artists_dict.items():
