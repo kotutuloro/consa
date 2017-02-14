@@ -7,7 +7,7 @@ def get_concert_recs(spotify):
     """Returns list of concert recommendation dictionaries using Spotify API object"""
 
     # Get user's top artists
-    top_artists_response = spotify.current_user_top_artists(limit=1,
+    top_artists_response = spotify.current_user_top_artists(limit=0,
                                                             time_range='medium_term')
     top_artists_dict = parse_artist_response(top_artists_response)
 
@@ -81,7 +81,7 @@ def find_songkick_concerts(related_artists_dict, location="sk:26330"):
             # Get list of events from response
             events = event_response.json()['resultsPage']['results'].get('event')
 
-            # If list not empty
+            # If event list not empty
             if events:
 
                 # Iterate over event list

@@ -12,45 +12,52 @@
     Email: {{ current_user.email }}
   </div>
 
-  <h3>Your saved concerts</h3>
-  <div id="saved-concerts-list">
-    {% for concert in current_user.concerts %}
-      <div class="saved-concert">
+  {% if current_user.concerts %}
+    <h3>Your saved concerts</h3>
 
-        <b>{{ concert.artist }}</b>
-        <br>
-        {{ concert.display_name }} 
+    <div id="saved-concerts-list">
+      {% for concert in current_user.concerts %}
+        <div class="saved-concert">
 
-        <form action="/remove-concert">
-          <input type="hidden" class="songkick-id" value="{{ concert.songkick_id }}">
-          <input type="submit" class="remove-concert" value="Remove this concert">
-        </form>
-        
-        {% if concert.city %}
-          {% if concert.venue %}
-            {{ concert.venue }} in
-          {% endif %}
+          <b>{{ concert.artist }}</b>
+          <br>
+          {{ concert.display_name }} 
+
+          <form action="/remove-concert">
+            <input type="hidden" class="songkick-id" value="{{ concert.songkick_id }}">
+            <input type="submit" class="remove-concert" value="Remove this concert">
+          </form>
           
-          {{ concert.city }}
-          <br>
-        {% endif %}
+          {% if concert.city %}
+            {% if concert.venue %}
+              {{ concert.venue }} in
+            {% endif %}
+            
+            {{ concert.city }}
+            <br>
+          {% endif %}
 
-        {% if concert.start_datetime %}
-          {{ concert.start_datetime.strftime("%a %b %d, %Y at %-I:%M %p") }}
-          <br>
-        {% endif %}
+          {% if concert.start_datetime %}
+            {{ concert.start_datetime.strftime("%a %b %d, %Y at %-I:%M %p") }}
+            <br>
+          {% endif %}
 
-        {% if concert.songkick_url %}
-          <a href="{{ concert.songkick_url }}" target="_blank">
-            View this event on Songkick
-          </a>
+          {% if concert.songkick_url %}
+            <a href="{{ concert.songkick_url }}" target="_blank">
+              View this event on Songkick
+            </a>
+            <br>
+          {% endif %}
           <br>
-        {% endif %}
-        <br>
 
-      </div>
-    {% endfor %}
-  </div>
+        </div>
+      {% endfor %}
+    </div>
+
+  {% else %}
+    <h3>You have no saved concerts</h3>
+  {% endif %}
+
 
 {% endblock %}
 

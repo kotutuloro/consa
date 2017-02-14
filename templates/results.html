@@ -7,56 +7,63 @@
 {% block content %}
 
   <h1>Results</h1>
-  <h3>Concerts you might be interested in</h3>
 
-  <div id="concert-results">
-    {% for concert in concert_recs %}
-      <div class="saved-concert">
+  {% if concert_recs %}
+    <h3>Concerts you might be interested in</h3>
 
-        <b>{{ concert.artist }}</b> 
-        <br>
-        {{ concert.display_name }}
-        <br>
+    <div id="concert-results">
+      {% for concert in concert_recs %}
+        <div class="saved-concert">
 
-        {% if concert.city %}
-          {% if concert.venue %}
-            {{ concert.venue }} in
+          <b>{{ concert.artist }}</b> 
+          <br>
+          {{ concert.display_name }}
+          <br>
+
+          {% if concert.city %}
+            {% if concert.venue %}
+              {{ concert.venue }} in
+            {% endif %}
+
+            {{ concert.city }}
+            <br>
           {% endif %}
 
-          {{ concert.city }}
+          {% if concert.start_datetime %}
+            {{ concert.start_datetime.strftime("%a %b %d, %Y at %-I:%M %p") }}
+            <br>
+          {% endif %}
+
+          {% if concert.songkick_url %}
+            <a href="{{ concert.songkick_url }}" target="_blank">
+              View this event on Songkick
+            </a>
+            <br>
+          {% endif %}
+
+          <form action="/add-concert">
+            <input type="hidden" class="songkick-id" value="{{ concert.songkick_id }}">
+            <input type="hidden" class="artist" value="{{ concert.artist }}">
+            <input type="hidden" class="display-name" value="{{ concert.display_name }}">
+            <input type="hidden" class="songkick-url" value="{{ concert.songkick_url }}">
+            <input type="hidden" class="spotify-id" value="{{ concert.spotify_id }}">
+            <input type="hidden" class="venue" value="{{ concert.venue }}">
+            <input type="hidden" class="city" value="{{ concert.city }}">
+            <input type="hidden" class="start-datetime" value="{{ concert.start_datetime }}">
+
+            <input type="submit" class="add-concert" value="Add this concert">
+          </form>
+
           <br>
-        {% endif %}
 
-        {% if concert.start_datetime %}
-          {{ concert.start_datetime.strftime("%a %b %d, %Y at %-I:%M %p") }}
-          <br>
-        {% endif %}
+        </div>
+      {% endfor %}
 
-        {% if concert.songkick_url %}
-          <a href="{{ concert.songkick_url }}" target="_blank">
-            View this event on Songkick
-          </a>
-          <br>
-        {% endif %}
+    </div>
 
-        <form action="/add-concert">
-          <input type="hidden" class="songkick-id" value="{{ concert.songkick_id }}">
-          <input type="hidden" class="artist" value="{{ concert.artist }}">
-          <input type="hidden" class="display-name" value="{{ concert.display_name }}">
-          <input type="hidden" class="songkick-url" value="{{ concert.songkick_url }}">
-          <input type="hidden" class="spotify-id" value="{{ concert.spotify_id }}">
-          <input type="hidden" class="venue" value="{{ concert.venue }}">
-          <input type="hidden" class="city" value="{{ concert.city }}">
-          <input type="hidden" class="start-datetime" value="{{ concert.start_datetime }}">
-
-          <input type="submit" class="add-concert" value="Add this concert">
-        </form>
-
-        <br>
-
-      </div>
-    {% endfor %}
-  </div>
+  {% else %}
+    <h3>We couldn't find any concerts based on your top artists in this area :(</h3>
+  {% endif %}
 
 {% endblock %}
 
