@@ -3,7 +3,7 @@ import requests
 from datetime import datetime
 
 
-def get_concert_recs(spotify):
+def get_concert_recs(spotify, location="sk:26330"):
     """Returns list of concert recommendation dictionaries using Spotify API object"""
 
     print "Retrieving top artists"
@@ -28,7 +28,7 @@ def get_concert_recs(spotify):
     print "Time to get {} related artists: {}".format(len(related_artists_dict), rel_time - top_time)
     print "Finding concerts"
 
-    concert_recs_list = find_songkick_concerts(related_artists_dict)
+    concert_recs_list = find_songkick_concerts(related_artists_dict, location)
     concert_recs_list.sort(cmp=lambda x, y: cmp(x['start_datetime'], y['start_datetime']))
 
     end = datetime.now()
@@ -69,7 +69,7 @@ def add_artists_to_dict(artists_response, original_dict):
         original_dict[artist_id] = artist_name
 
 
-def find_songkick_concerts(related_artists_dict, location="sk:26330"):
+def find_songkick_concerts(related_artists_dict, location):
     """Takes dicitonary of related artists and returns a list of concert recommendation dictionaries
 
     Makes requests to the Songkick API for upcoming events based on artists
@@ -134,6 +134,7 @@ def find_songkick_concerts(related_artists_dict, location="sk:26330"):
 
         # If request unsuccessful, print error
         else:
+            artist = artist.encode('utf-8')
             print "Failed: {}".format(artist)
 
     return concert_recs_list

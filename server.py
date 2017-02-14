@@ -68,9 +68,9 @@ def log_in():
 def log_out():
     """Logs user out, removing them from the Flask session"""
 
-    # Remove id from session if logged in
+    # Clear session if logged in
     if session.get('user_id'):
-        del session['user_id']
+        session.clear()
         flash('Logged out')
 
     # Display message if no user logged in
@@ -227,11 +227,21 @@ def return_location_matches():
 
 @app.route('/spotify-auth')
 def request_authorization():
-    """Redirects to user authorization for Spotify account"""
+    """Saves location info and returns url for Spotify authorization"""
 
+    # Get location info from form
+    locID = request.args.get('locID')
+    locName = request.args.get('locName')
+
+    # Save location info to session if available
+    if locID:
+        session['locID'] = locID
+        session['locName'] = locName
+
+    # Get url for Spotify authorization
     auth_url = SPOTIFY_OAUTH.get_authorize_url()
 
-    return redirect(auth_url)
+    return auth_url
 
 
 @app.route('/callback')
@@ -259,10 +269,10 @@ def return_results():
     # Create Spotify API object using access_token
     spotify = spotipy.Spotify(auth=access_token)
 
-    # Get concert recommendations
-    concert_recs = get_concert_recs(spotify)
+    # Get concert recommendations using saved location (SF Bay as default)
+    locID = session.get('locID', 'sk:26330')
+    concert_recs = get_concert_recs(spotify, locID)
 
-    flash('Results feature not implemented yet')
     return render_template('results.html', concert_recs=concert_recs)
 
 

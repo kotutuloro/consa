@@ -8,14 +8,14 @@
   <div id="search-form">
     <form id="loc-search-form">
       <label for="location-input">Location:</label>
-        <input type="text" id="location-input" name="location" value="San Francisco">
+        <input type="text" id="location-input" name="location" value="{{ session.get('locName', 'SF Bay Area') }}">
       <input type="submit" id="loc-search-button" value="Search">
       <br>
 
       
     </form>
 
-    <a href="/spotify-auth"><button id="spotify-auth" type="button">Authorize your Spotify account</button></a>
+    <button id="spotify-auth" type="button">Authorize your Spotify account</button>
   </div>
   
 {% endblock %}
@@ -62,10 +62,14 @@
           }
 
           // Create a radio button using the location's ID and name
-          var locRadio = '<input type="radio" name="sk-loc" value="' + locID + '">' + locName + '<br>';
+          var locRadio = '<input type="radio" name="sk-loc" value="sk:' + locID + '">' + locName + '<br>';
 
           // Append radio button to location selection fieldset
           $("#loc-selection").append(locRadio);
+
+          // Add ID & name to new radio button's data
+          var latest = $("#loc-selection input:last");
+          latest.data({"locID": "sk:" + locID, "locName": locName});
         }
 
       // If no locations found, inform user
@@ -75,6 +79,21 @@
     }
 
 
+    // Call Songkick Search function on click
     $("#loc-search-button").on('click', searchSongkickLoc);
+
+
+    // Save location and redirect to Spotify authorization
+    $("#spotify-auth").on('click', function() {
+      // Find selected location
+      var selectedLoc = $('input[name="sk-loc"]:checked');
+      
+      // Send request to server with location's data and open returned url
+      $.get('/spotify-auth', selectedLoc.data(), function(authurl) {
+        window.location = authurl;
+      });
+
+    });
+
   </script>
 {% endblock %}
