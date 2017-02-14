@@ -36,24 +36,14 @@
       $("#loc-selection").remove();
       $("#loc-search-form").append(locSelection);
 
-      // Get the location search value
+      // Make GET request to server and display locations
       var searchTerm = $("#location-input").val();
-
-      // Create payload for GET request
-      var payload = {
-        'query': searchTerm,
-        'apikey': 'XXXXX',
-      };
-
-      // Make GET request to Songkick location search and display locations
-      $.get("http://api.songkick.com/api/3.0/search/locations.json", payload, displayLocs)
+      $.get("/location-search", {'search-term': searchTerm}, displayLocs)
     }
 
-    // Display locations from JSON response from Songkick API
-    function displayLocs(data) {
-      // Get list of locations from JSON response
-      var locations = data.resultsPage.results.location;
 
+    // Display locations from JSON response from Songkick API
+    function displayLocs(locations) {
       // If locations found
       if (locations) {
 
@@ -61,7 +51,7 @@
         for (var i = 0; i < locations.length; i++) {
 
           // Get the metro area's information
-          var metro = locations[i].metroArea;
+          var metro = locations[i];
           var locID = metro.id;
 
           // Create location's name from metro area's display name, county, and state (if available)
@@ -83,6 +73,7 @@
         $("#loc-selection").append("No matching areas found.");
       }
     }
+
 
     $("#loc-search-button").on('click', searchSongkickLoc);
   </script>

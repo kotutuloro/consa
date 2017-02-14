@@ -1,8 +1,10 @@
-from flask import (Flask, render_template, flash, redirect, request, session)
+from flask import (Flask, render_template, flash, redirect, request, session, jsonify)
 from flask_debugtoolbar import DebugToolbarExtension
 
 import spotipy
 from spotipy.oauth2 import SpotifyOauthError
+import os
+import requests
 
 from model import (User, Concert, db, connect_to_db)
 from spotify_oauth_tools import get_spotify_oauth
@@ -173,6 +175,54 @@ def remove_saved_concert():
 
     # Return T/F if successful or unsuccessful
     return str(success)
+
+
+@app.route('/location-search')
+def return_location_matches():
+    """Return list of Songkick metro areas matching search
+
+    Makes a GET request to Songkick API for location data using the data
+    provided in the request to this route.
+    """
+
+    # Get search term from AJAX request
+    search_term = request.args.get('search-term')
+
+    # Make GET request to Songkick API for location
+    payload = {
+        'query': search_term,
+        'apikey': os.getenv('SONGKICK_KEY'),
+    }
+    loc_response = requests.get("http://api.songkick.com/api/3.0/search/locations.json",
+                                payload)
+
+    # If request is successful
+    if loc_response.ok:
+
+        # Get results from the response
+        results = loc_response.json()['resultsPage']['results']
+
+        # If the results are not empty
+        if results:
+            metro_id_list = []
+            metros = []
+
+            # Iterate over each location in results
+            for loc in results['location']:
+                metro = loc['metroArea']
+
+                # If metro area has not already been added to list of metros
+                if metro['id'] not in metro_id_list:
+
+                    # Add metro area to list
+                    metros.append(metro)
+                    metro_id_list.append(metro['id'])
+
+            # Return a list of metro areas for each location in results
+            return jsonify(metros)
+
+    # Return empty string request unsuccessful or no results
+    return ''
 
 
 @app.route('/spotify-auth')
