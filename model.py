@@ -85,6 +85,7 @@ class Concert(db.Model):
     venue = db.Column(db.String(64))
     city = db.Column(db.String(64))
     start_datetime = db.Column(db.DateTime)
+    display_name = db.Column(db.String(128))
 
     @classmethod
     def create_from_form(cls, form):
@@ -98,6 +99,7 @@ class Concert(db.Model):
         venue = form.get('venue')
         city = form.get('city')
         start_datetime = form.get('start-datetime')
+        display_name = form.get('display_name')
 
         # Create new concert object from data
         new_concert = cls(songkick_id=songkick_id,
@@ -106,7 +108,8 @@ class Concert(db.Model):
                           spotify_id=spotify_id,
                           venue=venue,
                           city=city,
-                          start_datetime=start_datetime
+                          start_datetime=start_datetime,
+                          display_name=display_name,
                           )
 
         # Add and commit new concert and return True if successful
@@ -122,8 +125,8 @@ class Concert(db.Model):
             return False
 
     def __repr__(self):
-        return ("<Concert songkick_id={} artist={}>"
-                .format(self.songkick_id, self.artist))
+        return ("<Concert songkick_id={} display_name={}>"
+                .format(self.songkick_id, self.display_name))
 
 
 class UserConcert(db.Model):

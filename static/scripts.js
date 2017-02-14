@@ -8,6 +8,7 @@ function addConcert(evt){
     var formInputs = {
         "songkick-id": $(this).siblings("input.songkick-id").val(),
         "songkick-url": $(this).siblings("input.songkick-url").val(),
+        "display-name": $(this).siblings("input.display-name").val(),
         "artist": $(this).siblings("input.artist").val(),
         "spotify-id": $(this).siblings("input.spotify-id").val(),
         "venue": $(this).siblings("input.venue").val(),

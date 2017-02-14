@@ -17,7 +17,9 @@
     {% for concert in current_user.concerts %}
       <div class="saved-concert">
 
-        <b>{{ concert.artist }}</b> 
+        <b>{{ concert.artist }}</b>
+        <br>
+        {{ concert.display_name }} 
 
         <form action="/remove-concert">
           <input type="hidden" class="songkick-id" value="{{ concert.songkick_id }}">
