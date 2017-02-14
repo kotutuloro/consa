@@ -6,10 +6,17 @@ from datetime import datetime
 def get_concert_recs(spotify):
     """Returns list of concert recommendation dictionaries using Spotify API object"""
 
+    print "Retrieving top artists"
+    start = datetime.now()
+
     # Get user's top artists
-    top_artists_response = spotify.current_user_top_artists(limit=0,
+    top_artists_response = spotify.current_user_top_artists(limit=3,
                                                             time_range='medium_term')
     top_artists_dict = parse_artist_response(top_artists_response)
+
+    top_time = datetime.now()
+    print "Time to get {} top artists: {}".format(len(top_artists_dict), top_time - start)
+    print "Getting related artists"
 
     # Get artists related to user's top artists
     related_artists_dict = {}
@@ -17,8 +24,16 @@ def get_concert_recs(spotify):
         rel_artists_resp = spotify.artist_related_artists(artist_id)
         add_artists_to_dict(rel_artists_resp, related_artists_dict)
 
-    concert_recs_list = find_songkick_concerts(related_artists_dict)
+    rel_time = datetime.now()
+    print "Time to get {} related artists: {}".format(len(related_artists_dict), rel_time - top_time)
+    print "Finding concerts"
 
+    concert_recs_list = find_songkick_concerts(related_artists_dict)
+    concert_recs_list.sort(cmp=lambda x, y: cmp(x['start_datetime'], y['start_datetime']))
+
+    end = datetime.now()
+    print "Time to search for {} concerts: {}".format(len(related_artists_dict), end - rel_time)
+    print "Total time: {}".format(end - start)
     return concert_recs_list
 
 
@@ -62,18 +77,21 @@ def find_songkick_concerts(related_artists_dict, location="sk:26330"):
 
     # Create empty recommendation list
     concert_recs_list = []
+    songkick_key = os.getenv('SONGKICK_KEY')
 
     # Iterate over items in dictionary
     for spotify_id, artist in related_artists_dict.items():
+        start = datetime.now()
 
         # Make GET request to songkick API for this location & artist
-        songkick_key = os.getenv('SONGKICK_KEY')
         payload = {
             'apikey': songkick_key,
             'artist_name': artist,
             'location': location,
         }
         event_response = requests.get("http://api.songkick.com/api/3.0/events.json", payload)
+
+        print datetime.now() - start
 
         # If request is successful
         if event_response.ok:
