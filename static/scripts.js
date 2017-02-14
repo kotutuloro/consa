@@ -2,6 +2,8 @@
 function addConcert(evt){
     evt.preventDefault();
 
+    var thisButton = $(this);
+
     // Get hidden values of concert data in form
     var formInputs = {
         "songkick-id": $(this).siblings("input.songkick-id").val(),
@@ -9,18 +11,19 @@ function addConcert(evt){
         "artist": $(this).siblings("input.artist").val(),
         "spotify-id": $(this).siblings("input.spotify-id").val(),
         "venue": $(this).siblings("input.venue").val(),
-        "city": $(this).siblings("input.songkick-id").val(),
+        "city": $(this).siblings("input.city").val(),
         "start-datetime": $(this).siblings("input.start-datetime").val(),
     };
 
     // POST AJAX request to server
     $.post("/add-concert", formInputs, function(data) {
-        // If the removal is successful, alert success
+        // If the removal is successful, disable the button
         if (data == "True") {
-            alert('Successful');
+            thisButton.prop("disabled", true);
+            thisButton.val("Saved!");
         } else {
             // Alert user if unsuccessful
-            alert('Cannot remove this concert at this time.');
+            alert('Cannot add this concert at this time.');
         }
     });
 }

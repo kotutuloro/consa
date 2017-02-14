@@ -40,9 +40,17 @@
         {% endif %}
 
         <form action="/add-concert">
+          <input type="hidden" class="songkick-id" value="{{ concert.songkick_id }}">
+          <input type="hidden" class="artist" value="{{ concert.artist }}">
+          <input type="hidden" class="songkick-url" value="{{ concert.songkick_url }}">
+          <input type="hidden" class="spotify-id" value="{{ concert.spotify_id }}">
+          <input type="hidden" class="venue" value="{{ concert.venue }}">
+          <input type="hidden" class="city" value="{{ concert.city }}">
+          <input type="hidden" class="start-datetime" value="{{ concert.start_datetime }}">
+
           <input type="submit" class="add-concert" value="Add this concert">
         </form>
-        
+
         <br>
 
       </div>
