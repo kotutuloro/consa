@@ -99,7 +99,7 @@ class Concert(db.Model):
         venue = form.get('venue')
         city = form.get('city')
         start_datetime = form.get('start-datetime')
-        display_name = form.get('display_name')
+        display_name = form.get('display-name')
 
         # Create new concert object from data
         new_concert = cls(songkick_id=songkick_id,
