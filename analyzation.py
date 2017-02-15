@@ -28,6 +28,7 @@ def get_concert_recs(spotify, location="sk:26330"):
     print "Time to get {} related artists: {}".format(len(related_artists_dict), rel_time - top_time)
     print "Finding concerts"
 
+    # Get concerts for related artists and sort by datetime
     concert_recs_list = find_songkick_concerts(related_artists_dict, location)
     concert_recs_list.sort(cmp=lambda x, y: cmp(x['start_datetime'], y['start_datetime']))
 
@@ -138,3 +139,43 @@ def find_songkick_concerts(related_artists_dict, location):
             print "Failed: {}".format(artist)
 
     return concert_recs_list
+
+
+def find_songkick_locations(search_term):
+    """Return list of Songkick metro areas matching search term
+
+    Makes a GET request to Songkick API for location data using the term.
+    """
+
+    # Make GET request to Songkick API for location
+    payload = {
+        'query': search_term,
+        'apikey': os.getenv('SONGKICK_KEY'),
+    }
+    loc_response = requests.get("http://api.songkick.com/api/3.0/search/locations.json",
+                                payload)
+
+    # Create empty list of metro areas
+    metros = []
+
+    # If request is successful, get results from the response
+    if loc_response.ok:
+        results = loc_response.json()['resultsPage']['results']
+
+        # If the results are not empty, create empty list of metro ids
+        if results:
+            metro_id_list = []
+
+            # Iterate over each location in results
+            for loc in results['location']:
+                metro = loc['metroArea']
+
+                # If metro area has not already been added to list of metros
+                if metro['id'] not in metro_id_list:
+
+                    # Add metro area to list
+                    metros.append(metro)
+                    metro_id_list.append(metro['id'])
+
+    # Return list of metro areas for each location in results
+    return metros

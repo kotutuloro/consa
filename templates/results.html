@@ -41,7 +41,7 @@
             <br>
           {% endif %}
 
-          <form action="/add-concert">
+          <form action="/add-concert" method="POST">
             <input type="hidden" class="songkick-id" value="{{ concert.songkick_id }}">
             <input type="hidden" class="artist" value="{{ concert.artist }}">
             <input type="hidden" class="display-name" value="{{ concert.display_name }}">
@@ -69,7 +69,14 @@
 
 {% block js %}
   <script>
-    $("input.add-concert").on("click", addConcert);
-    $("input.remove-concert").on("click", removeConcert);
+    // If user logged in, addConcert on button click
+    {% if session.get('user_id') %}
+      $("input.add-concert").on("click", addConcert);
+
+    // If user not logged in, disable button
+    {% else %}
+      $("input.add-concert").prop("disabled", true).val("Log in to save this concert");
+    {% endif %}
+
   </script>
 {% endblock %}
