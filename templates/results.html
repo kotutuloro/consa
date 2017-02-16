@@ -8,7 +8,8 @@
   <h1>Results</h1>
 
   <div id="results-loading">
-    <h1>LOADING...</h1>
+    <h2>LOADING...</h2>
+    This may take a minute
   </div>
 
   <div id="concert-results" hidden>
@@ -96,8 +97,14 @@
       var start;
       // Set start date/time if available
       if (concert.start_datetime) {
-        start = concert.start_datetime + "<br>";
+        // Format start date/time with JS and moment.js
+        var startISO = new Date(concert.start_datetime).toISOString();
+        var startMoment = moment(startISO).utc();
+        var formattedStart = startMoment.format("ddd MMM DD, Y [at] LT")
+
+        start = formattedStart + "<br>";
       }
+
 
       var url;
       // Set songkick url if available
@@ -113,7 +120,7 @@
       var addForm = createAddConcertForm(concert);
 
       // Add all elements to concertDiv and return the div
-      concertDiv.append(artist, displayName, location, start, url, addForm);
+      concertDiv.append(artist, displayName, location, start, url, addForm, "<br>");
       return concertDiv;
     }
 

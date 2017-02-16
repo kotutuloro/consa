@@ -24,11 +24,10 @@
       evt.preventDefault();
 
       // Create fieldset for locations
-      var locSelection = '\
-        <fieldset id="loc-selection">\
-          <legend>Choose your area:</legend>\
-          <div id="loc-loading">Loading...</div>\
-        </fieldset>';
+      var locSelection = $("<fieldset>").attr("id", "loc-selection");
+      var legend = $("<legend>").text("Choose your area:");
+      var loadingDiv = $("<div>").attr("id", "loc-loading").text("Loading...")
+      locSelection.append(legend, loadingDiv);
 
       // Remove the previous fieldset and append new fieldset to form
       $("#loc-selection").remove();
