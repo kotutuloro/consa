@@ -126,7 +126,7 @@ class Concert(db.Model):
 
     def __repr__(self):
         return ("<Concert songkick_id={} display_name={}>"
-                .format(self.songkick_id, self.display_name))
+                .format(self.songkick_id, self.display_name.encode('utf-8')))
 
 
 class UserConcert(db.Model):

@@ -223,7 +223,21 @@ def return_results_page():
     # Get authorization code from Spotify
     auth_code = request.args.get('code')
 
-    return render_template('results.html', auth_code=auth_code)
+    # Get logged in user's user_id
+    current_user_id = session.get('user_id')
+
+    # Create list of user's saved concert's songkick ids if logged in
+    if current_user_id:
+        current_user = User.query.get(current_user_id)
+        user_saved_concerts = [concert.songkick_id for concert in current_user.concerts]
+
+    # Set to empty list if not logged in
+    else:
+        user_saved_concerts = []
+
+    return render_template('results.html',
+                           auth_code=auth_code,
+                           user_saved_concerts=user_saved_concerts)
 
 
 @app.route('/recs')

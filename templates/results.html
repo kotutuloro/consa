@@ -24,6 +24,14 @@
 
 {% block js %}
   <script>
+    // Get variables with server
+    var userSavedConcerts = {{ user_saved_concerts }};
+    var authCode = "{{ auth_code }}";
+
+    // Make GET request to server and display recommended concerts
+    $.get('/recs', {'auth-code': authCode}, displayRecs);
+
+
     // Display concert recommendations from Songkick
     function displayRecs(recList) {
       // Hide loading div
@@ -106,7 +114,6 @@
         start = formattedStart + "<br>";
       }
 
-
       var url;
       // Set songkick url if available
       if (concert.songkick_url) {
@@ -160,18 +167,15 @@
       var submit = $("<input>").attr("type", "submit");
       submit.addClass("add-concert").val("Add this concert");
 
+      // Disable submit button if concert in user's saved concerts
+      if ( userSavedConcerts.includes( parseInt( songkickID.val() ) ) ) {
+        submit.prop("disabled", true).val("Concert previously saved");
+      }
+
       // Add all inputs to form and return it
       addForm.append(songkickID, artist, displayName, songkickURL, spotifyID, venue, city, start, submit);
       return addForm;
     }
-
-
-
-    // Get spotify auth code from server
-    var authCode = "{{ auth_code }}";
-
-    // Make GET request to server and display recommended concerts
-    $.get('/recs', {'auth-code': authCode}, displayRecs);
 
   </script>
 {% endblock %}
