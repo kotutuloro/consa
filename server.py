@@ -217,7 +217,17 @@ def request_authorization():
 
 
 @app.route('/callback')
-def return_results():
+def return_results_page():
+    """Display results page with auth code from Spotify"""
+
+    # Get authorization code from Spotify
+    auth_code = request.args.get('code')
+
+    return render_template('results.html', auth_code=auth_code)
+
+
+@app.route('/recs')
+def return_recommendations():
     """Connects to Spotify API and displays results of API call
 
     Gets the Spotify access token if possible
@@ -225,18 +235,17 @@ def return_results():
     Otherwise, returns results page
     """
 
-    # Get authorization code from Spotify
-    auth_code = request.args.get('code')
+    # Get auth code from callback
+    auth_code = request.args.get('auth-code')
 
     # Exchange authorization code for access token
     try:
         token_info = SPOTIFY_OAUTH.get_access_token(auth_code)
         access_token = token_info.get('access_token')
 
-    # Flash error message & return home if getting access token fails
+    # Return error message if getting access token fails
     except SpotifyOauthError, error:
-        flash('Unable to authorize: ' + str(error))
-        return redirect('/')
+        return 'Unable to authorize: ' + str(error)
 
     # Create Spotify API object using access_token
     spotify = spotipy.Spotify(auth=access_token)
@@ -245,7 +254,7 @@ def return_results():
     locID = session.get('locID', 'sk:26330')
     concert_recs = get_concert_recs(spotify, locID)
 
-    return render_template('results.html', concert_recs=concert_recs)
+    return jsonify(concert_recs)
 
 
 if __name__ == '__main__':

@@ -1,82 +1,169 @@
 {% extends 'base.html' %}
 
 {% block subtitle %}
-  : Your Profile
+  : Concert Recommendations
 {% endblock %}
 
 {% block content %}
-
   <h1>Results</h1>
 
-  {% if concert_recs %}
+  <div id="results-loading">
+    <h1>LOADING...</h1>
+  </div>
+
+  <div id="concert-results" hidden>
     <h3>Concerts you might be interested in</h3>
+  </div>
 
-    <div id="concert-results">
-      {% for concert in concert_recs %}
-        <div class="saved-concert">
-
-          <b>{{ concert.artist }}</b> 
-          <br>
-          {{ concert.display_name }}
-          <br>
-
-          {% if concert.city %}
-            {% if concert.venue %}
-              {{ concert.venue }} in
-            {% endif %}
-
-            {{ concert.city }}
-            <br>
-          {% endif %}
-
-          {% if concert.start_datetime %}
-            {{ concert.start_datetime.strftime("%a %b %d, %Y at %-I:%M %p") }}
-            <br>
-          {% endif %}
-
-          {% if concert.songkick_url %}
-            <a href="{{ concert.songkick_url }}" target="_blank">
-              View this event on Songkick
-            </a>
-            <br>
-          {% endif %}
-
-          <form action="/add-concert" method="POST">
-            <input type="hidden" class="songkick-id" value="{{ concert.songkick_id }}">
-            <input type="hidden" class="artist" value="{{ concert.artist }}">
-            <input type="hidden" class="display-name" value="{{ concert.display_name }}">
-            <input type="hidden" class="songkick-url" value="{{ concert.songkick_url }}">
-            <input type="hidden" class="spotify-id" value="{{ concert.spotify_id }}">
-            <input type="hidden" class="venue" value="{{ concert.venue }}">
-            <input type="hidden" class="city" value="{{ concert.city }}">
-            <input type="hidden" class="start-datetime" value="{{ concert.start_datetime }}">
-
-            <input type="submit" class="add-concert" value="Add this concert">
-          </form>
-
-          <br>
-
-        </div>
-      {% endfor %}
-
-    </div>
-
-  {% else %}
-    <h3>We couldn't find any concerts based on your top artists in this area :(</h3>
-  {% endif %}
+  <div id="no-results" hidden>
+  </div>
 
 {% endblock %}
 
 {% block js %}
   <script>
-    // If user logged in, addConcert on button click
-    {% if session.get('user_id') %}
-      $("input.add-concert").on("click", addConcert);
+    // Display concert recommendations from Songkick
+    function displayRecs(recList) {
+      // Hide loading div
+      $("#results-loading").hide();
 
-    // If user not logged in, disable button
-    {% else %}
-      $("input.add-concert").prop("disabled", true).val("Log in to save this concert");
-    {% endif %}
+      // If error message returned, display that message
+      if (typeof recList == 'string') {
+        displayError(recList);
+
+      // If no results, display message informing user
+      } else if (recList.length === 0) {
+        displayError("We couldn't find any concerts based on your top artists in this area :(");
+
+      // If there are results, iterate through list of results
+      } else {
+        
+        // Create div for each concert and append to div#concert-results
+        for (var i = 0; i < recList.length; i++) {
+          var recDiv = createRecDiv(recList[i]);
+          $("#concert-results").append(recDiv);
+        }
+
+        // If user logged in, addConcert on button click
+        {% if session.get('user_id') %}
+          $("input.add-concert").on("click", addConcert);
+
+        // If user not logged in, disable button
+        {% else %}
+          $("input.add-concert").prop("disabled", true).val("Log in to save this concert");
+        {% endif %}
+
+        // Display the concert recommendations
+        $("#concert-results").show();
+      }
+    }
+
+
+    // Display message in div#no-results 
+    function displayError(error) {
+      // Create h3 tag with error message
+      var message = $("<h3>");
+      message.text(error);
+
+      // Add message to div#no-results and show the div
+      $("#no-results").append(message);
+      $("#no-results").show();
+    }
+
+
+    // Create a div.concert-rec for a concert object
+    function createRecDiv(concert) {
+      // Create a div with class concert-rec
+      var concertDiv = $("<div>").addClass("concert-rec");
+
+      // Set artist with bold tag 
+      var artist = $("<b>").text(concert.artist);
+
+      // Set display name with surrounding line breaks
+      var displayName = "<br>" + concert.display_name + "<br>";
+
+      var location;
+      // Set location to city if available
+      if (concert.city) {
+        location = concert.city + "<br>";
+
+        // Add concert venue to location if available
+        if (concert.venue) {
+          location = concert.venue + " in " + location;
+        }
+      }
+
+      var start;
+      // Set start date/time if available
+      if (concert.start_datetime) {
+        start = concert.start_datetime + "<br>";
+      }
+
+      var url;
+      // Set songkick url if available
+      if (concert.songkick_url) {
+        url = $("<a>").text("View this event on Songkick");
+        url.attr({
+          "href": concert.songkick_url,
+          "target": "_blank",
+        });
+      }
+
+      // Create a form for adding the concert
+      var addForm = createAddConcertForm(concert);
+
+      // Add all elements to concertDiv and return the div
+      concertDiv.append(artist, displayName, location, start, url, addForm);
+      return concertDiv;
+    }
+
+
+    // Create a hidden form for adding a concert
+    function createAddConcertForm(concert) {
+      // Create empty form
+      var addForm = $("<form>");
+
+      // Create hidden inputs for the concerts data
+      var songkickID = $("<input>").attr("type", "hidden");
+      songkickID.addClass("songkick-id").val(concert.songkick_id);
+
+      var artist = $("<input>").attr("type", "hidden");
+      artist.addClass("artist").val(concert.artist);
+
+      var displayName = $("<input>").attr("type", "hidden");
+      displayName.addClass("display-name").val(concert.display_name);
+
+      var songkickURL = $("<input>").attr("type", "hidden");
+      songkickURL.addClass("songkick-url").val(concert.songkick_url);
+
+      var spotifyID = $("<input>").attr("type", "hidden");
+      spotifyID.addClass("spotify-id").val(concert.spotify_id);
+
+      var venue = $("<input>").attr("type", "hidden");
+      venue.addClass("venue").val(concert.venue);
+
+      var city = $("<input>").attr("type", "hidden");
+      city.addClass("city").val(concert.city);
+
+      var start = $("<input>").attr("type", "hidden");
+      start.addClass("start-datetime").val(concert.start_datetime);
+
+      // Create submit button
+      var submit = $("<input>").attr("type", "submit");
+      submit.addClass("add-concert").val("Add this concert");
+
+      // Add all inputs to form and return it
+      addForm.append(songkickID, artist, displayName, songkickURL, spotifyID, venue, city, start, submit);
+      return addForm;
+    }
+
+
+
+    // Get spotify auth code from server
+    var authCode = "{{ auth_code }}";
+
+    // Make GET request to server and display recommended concerts
+    $.get('/recs', {'auth-code': authCode}, displayRecs);
 
   </script>
 {% endblock %}

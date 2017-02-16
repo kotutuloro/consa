@@ -27,6 +27,7 @@
       var locSelection = '\
         <fieldset id="loc-selection">\
           <legend>Choose your area:</legend>\
+          <div id="loc-loading">Loading...</div>\
         </fieldset>';
 
       // Remove the previous fieldset and append new fieldset to form
@@ -41,6 +42,9 @@
 
     // Display locations from JSON response from Songkick API
     function displayLocs(locations) {
+      // Remove loading notification
+      $("#loc-loading").remove();
+
       // If locations found
       if (locations) {
 
