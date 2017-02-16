@@ -8,7 +8,8 @@
   <h1>Results</h1>
 
   <div id="results-loading">
-    <h2>LOADING...</h2>
+    <h2>FINDING CONCERTS...</h2>
+    <img src="/static/img/load-hourglass.gif"><br>
     This may take a minute
   </div>
 
@@ -26,7 +27,7 @@
     // Display concert recommendations from Songkick
     function displayRecs(recList) {
       // Hide loading div
-      $("#results-loading").hide();
+      $("#results-loading").slideUp();
 
       // If error message returned, display that message
       if (typeof recList == 'string') {
@@ -55,7 +56,7 @@
         {% endif %}
 
         // Display the concert recommendations
-        $("#concert-results").show();
+        $("#concert-results").slideDown();
       }
     }
 
@@ -68,7 +69,7 @@
 
       // Add message to div#no-results and show the div
       $("#no-results").append(message);
-      $("#no-results").show();
+      $("#no-results").fadeIn();
     }
 
 

@@ -24,14 +24,19 @@
       evt.preventDefault();
 
       // Create fieldset for locations
-      var locSelection = $("<fieldset>").attr("id", "loc-selection");
+      var locFieldset = $("<fieldset>").attr("id", "loc-selection").hide();
       var legend = $("<legend>").text("Choose your area:");
+
       var loadingDiv = $("<div>").attr("id", "loc-loading").text("Loading...")
-      locSelection.append(legend, loadingDiv);
+      var loadingImg = $("<img>").attr("src", "/static/img/load-gps.gif");
+      loadingDiv.append(loadingImg);
+
+      locFieldset.append(legend, loadingDiv);
 
       // Remove the previous fieldset and append new fieldset to form
       $("#loc-selection").remove();
-      $("#loc-search-form").append(locSelection);
+      $("#loc-search-form").append(locFieldset);
+      locFieldset.slideDown();
 
       // Make GET request to server and display locations
       var searchTerm = $("#location-input").val();
@@ -42,7 +47,7 @@
     // Display locations from JSON response from Songkick API
     function displayLocs(locations) {
       // Remove loading notification
-      $("#loc-loading").remove();
+      $("#loc-loading").slideUp();
 
       // If locations found
       if (locations) {

@@ -49,7 +49,7 @@ function removeConcert(evt){
         $.post("/remove-concert", formInputs, function(data) {
             // If the removal is successful, remove the concert's div
             if (data == "True") {
-                thisDiv.hide();
+                thisDiv.slideUp();
             } else {
                 // Alert user if unsuccessful
                 alert('Cannot remove this concert at this time.');
