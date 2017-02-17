@@ -24,16 +24,22 @@
 
 {% block js %}
   <script>
-    // Get variables with server
+    // Get variables from server
     var userSavedConcerts = {{ user_saved_concerts }};
     var authCode = "{{ auth_code }}";
+
+    // Declare variables to keep track of end of get requests 
+    var resultCount;
+    var expectedResults;
+    
+    // If user logged in, addConcert on button click
+    {% if session.get('user_id') %}
+      $("div#concert-results").on("click", "input.add-concert", addConcert);
+    {% endif %}
 
     // Make GET request to server and display recommended concerts
     $.get('/recs', {'auth-code': authCode}, findConcerts);
 
-    
-    var resultCount;
-    var expectedResults;
 
     // Make GET request to find concerts for each artist
     function findConcerts(artistRecs) {
@@ -57,7 +63,6 @@
           $.get('/concerts', payload, displayConcerts);
         }
       }
-
     }
 
 
@@ -76,15 +81,6 @@
         recDiv.slideDown();
       }
 
-      // If user logged in, addConcert on button click
-      {% if session.get('user_id') %}
-        $("input.add-concert").on("click", addConcert);
-
-      // If user not logged in, disable button
-      {% else %}
-        $("input.add-concert").prop("disabled", true).val("Log in to save this concert");
-      {% endif %}
-
       // If this is part of last GET request, remove loading gif div
       resultCount++;
       if (resultCount === expectedResults) {
@@ -92,12 +88,12 @@
         // If there were no results, remove results div and display message
         if ($(".concert-rec").length == 0){
           displayError("We couldn't find any concerts based on your top artists in this area :(");
+
+        // Otherwise, remove the loading div
         } else {
-          $("#results-loading").fadeOut();
-          
+          $("#results-loading").fadeOut(); 
         }
       }
-
     }
 
 
@@ -107,6 +103,7 @@
       var message = $("<h3>");
       message.text(error);
 
+      // Remove loading and results divs
       $("#results-loading").slideUp();
       $("#concert-results").slideUp();
 
@@ -200,12 +197,24 @@
 
       // Create submit button
       var submit = $("<input>").attr("type", "submit");
-      submit.addClass("add-concert").val("Add this concert");
+      submit.addClass("add-concert")
 
-      // Disable submit button if concert in user's saved concerts
-      if ( userSavedConcerts.includes( parseInt( songkickID.val() ) ) ) {
-        submit.prop("disabled", true).val("Concert previously saved");
-      }
+      // If user logged in
+      {% if session.get('user_id') %}
+
+        // Disable submit button if concert in user's saved concerts
+        if ( userSavedConcerts.includes( parseInt( songkickID.val() ) ) ) {
+          submit.prop("disabled", true).val("Concert previously saved");
+
+        // Enable submit button otherwise
+        } else {
+          submit.val("Add this concert");
+        }
+
+      // If user not logged in, disable submit button
+      {% else %}
+        submit.prop("disabled", true).val("Log in to save this concert");
+      {% endif %}
 
       // Add all inputs to form and return it
       addForm.append(songkickID, artist, displayName, songkickURL, spotifyID, venue, city, start, submit);
