@@ -31,6 +31,9 @@
     // Make GET request to server and display recommended concerts
     $.get('/recs', {'auth-code': authCode}, findConcerts);
 
+    
+    var resultCount;
+    var expectedResults;
 
     // Make GET request to find concerts for each artist
     function findConcerts(artistRecs) {
@@ -42,6 +45,10 @@
         // Display the concert recommendations
         $("#concert-results").slideDown();
       
+        // Initiate variables to keep track of end of get requests
+        resultCount = 0;
+        expectedResults = Object.keys(artistRecs).length;
+
         // Iterate throuh dictionary of recommended artists
         for (spotifyID in artistRecs) {
   
@@ -54,14 +61,12 @@
         }
       }
 
-      // Hide loading div
-      $("#results-loading").slideUp();
     }
 
 
     // Display concert recommendations from Songkick
     function displayConcerts(concertList) {
-      
+
       // Create div for each concert and append to div#concert-results
       for (var i = 0; i < concertList.length; i++) {
         var recDiv = createRecDiv(concertList[i]).hide();
@@ -77,6 +82,19 @@
       {% else %}
         $("input.add-concert").prop("disabled", true).val("Log in to save this concert");
       {% endif %}
+
+      // If this is part of last GET request, remove loading gif div
+      resultCount++;
+      if (resultCount === expectedResults) {
+        $("#results-loading").slideUp();
+
+        // If there were no results, remove results div and display message
+        if ($(".concert-rec").length == 0){
+          $("#concert-results").slideUp();
+          displayError("We couldn't find any concerts based on your top artists in this area :(");
+        }
+      }
+
     }
 
 

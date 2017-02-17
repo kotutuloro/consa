@@ -56,8 +56,6 @@ def find_songkick_concerts(spotify_id, artist, location="sk:26330"):
     # Create empty recommendation list
     concert_recs_list = []
 
-    start = datetime.now()
-
     # Make GET request to songkick API for this location & artist
     payload = {
         'apikey': songkick_key,
@@ -65,8 +63,6 @@ def find_songkick_concerts(spotify_id, artist, location="sk:26330"):
         'location': location,
     }
     event_response = requests.get("http://api.songkick.com/api/3.0/events.json", payload)
-
-    print datetime.now() - start
 
     # If request is successful
     if event_response.ok:
