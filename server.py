@@ -7,8 +7,8 @@ from spotipy.oauth2 import SpotifyOauthError
 from model import (User, Concert, db, connect_to_db)
 from spotify_oauth_tools import get_spotify_oauth
 
-
-from analyzation import (get_concert_recs, find_songkick_locations, find_songkick_concerts)
+from analyzation import (get_artist_recs)
+from songkick import (find_songkick_locations, find_songkick_concerts)
 
 
 app = Flask(__name__)
@@ -220,7 +220,7 @@ def request_authorization():
 
 @app.route('/callback')
 def return_results_page():
-    """Display results page with auth code from Spotify"""
+    """Display results page"""
 
     # Get authorization code from Spotify
     auth_code = request.args.get('code')
@@ -244,11 +244,11 @@ def return_results_page():
 
 @app.route('/recs')
 def return_recommendations():
-    """Connects to Spotify API and displays results of API call
+    """Connects to Spotify API and displays JSON dictionary of recommended artists
 
     Gets the Spotify access token if possible
-    Returns redirect to homepage if unsuccessful
-    Otherwise, returns results page
+    Returns error message if unsuccessful
+    Otherwise, returns (JSONified) dictionary of artist recommendations
     """
 
     # Get auth code from callback
@@ -267,14 +267,14 @@ def return_recommendations():
     spotify = spotipy.Spotify(auth=access_token)
 
     # Get dictionary of concert recommendations
-    artist_recs = get_concert_recs(spotify)
+    artist_recs = get_artist_recs(spotify)
 
     return jsonify(artist_recs)
 
 
 @app.route('/concerts')
 def return_concerts():
-    """"""
+    """Returns JSON list of concerts for an artist and location"""
 
     # Get artist's spotify ID and name from request
     spotify_id = request.args.get('spotify-id')
@@ -295,4 +295,4 @@ if __name__ == '__main__':
 
     DebugToolbarExtension(app)
 
-    app.run(host='0.0.0.0')
+    app.run(threaded=True, host='0.0.0.0')

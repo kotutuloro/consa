@@ -32,27 +32,25 @@
     $.get('/recs', {'auth-code': authCode}, findConcerts);
 
 
-    // 
+    // Make GET request to find concerts for each artist
     function findConcerts(artistRecs) {
-
       // If error message returned, display that message
       if (typeof artistRecs == 'string') {
         displayError(artistRecs);
 
-      // If no results, display message informing user
       } else {
         // Display the concert recommendations
         $("#concert-results").slideDown();
       
+        // Iterate throuh dictionary of recommended artists
         for (spotifyID in artistRecs) {
   
+          // Make GET request to server for each artist and display concerts
           payload = {
             'spotify-id': spotifyID,
             'artist': artistRecs[spotifyID]
           };
-  
-          $.get('/concerts', payload, displayRecs);
-  
+          $.get('/concerts', payload, displayConcerts);
         }
       }
 
@@ -60,15 +58,13 @@
       $("#results-loading").slideUp();
     }
 
+
     // Display concert recommendations from Songkick
-    function displayRecs(recList) {
-      // if (recList.length === 0) {
-      //   displayError("We couldn't find any concerts based on your top artists in this area :(");
-      // } 
-        
+    function displayConcerts(concertList) {
+      
       // Create div for each concert and append to div#concert-results
-      for (var i = 0; i < recList.length; i++) {
-        var recDiv = createRecDiv(recList[i]).hide();
+      for (var i = 0; i < concertList.length; i++) {
+        var recDiv = createRecDiv(concertList[i]).hide();
         $("#concert-results").append(recDiv);
         recDiv.slideDown();
       }
@@ -81,7 +77,6 @@
       {% else %}
         $("input.add-concert").prop("disabled", true).val("Log in to save this concert");
       {% endif %}
-      
     }
 
 
