@@ -1,4 +1,5 @@
 env/
 *.pyc
 secrets.sh
-test.py
+prep.sh
+test*.py

@@ -29,43 +29,59 @@
     var authCode = "{{ auth_code }}";
 
     // Make GET request to server and display recommended concerts
-    $.get('/recs', {'auth-code': authCode}, displayRecs);
+    $.get('/recs', {'auth-code': authCode}, findConcerts);
 
+
+    // 
+    function findConcerts(artistRecs) {
+
+      // If error message returned, display that message
+      if (typeof artistRecs == 'string') {
+        displayError(artistRecs);
+
+      // If no results, display message informing user
+      } else {
+        // Display the concert recommendations
+        $("#concert-results").slideDown();
+      
+        for (spotifyID in artistRecs) {
+  
+          payload = {
+            'spotify-id': spotifyID,
+            'artist': artistRecs[spotifyID]
+          };
+  
+          $.get('/concerts', payload, displayRecs);
+  
+        }
+      }
+
+      // Hide loading div
+      $("#results-loading").slideUp();
+    }
 
     // Display concert recommendations from Songkick
     function displayRecs(recList) {
-      // Hide loading div
-      $("#results-loading").slideUp();
-
-      // If error message returned, display that message
-      if (typeof recList == 'string') {
-        displayError(recList);
-
-      // If no results, display message informing user
-      } else if (recList.length === 0) {
-        displayError("We couldn't find any concerts based on your top artists in this area :(");
-
-      // If there are results, iterate through list of results
-      } else {
+      // if (recList.length === 0) {
+      //   displayError("We couldn't find any concerts based on your top artists in this area :(");
+      // } 
         
-        // Create div for each concert and append to div#concert-results
-        for (var i = 0; i < recList.length; i++) {
-          var recDiv = createRecDiv(recList[i]);
-          $("#concert-results").append(recDiv);
-        }
-
-        // If user logged in, addConcert on button click
-        {% if session.get('user_id') %}
-          $("input.add-concert").on("click", addConcert);
-
-        // If user not logged in, disable button
-        {% else %}
-          $("input.add-concert").prop("disabled", true).val("Log in to save this concert");
-        {% endif %}
-
-        // Display the concert recommendations
-        $("#concert-results").slideDown();
+      // Create div for each concert and append to div#concert-results
+      for (var i = 0; i < recList.length; i++) {
+        var recDiv = createRecDiv(recList[i]).hide();
+        $("#concert-results").append(recDiv);
+        recDiv.slideDown();
       }
+
+      // If user logged in, addConcert on button click
+      {% if session.get('user_id') %}
+        $("input.add-concert").on("click", addConcert);
+
+      // If user not logged in, disable button
+      {% else %}
+        $("input.add-concert").prop("disabled", true).val("Log in to save this concert");
+      {% endif %}
+      
     }
 
 

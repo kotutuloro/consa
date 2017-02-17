@@ -43,7 +43,7 @@ def find_songkick_locations(search_term):
     return metros
 
 
-def get_concert_recs(spotify, location="sk:26330"):
+def get_concert_recs(spotify):
     """Returns list of concert recommendation dictionaries using Spotify API object"""
 
     print "Retrieving top artists"
@@ -68,15 +68,7 @@ def get_concert_recs(spotify, location="sk:26330"):
     print "Time to get {} related artists: {}".format(len(related_artists_dict), rel_time - top_time)
     print "Finding concerts"
 
-    # Get concerts for related artists and sort by datetime
-    concert_recs_list = find_songkick_concerts(related_artists_dict, location)
-    concert_recs_list.sort(cmp=lambda x, y: cmp(x['start_datetime'], y['start_datetime']))
-
-    end = datetime.now()
-    print "Time to search for {} concerts: {}".format(len(related_artists_dict), end - rel_time)
-    print "Total time: {}".format(end - start)
-
-    return concert_recs_list
+    return related_artists_dict
 
 
 def parse_artist_response(artists_response):
@@ -111,7 +103,7 @@ def add_artists_to_dict(artists_response, original_dict):
         original_dict[artist_id] = artist_name
 
 
-def find_songkick_concerts(related_artists_dict, location):
+def find_songkick_concerts(spotify_id, artist, location="sk:26330"):
     """Takes dicitonary of related artists and returns a list of concert recommendation dictionaries
 
     Makes requests to the Songkick API for upcoming events based on artists
@@ -122,61 +114,59 @@ def find_songkick_concerts(related_artists_dict, location):
     # Create empty recommendation list
     concert_recs_list = []
 
-    # Iterate over items in dictionary
-    for spotify_id, artist in related_artists_dict.items():
-        start = datetime.now()
+    start = datetime.now()
 
-        # Make GET request to songkick API for this location & artist
-        payload = {
-            'apikey': songkick_key,
-            'artist_name': artist,
-            'location': location,
-        }
-        event_response = requests.get("http://api.songkick.com/api/3.0/events.json", payload)
+    # Make GET request to songkick API for this location & artist
+    payload = {
+        'apikey': songkick_key,
+        'artist_name': artist,
+        'location': location,
+    }
+    event_response = requests.get("http://api.songkick.com/api/3.0/events.json", payload)
 
-        print datetime.now() - start
+    print datetime.now() - start
 
-        # If request is successful
-        if event_response.ok:
+    # If request is successful
+    if event_response.ok:
 
-            # Get list of events from response
-            events = event_response.json()['resultsPage']['results'].get('event')
+        # Get list of events from response
+        events = event_response.json()['resultsPage']['results'].get('event')
 
-            # If event list not empty
-            if events:
+        # If event list not empty
+        if events:
 
-                # Iterate over event list
-                for event in events:
+            # Iterate over event list
+            for event in events:
 
-                    # Create dictionary of concert's information
-                    concert = {
-                        'display_name': event['displayName'],
-                        'songkick_id': event['id'],
-                        'songkick_url': event['uri'],
-                        'artist': artist,
-                        'spotify_id': spotify_id,
-                        'venue': event['venue']['displayName'],
-                        'city': event['location']['city'],
-                    }
+                # Create dictionary of concert's information
+                concert = {
+                    'display_name': event['displayName'],
+                    'songkick_id': event['id'],
+                    'songkick_url': event['uri'],
+                    'artist': artist,
+                    'spotify_id': spotify_id,
+                    'venue': event['venue']['displayName'],
+                    'city': event['location']['city'],
+                }
 
-                    # Find concert's start date & datetime
-                    start_datetime = event['start']['datetime']
-                    start_date = event['start']['date']
+                # Find concert's start date & datetime
+                start_datetime = event['start']['datetime']
+                start_date = event['start']['date']
 
-                    # Set concert dict's start_datetime as start_datetime, or start_date if datetime unavailable
-                    if start_datetime:
-                        concert['start_datetime'] = datetime.strptime(start_datetime[:-5],
-                                                                      "%Y-%m-%dT%H:%M:%S")
-                    elif start_date:
-                        concert['start_datetime'] = datetime.strptime(start_date,
-                                                                      "%Y-%m-%d")
+                # Set concert dict's start_datetime as start_datetime, or start_date if datetime unavailable
+                if start_datetime:
+                    concert['start_datetime'] = datetime.strptime(start_datetime[:-5],
+                                                                  "%Y-%m-%dT%H:%M:%S")
+                elif start_date:
+                    concert['start_datetime'] = datetime.strptime(start_date,
+                                                                  "%Y-%m-%d")
 
-                    # Add concert to recommendation list
-                    concert_recs_list.append(concert)
+                # Add concert to recommendation list
+                concert_recs_list.append(concert)
 
-        # If request unsuccessful, print error
-        else:
-            artist = artist.encode('utf-8')
-            print "Failed: {}".format(artist)
+    # If request unsuccessful, print error
+    else:
+        artist = artist.encode('utf-8')
+        print "Failed: {}".format(artist)
 
     return concert_recs_list

@@ -6,7 +6,9 @@ from spotipy.oauth2 import SpotifyOauthError
 
 from model import (User, Concert, db, connect_to_db)
 from spotify_oauth_tools import get_spotify_oauth
-from analyzation import (get_concert_recs, find_songkick_locations)
+
+
+from analyzation import (get_concert_recs, find_songkick_locations, find_songkick_concerts)
 
 
 app = Flask(__name__)
@@ -264,9 +266,24 @@ def return_recommendations():
     # Create Spotify API object using access_token
     spotify = spotipy.Spotify(auth=access_token)
 
+    # Get dictionary of concert recommendations
+    artist_recs = get_concert_recs(spotify)
+
+    return jsonify(artist_recs)
+
+
+@app.route('/concerts')
+def return_concerts():
+    """"""
+
+    # Get artist's spotify ID and name from request
+    spotify_id = request.args.get('spotify-id')
+    artist = request.args.get('artist')
+
     # Get concert recommendations using saved location (SF Bay as default)
     locID = session.get('locID', 'sk:26330')
-    concert_recs = get_concert_recs(spotify, locID)
+
+    concert_recs = find_songkick_concerts(spotify_id, artist, locID)
 
     return jsonify(concert_recs)
 
