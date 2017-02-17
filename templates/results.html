@@ -7,14 +7,14 @@
 {% block content %}
   <h1>Results</h1>
 
+  <div id="concert-results" hidden>
+    <h3>Concerts you might be interested in</h3>
+  </div>
+
   <div id="results-loading">
     <h2>FINDING CONCERTS...</h2>
     <img src="/static/img/load-hourglass.gif"><br>
     This may take a minute
-  </div>
-
-  <div id="concert-results" hidden>
-    <h3>Concerts you might be interested in</h3>
   </div>
 
   <div id="no-results" hidden>
@@ -42,9 +42,6 @@
         displayError(artistRecs);
 
       } else {
-        // Display the concert recommendations
-        $("#concert-results").slideDown();
-      
         // Initiate variables to keep track of end of get requests
         resultCount = 0;
         expectedResults = Object.keys(artistRecs).length;
@@ -67,8 +64,13 @@
     // Display concert recommendations from Songkick
     function displayConcerts(concertList) {
 
-      // Create div for each concert and append to div#concert-results
+      // Iterate through list of concerts
       for (var i = 0; i < concertList.length; i++) {
+
+        // Display the concert recommendations
+        $("#concert-results").slideDown();
+
+        // Create div for each concert and append to div#concert-results
         var recDiv = createRecDiv(concertList[i]).hide();
         $("#concert-results").append(recDiv);
         recDiv.slideDown();
@@ -86,12 +88,13 @@
       // If this is part of last GET request, remove loading gif div
       resultCount++;
       if (resultCount === expectedResults) {
-        $("#results-loading").slideUp();
 
         // If there were no results, remove results div and display message
         if ($(".concert-rec").length == 0){
-          $("#concert-results").slideUp();
           displayError("We couldn't find any concerts based on your top artists in this area :(");
+        } else {
+          $("#results-loading").fadeOut();
+          
         }
       }
 
@@ -103,6 +106,9 @@
       // Create h3 tag with error message
       var message = $("<h3>");
       message.text(error);
+
+      $("#results-loading").slideUp();
+      $("#concert-results").slideUp();
 
       // Add message to div#no-results and show the div
       $("#no-results").append(message);
