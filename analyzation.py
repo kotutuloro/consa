@@ -5,7 +5,7 @@ def get_artist_recs(spotify):
     """Returns dictionary of artist recommendations using Spotify API object"""
 
     # Get user's top artists
-    top_artists_response = spotify.current_user_top_artists(limit=5,
+    top_artists_response = spotify.current_user_top_artists(limit=10,
                                                             time_range='medium_term')
     top_artists_dict = parse_artist_response(top_artists_response)
 
