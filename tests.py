@@ -2,13 +2,16 @@ import unittest
 import sample_apis
 import songkick
 import analyzation
+import spotify_oauth_tools
+import spotipy
+import os
 
 
 class TestSongkick(unittest.TestCase):
 
     def test_san_francisco(self):
         SF_Metros = songkick.find_songkick_locations("San Francisco")
-        self.assertIs(type(SF_Metros), list)
+        self.assertIsInstance(SF_Metros, list)
         self.assertIn("SF Bay Area", SF_Metros[0]['displayName'])
 
     def test_nowhere(self):
@@ -16,7 +19,7 @@ class TestSongkick(unittest.TestCase):
 
     def test_concert(self):
         concerts = songkick.find_songkick_concerts('1234', 'clipping.')
-        self.assertIs(type(concerts), list)
+        self.assertIsInstance(concerts, list)
 
 
 class TestAnalyzation(unittest.TestCase):
@@ -31,24 +34,32 @@ class TestAnalyzation(unittest.TestCase):
         self.assertEqual(true_result, expected_result)
 
     def test_add_artists_to_dict(self):
-        sample_response_first = sample_apis.clipping_related_1
-
         true_result = {}
-        analyzation.add_artists_to_dict(sample_response_first, true_result)
+        analyzation.add_artists_to_dict(sample_apis.clipping_related_1, true_result)
 
         expected_result_first = {'6Jrxnp0JgqmeUX1veU591p': 'Santigold',
                                  '0S05AeePINj4CeTVMfysIu': 'Rye Rye'}
 
         self.assertEqual(true_result, expected_result_first)
 
-        sample_response_second = sample_apis.clipping_related_2
-        analyzation.add_artists_to_dict(sample_response_second, true_result)
+        analyzation.add_artists_to_dict(sample_apis.clipping_related_2, true_result)
 
         expected_result_second = {'6Jrxnp0JgqmeUX1veU591p': 'Santigold',
                                   '0S05AeePINj4CeTVMfysIu': 'Rye Rye',
                                   '134GdR5tUtxJrf8cpsfpyY': 'Elliphant'}
 
         self.assertEqual(true_result, expected_result_second)
+
+
+class TestSpotifyOauth(unittest.TestCase):
+
+    def test_get_spotify_oauth(self):
+        sp_oauth = spotify_oauth_tools.get_spotify_oauth()
+
+        self.assertIsInstance(sp_oauth, spotipy.oauth2.SpotifyOAuth)
+        self.assertIn('user-top-read', sp_oauth.scope)
+        self.assertEqual(sp_oauth.client_id, os.getenv('SPOTIPY_CLIENT_ID'))
+        self.assertEqual(sp_oauth.client_secret, os.getenv('SPOTIPY_CLIENT_SECRET'))
 
 
 if __name__ == "__main__":
