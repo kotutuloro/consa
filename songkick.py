@@ -4,6 +4,8 @@ import os
 import requests
 from datetime import datetime
 
+SONGKICK_API_URL = "http://api.songkick.com/api/3.0"
+
 
 def find_songkick_locations(search_term):
     """Return list of Songkick metro areas matching search term
@@ -16,7 +18,7 @@ def find_songkick_locations(search_term):
         'query': search_term,
         'apikey': os.getenv('SONGKICK_KEY'),
     }
-    loc_response = requests.get("http://api.songkick.com/api/3.0/search/locations.json",
+    loc_response = requests.get(SONGKICK_API_URL + "/search/locations.json",
                                 payload)
 
     # Create empty list of metro areas
@@ -62,7 +64,7 @@ def find_songkick_concerts(spotify_id, artist, location="sk:26330"):
         'artist_name': artist,
         'location': location,
     }
-    event_response = requests.get("http://api.songkick.com/api/3.0/events.json", payload)
+    event_response = requests.get(SONGKICK_API_URL + "/events.json", payload)
 
     # If request is successful
     if event_response.ok:
@@ -87,16 +89,12 @@ def find_songkick_concerts(spotify_id, artist, location="sk:26330"):
                     'city': event['location']['city'],
                 }
 
-                # Find concert's start date & datetime
-                start_datetime = event['start']['datetime']
-                start_date = event['start']['date']
-
-                # Set concert dict's start_datetime as start_datetime, or start_date if datetime unavailable
-                if start_datetime:
-                    concert['start_datetime'] = datetime.strptime(start_datetime[:-5],
+                # Set concert dict's start_datetime as datetime, or date if datetime unavailable
+                if event['start']['datetime']:
+                    concert['start_datetime'] = datetime.strptime(event['start']['datetime'][:-5],
                                                                   "%Y-%m-%dT%H:%M:%S")
-                elif start_date:
-                    concert['start_datetime'] = datetime.strptime(start_date,
+                elif event['start']['date']:
+                    concert['start_datetime'] = datetime.strptime(event['start']['date'],
                                                                   "%Y-%m-%d")
 
                 # Add concert to recommendation list
