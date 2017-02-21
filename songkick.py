@@ -103,7 +103,7 @@ def find_songkick_concerts(spotify_id, artist, location="sk:26330"):
                 concert_recs_list.append(concert)
 
     # If request unsuccessful, print error
-    else:
+    else:      # pragma: no cover
         artist = artist.encode('utf-8')
         print "Failed: {}".format(artist)
 

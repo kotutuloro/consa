@@ -61,12 +61,12 @@ class User(db.Model):
             return True
 
         # Rollback transaction and return False if not successful
-        except Exception, msg:
+        except Exception, msg:      # pragma: no cover
             db.session.rollback()
             print msg
             return False
 
-    def __repr__(self):
+    def __repr__(self):     # pragma: no cover
         return ("<User user_id={} email={}>"
                 .format(self.user_id, self.email))
 
@@ -124,7 +124,7 @@ class Concert(db.Model):
             print msg
             return False
 
-    def __repr__(self):
+    def __repr__(self):     # pragma: no cover
         return ("<Concert songkick_id={} display_name={}>"
                 .format(self.songkick_id, self.display_name.encode('utf-8')))
 
@@ -144,7 +144,7 @@ class UserConcert(db.Model):
                             db.ForeignKey('concerts.songkick_id'),
                             nullable=False)
 
-    def __repr__(self):
+    def __repr__(self):     # pragma: no cover
         return ("<UserConcert user_id={} songkick_id={}>"
                 .format(self.user_id, self.songkick_id))
 
@@ -152,17 +152,44 @@ class UserConcert(db.Model):
 ##############################################################################
 # Helper functions
 
+def example_data():
+    u1 = User(email='test@test.ts', password='testtesttest')
+    u2 = User(email='kiko@creat.er', password='kikokikokiko')
+    u3 = User(email='no@one', password='noone')
 
-def connect_to_db(app):
+    c1 = Concert(songkick_id=1,
+                 artist='clipping.',
+                 venue='Brick & Mortar',
+                 city='San Francisco, CA',
+                 display_name='clipping. & Baseck')
+    c2 = Concert(songkick_id=2,
+                 artist='Cakes Da Killa',
+                 venue='The New Parish',
+                 city='Oakland, CA',
+                 display_name='Mykki Blanco & Cakes Da Killa',
+                 songkick_url='https://www.songkick.com/concerts/28832389-mykki-blanco-at-new-parish',
+                 start_datetime='2017-03-03 20:00')
+
+    db.session.add_all([u1, u2, u3, c1, c2])
+    db.session.commit()
+
+    a1 = UserConcert(user_id=1, songkick_id=1)
+    a2 = UserConcert(user_id=2, songkick_id=2)
+
+    db.session.add_all([a1, a2])
+    db.session.commit()
+
+
+def connect_to_db(app, db_uri='postgresql:///consa'):
     """Connect the database to our Flask app."""
 
     # Configure to use our PostgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///consa'
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     db.app = app
     db.init_app(app)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":      # pragma: no cover
     # If this module is run interactively, it will still be
     # able to work with the database directly.
 
