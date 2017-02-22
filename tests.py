@@ -1,13 +1,15 @@
 import unittest
+from datetime import datetime
+import spotipy
+import os
+from flask import session
+
 import sample_apis
 import songkick
 import analyzation
 import spotify_oauth_tools
-import spotipy
-import os
 import model
-from datetime import datetime
-from server import app
+import server
 
 
 class TestSongkick(unittest.TestCase):
@@ -51,7 +53,7 @@ class TestSpotifyOauth(unittest.TestCase):
 class TestModel(unittest.TestCase):
 
     def setUp(self):
-        model.connect_to_db(app, "postgresql:///testconsa")
+        model.connect_to_db(server.app, "postgresql:///testconsa")
         model.db.create_all()
         model.example_data()
 
@@ -124,6 +126,104 @@ class TestModel(unittest.TestCase):
         assoc = model.UserConcert.query.first()
         self.assertEqual(assoc.user_id, 1)
         self.assertEqual(assoc.songkick_id, 1)
+
+
+class TestServer(unittest.TestCase):
+
+    def setUp(self):
+        server.app.config['TESTING'] = True
+        self.client = server.app.test_client()
+
+        model.connect_to_db(server.app, "postgresql:///testconsa")
+        model.db.create_all()
+        model.example_data()
+
+    def tearDown(self):
+        model.db.session.close()
+        model.db.drop_all()
+
+    def test_homepage(self):
+        result = self.client.get('/')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn('Consa', result.data)
+
+        self.assertIn('Location', result.data)
+        self.assertIn('<form id="spotify-auth-form">', result.data)
+        self.assertIn('Authorize your Spotify account', result.data)
+
+        self.assertIn('Register', result.data)
+        self.assertIn('Login', result.data)
+        self.assertNotIn('My Profile', result.data)
+        self.assertNotIn('Logout', result.data)
+
+    def test_display_login_form(self):
+        result = self.client.get('/login')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(': Login', result.data)
+
+        self.assertIn('<form action="/login" method="POST">', result.data)
+        self.assertIn('Email', result.data)
+        self.assertIn('Password', result.data)
+        self.assertNotIn('already logged in', result.data)
+
+    def test_log_out(self):
+        result = self.client.get('/logout', follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+
+        self.assertNotIn('Logged out', result.data)
+        self.assertIn('No user currently logged in.', result.data)
+        self.assertIn('Authorize your Spotify account', result.data)
+
+
+class TestServerLoggedIn(unittest.TestCase):
+
+    def setUp(self):
+        server.app.config['TESTING'] = True
+        server.app.config['SECRET_KEY'] = 'key'
+        self.client = server.app.test_client()
+
+        with self.client.session_transaction() as sess:
+            sess['user_id'] = 1
+
+        model.connect_to_db(server.app, "postgresql:///testconsa")
+        model.db.create_all()
+        model.example_data()
+
+    def tearDown(self):
+        model.db.session.close()
+        model.db.drop_all()
+
+    def test_homepage(self):
+        result = self.client.get('/')
+        self.assertEqual(result.status_code, 200)
+
+        self.assertIn('My Profile', result.data)
+        self.assertIn('Logout', result.data)
+        self.assertNotIn('Register', result.data)
+        self.assertNotIn('Login', result.data)
+
+    def test_display_login_form(self):
+        result = self.client.get('/login', follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+        self.assertNotIn(': Login', result.data)
+
+        self.assertNotIn('<form action="/login" method="POST">', result.data)
+        self.assertIn('already logged in', result.data)
+        self.assertIn('Authorize your Spotify account', result.data)
+
+    def test_log_out(self):
+        result = self.client.get('/logout', follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+        # self.assertIsNone(session.get('user_id'))
+
+        self.assertIn('Logged out', result.data)
+        self.assertNotIn('No user currently logged in.', result.data)
+        self.assertIn('Authorize your Spotify account', result.data)
+
+        self.assertIn('Register', result.data)
+        self.assertIn('Login', result.data)
+        self.assertNotIn('My Profile', result.data)
+        self.assertNotIn('Logout', result.data)
 
 
 if __name__ == "__main__":

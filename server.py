@@ -1,14 +1,14 @@
-from flask import (Flask, render_template, flash, redirect, request, session, jsonify)
+from flask import Flask, render_template, flash, redirect, request, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 
 import spotipy
 from spotipy.oauth2 import SpotifyOauthError
 
-from model import (User, Concert, db, connect_to_db)
+from model import User, Concert, db, connect_to_db
 from spotify_oauth_tools import get_spotify_oauth
 
-from analyzation import (get_artist_recs)
-from songkick import (find_songkick_locations, find_songkick_concerts)
+from analyzation import get_artist_recs
+from songkick import find_songkick_locations, find_songkick_concerts
 
 
 app = Flask(__name__)
