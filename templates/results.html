@@ -140,7 +140,7 @@
       // Set start date/time if available
       if (concert.start_datetime) {
         // Format start date/time with JS and moment.js
-        var startISO = new Date(concert.start_datetime).toISOString();
+        var startISO = new Date(concert.start_datetime);
         var startMoment = moment(startISO).utc();
         var formattedStart = startMoment.format("ddd MMM DD, Y [at] LT")
 

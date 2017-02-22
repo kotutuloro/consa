@@ -2,7 +2,7 @@
 
 import os
 import requests
-from datetime import datetime
+from dateutil import parser
 
 SONGKICK_API_URL = "http://api.songkick.com/api/3.0"
 
@@ -91,11 +91,9 @@ def find_songkick_concerts(spotify_id, artist, location="sk:26330"):
 
                 # Set concert dict's start_datetime as datetime, or date if datetime unavailable
                 if event['start']['datetime']:
-                    concert['start_datetime'] = datetime.strptime(event['start']['datetime'][:-5],
-                                                                  "%Y-%m-%dT%H:%M:%S")
+                    concert['start_datetime'] = parser.parse(event['start']['datetime'])
                 elif event['start']['date']:
-                    concert['start_datetime'] = datetime.strptime(event['start']['date'],
-                                                                  "%Y-%m-%d")
+                    concert['start_datetime'] = parser.parse(event['start']['date'])
 
                 # Add concert to recommendation list
                 concert_recs_list.append(concert)
