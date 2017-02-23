@@ -288,7 +288,7 @@ def return_concerts():
     return jsonify(concert_recs)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     app.debug = True
 
     connect_to_db(app)

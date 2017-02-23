@@ -165,19 +165,19 @@ class TestServer(unittest.TestCase):
         self.assertIn('Password', result.data)
         self.assertNotIn('already logged in', result.data)
 
-    def log_in(self):
+    def test_log_in(self):
         result = self.client.post('/login',
-                                  data={'email': 'test@test.ts', 'password': 'testtesttest'},
+                                  data={'email': 'teST@tEst.ts', 'password': 'testtesttest'},
                                   follow_redirects=True)
         self.assertEqual(result.status_code, 200)
 
-        self.assertIn('<h1>Your Profile</h1>', result.data)
+        self.assertIn('<h1>Your profile</h1>', result.data)
         self.assertIn('Email: test@test.ts', result.data)
         self.assertIn('Login successful', result.data)
         self.assertNotIn('Invalid username or password', result.data)
         # FIXME: self.assertEqual(session.get('user_id'), 1)
 
-    def log_in_fail(self):
+    def test_log_in_fail(self):
         result = self.client.post('/login',
                                   data={'email': 'test@test.ts', 'password': 'wrong'},
                                   follow_redirects=True)
@@ -185,7 +185,7 @@ class TestServer(unittest.TestCase):
 
         self.assertIn('<form action="/login" method="POST">', result.data)
         self.assertIn('Invalid username or password', result.data)
-        self.assertNotIn('<h1>Your Profile</h1>', result.data)
+        self.assertNotIn('<h1>Your profile</h1>', result.data)
         self.assertNotIn('Login successful', result.data)
 
     def test_log_out(self):
@@ -236,6 +236,39 @@ class TestServer(unittest.TestCase):
         self.assertIn('<form action="/login" method="POST">', result.data)
         self.assertIn('must be logged in', result.data)
         self.assertNotIn('<h1>Your profile</h1>', result.data)
+
+    def test_results_page(self):
+        result = self.client.get('/callback?code=AbCdEf')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(': Concert Recommendations', result.data)
+
+        self.assertIn('authCode = "AbCdEf"', result.data)
+        self.assertIn('<h2>FINDING CONCERTS...</h2>', result.data)
+        self.assertIn('<div id="concert-results" hidden>', result.data)
+
+    def test_location_matches(self):
+        result = self.client.get('/location-search?search-term=SanFrancisco,+TX')
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.data, '')
+
+        result = self.client.get('/location-search?search-term=Houston')
+        self.assertNotEqual(result.data, '')
+        self.assertIn('"displayName": "Houston"', result.data)
+        self.assertIn('"displayName": "TX"', result.data)
+
+    def test_request_authorization(self):
+        result = self.client.get('/spotify-auth')
+        self.assertEqual(result.status_code, 200)
+
+        client_id = os.getenv('SPOTIPY_CLIENT_ID')
+        self.assertIn(client_id, result.data)
+        self.assertIn('user-top-read', result.data)
+        self.assertIn('accounts.spotify.com', result.data)
+
+    def test_concerts(self):
+        result = self.client.get('/concerts?spotify-id=123&artist=clipping')
+        self.assertEqual(result.status_code, 200)
+        self.assertIsNotNone(result.data)
 
 
 class TestServerLoggedIn(unittest.TestCase):
@@ -335,6 +368,10 @@ class TestServerLoggedIn(unittest.TestCase):
         self.assertEqual(success.status_code, 200)
         self.assertEqual(success.data, 'True')
 
+        success = self.client.post('/add-concert', data=success_form)
+        self.assertEqual(success.status_code, 200)
+        self.assertEqual(success.data, 'True')
+
         user = model.User.query.get(2)
         self.assertEqual(user.concerts[1].artist, 'Princess Nokia')
 
@@ -350,6 +387,13 @@ class TestServerLoggedIn(unittest.TestCase):
 
         user = model.User.query.get(2)
         self.assertEqual(user.concerts, [])
+
+    def test_recommendations(self):
+        result = self.client.get('/recs?code=AbCdEf')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn('Unable to authorize', result.data)
+
+
 
 
 if __name__ == "__main__":
