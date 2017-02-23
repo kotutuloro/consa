@@ -325,6 +325,32 @@ class TestServerLoggedIn(unittest.TestCase):
         self.assertNotIn('<h3>Your saved concerts</h3>', result.data)
         self.assertIn('<h3>You have no saved concerts</h3>', result.data)
 
+    def test_add_saved_concert(self):
+        success_form = {'songkick-id': u'3',
+                        'artist': u'Princess Nokia',
+                        'venue': u'Starline Social Club',
+                        'city': u'Oakland, CA',
+                        'start-datetime': u'Sat, 06 May 2017 21:00:00 GMT'}
+        success = self.client.post('/add-concert', data=success_form)
+        self.assertEqual(success.status_code, 200)
+        self.assertEqual(success.data, 'True')
+
+        user = model.User.query.get(2)
+        self.assertEqual(user.concerts[1].artist, 'Princess Nokia')
+
+        failure_form = {'songkick-id': u'99'}
+        failure = self.client.post('/add-concert', data=failure_form)
+        self.assertEqual(failure.status_code, 200)
+        self.assertEqual(failure.data, 'False')
+
+    def test_remove_saved_concert(self):
+        result = self.client.post('/remove-concert', data={'songkick-id': '2'})
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.data, 'True')
+
+        user = model.User.query.get(2)
+        self.assertEqual(user.concerts, [])
+
 
 if __name__ == "__main__":
     unittest.main()
