@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime
 import spotipy
 import os
-from flask import session
+# from flask import session
 
 import sample_apis
 import songkick
@@ -28,6 +28,12 @@ class TestSongkick(unittest.TestCase):
 
 
 class TestAnalyzation(unittest.TestCase):
+
+    def test_get_artist_recs(self):
+        top_artist = {'6Tyzp9KzpiZ04DABQoedps': 'Little Dragon'}
+        result = analyzation.get_artist_recs(top_artist)
+        self.assertIsInstance(result, dict)
+        self.assertNotEqual(len(result), 0)
 
     def test_parse_artist_response(self):
         sample_response = sample_apis.top_artists['items']
@@ -148,7 +154,14 @@ class TestServer(unittest.TestCase):
 
         self.assertIn('Location', result.data)
         self.assertIn('<form id="spotify-auth-form">', result.data)
-        self.assertIn('Authorize your Spotify account', result.data)
+        self.assertIn('Use your Spotify account', result.data)
+
+        self.assertIn('<div id="spotify-artist-search" hidden>', result.data)
+        self.assertIn('Selected artists', result.data)
+
+    def test_nav_bar(self):
+        result = self.client.get('/')
+        self.assertEqual(result.status_code, 200)
 
         self.assertIn('Register', result.data)
         self.assertIn('Login', result.data)
@@ -237,12 +250,21 @@ class TestServer(unittest.TestCase):
         self.assertIn('must be logged in', result.data)
         self.assertNotIn('<h1>Your profile</h1>', result.data)
 
-    def test_results_page(self):
+    def test_callback_results_page(self):
         result = self.client.get('/callback?code=AbCdEf')
         self.assertEqual(result.status_code, 200)
         self.assertIn(': Concert Recommendations', result.data)
 
         self.assertIn('authCode = "AbCdEf"', result.data)
+        self.assertIn('<h2>FINDING CONCERTS...</h2>', result.data)
+        self.assertIn('<div id="concert-results" hidden>', result.data)
+
+    def test_no_auth_results_page(self):
+        result = self.client.get('/no-auth-search')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(': Concert Recommendations', result.data)
+
+        self.assertIn('authCode = null', result.data)
         self.assertIn('<h2>FINDING CONCERTS...</h2>', result.data)
         self.assertIn('<div id="concert-results" hidden>', result.data)
 
@@ -256,6 +278,11 @@ class TestServer(unittest.TestCase):
         self.assertIn('"displayName": "Houston"', result.data)
         self.assertIn('"displayName": "TX"', result.data)
 
+    def test_artist_matches(self):
+        result = self.client.get('/artist-search?search-term=Run+The+Jewels')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn('Run The Jewels', result.data)
+
     def test_request_authorization(self):
         result = self.client.get('/spotify-auth')
         self.assertEqual(result.status_code, 200)
@@ -264,6 +291,16 @@ class TestServer(unittest.TestCase):
         self.assertIn(client_id, result.data)
         self.assertIn('user-top-read', result.data)
         self.assertIn('accounts.spotify.com', result.data)
+
+    def test_recommendations(self):
+        result = self.client.get('/recs?code=AbCdEf')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn('Unable to authorize', result.data)
+
+    def test_recs_from_search(self):
+        artists = {'5HJ2kX5UTwN4Ns8fB5Rn1I': 'clipping.'}
+        result = self.client.post('/recs-from-search', data=artists)
+        self.assertEqual(result.status_code, 200)
 
     def test_concerts(self):
         result = self.client.get('/concerts?spotify-id=123&artist=clipping')
@@ -289,7 +326,7 @@ class TestServerLoggedIn(unittest.TestCase):
         model.db.session.close()
         model.db.drop_all()
 
-    def test_homepage(self):
+    def test_nav_bar(self):
         result = self.client.get('/')
         self.assertEqual(result.status_code, 200)
 
@@ -387,13 +424,6 @@ class TestServerLoggedIn(unittest.TestCase):
 
         user = model.User.query.get(2)
         self.assertEqual(user.concerts, [])
-
-    def test_recommendations(self):
-        result = self.client.get('/recs?code=AbCdEf')
-        self.assertEqual(result.status_code, 200)
-        self.assertIn('Unable to authorize', result.data)
-
-
 
 
 if __name__ == "__main__":
