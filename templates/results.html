@@ -10,6 +10,12 @@
   <div id="concert-results" hidden>
     <h3>Concerts you might be interested in</h3>
     <img style="max-width: 200px" src="/static/img/powered-by-songkick-black.png">
+    <div id="sort-results" hidden>
+      Sort results by
+      <button class="sort-by-date">Date</button>
+      <button class="sort-by-artist">Artist</button>
+    </div>
+    <br>
   </div>
 
   <div id="results-loading">
@@ -37,6 +43,9 @@
     {% if session.get('user_id') %}
       $("div#concert-results").on("click", "input.add-concert", addConcert);
     {% endif %}
+
+    $("button.sort-by-date").on("click", sortConcerts);
+    $("button.sort-by-artist").on("click", sortConcerts);
 
     // Make GET request to server and display recommended concerts
     $.get('/recs', {'auth-code': authCode}, findConcerts);
@@ -93,6 +102,7 @@
         // Otherwise, remove the loading div
         } else {
           $("#results-loading").fadeOut(); 
+          $("#sort-results").slideDown();
         }
       }
     }

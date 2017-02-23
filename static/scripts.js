@@ -58,3 +58,60 @@ function removeConcert(evt){
 
     }
 }
+
+
+// Sort concert divs based on button pressed
+function sortConcerts(evt){
+    var evtButton = $(this);
+
+    // Get all concert divs and fade out
+    var concerts = $('.concert-rec');
+    concerts.fadeOut(function() {
+
+        // Sort divs based on which button triggered event
+        if (evtButton.hasClass('sort-by-date')) {
+            concerts.sort(sortByDate);
+        } else if (evtButton.hasClass('sort-by-artist')) {
+            concerts.sort(sortByArtist);
+        }
+
+        // Remove and reattach sorted divs and fade in
+        concerts.detach().appendTo($('#concert-results')).fadeIn();
+    });
+}
+
+
+// Sort results by concert's date
+function sortByDate(a, b){
+    a = $(a);
+    b = $(b);
+
+    // Get concert's date from its hidden form input as an ISO String
+    var aDate = new Date(a.find('input.start-datetime').val()).toISOString();
+    var bDate = new Date(b.find('input.start-datetime').val()).toISOString();
+
+    // Sort ascending
+    if (aDate > bDate) {
+        return 1;
+    } else {
+        return -1;
+    }
+}
+
+
+// Sort results by artist's name
+function sortByArtist(a, b){
+    a = $(a);
+    b = $(b);
+
+    // Get concert's date from its hidden form input as an ISO String
+    var aArtist = a.find('input.artist').val();
+    var bArtist = b.find('input.artist').val();
+
+    // Sort ascending
+    if (aArtist > bArtist) {
+        return 1;
+    } else {
+        return -1;
+    }
+}
