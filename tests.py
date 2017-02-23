@@ -98,7 +98,6 @@ class TestModel(unittest.TestCase):
 
         cakes = model.Concert.query.get(2)
         self.assertEqual(cakes.artist, 'Cakes Da Killa')
-        self.assertEqual(cakes.venue, 'The New Parish')
         self.assertIsInstance(cakes.start_datetime, datetime)
         self.assertEqual(2017, cakes.start_datetime.year)
 
@@ -166,6 +165,29 @@ class TestServer(unittest.TestCase):
         self.assertIn('Password', result.data)
         self.assertNotIn('already logged in', result.data)
 
+    def log_in(self):
+        result = self.client.post('/login',
+                                  data={'email': 'test@test.ts', 'password': 'testtesttest'},
+                                  follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+
+        self.assertIn('<h1>Your Profile</h1>', result.data)
+        self.assertIn('Email: test@test.ts', result.data)
+        self.assertIn('Login successful', result.data)
+        self.assertNotIn('Invalid username or password', result.data)
+        # FIXME: self.assertEqual(session.get('user_id'), 1)
+
+    def log_in_fail(self):
+        result = self.client.post('/login',
+                                  data={'email': 'test@test.ts', 'password': 'wrong'},
+                                  follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+
+        self.assertIn('<form action="/login" method="POST">', result.data)
+        self.assertIn('Invalid username or password', result.data)
+        self.assertNotIn('<h1>Your Profile</h1>', result.data)
+        self.assertNotIn('Login successful', result.data)
+
     def test_log_out(self):
         result = self.client.get('/logout', follow_redirects=True)
         self.assertEqual(result.status_code, 200)
@@ -173,6 +195,47 @@ class TestServer(unittest.TestCase):
         self.assertNotIn('Logged out', result.data)
         self.assertIn('No user currently logged in.', result.data)
         self.assertIn('Authorize your Spotify account', result.data)
+
+    def test_display_registration_form(self):
+        result = self.client.get('/register')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(': Register', result.data)
+
+        self.assertIn('<form action="/register" method="POST">', result.data)
+        self.assertIn('Email', result.data)
+        self.assertIn('Password', result.data)
+        self.assertNotIn('already logged in', result.data)
+
+    def test_register(self):
+        result = self.client.post('/register',
+                                  data={'email': 'new@cool.dude', 'password': 'c00ld00d'},
+                                  follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+
+        self.assertIn('<h1>Your profile</h1>', result.data)
+        self.assertIn('Email: new@cool.dude', result.data)
+        self.assertIn('Registration successful', result.data)
+        self.assertNotIn('username already exists', result.data)
+
+    def test_register_fail(self):
+        result = self.client.post('/register',
+                                  data={'email': 'test@test.ts', 'password': 'lolsame'},
+                                  follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+
+        self.assertIn('<form action="/register" method="POST">', result.data)
+        self.assertIn('username already exists', result.data)
+        self.assertNotIn('<h1>Your profile</h1>', result.data)
+        self.assertNotIn('Registration successful', result.data)
+
+    def test_profile(self):
+        result = self.client.get('/my-profile', follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(': Login', result.data)
+
+        self.assertIn('<form action="/login" method="POST">', result.data)
+        self.assertIn('must be logged in', result.data)
+        self.assertNotIn('<h1>Your profile</h1>', result.data)
 
 
 class TestServerLoggedIn(unittest.TestCase):
@@ -183,7 +246,7 @@ class TestServerLoggedIn(unittest.TestCase):
         self.client = server.app.test_client()
 
         with self.client.session_transaction() as sess:
-            sess['user_id'] = 1
+            sess['user_id'] = 2
 
         model.connect_to_db(server.app, "postgresql:///testconsa")
         model.db.create_all()
@@ -214,7 +277,7 @@ class TestServerLoggedIn(unittest.TestCase):
     def test_log_out(self):
         result = self.client.get('/logout', follow_redirects=True)
         self.assertEqual(result.status_code, 200)
-        # self.assertIsNone(session.get('user_id'))
+        # FIXME: self.assertIsNone(session.get('user_id'))
 
         self.assertIn('Logged out', result.data)
         self.assertNotIn('No user currently logged in.', result.data)
@@ -224,6 +287,43 @@ class TestServerLoggedIn(unittest.TestCase):
         self.assertIn('Login', result.data)
         self.assertNotIn('My Profile', result.data)
         self.assertNotIn('Logout', result.data)
+
+    def test_display_registration_form(self):
+        result = self.client.get('/register', follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+        self.assertNotIn(': Register', result.data)
+
+        self.assertNotIn('<form action="/register" method="POST">', result.data)
+        self.assertIn('already logged in', result.data)
+        self.assertIn('Authorize your Spotify account', result.data)
+
+    def test_profile(self):
+        result = self.client.get('/my-profile')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(': Your Profile', result.data)
+
+        self.assertIn('<h1>Your profile</h1>', result.data)
+        self.assertIn('Email: kiko@creat.er', result.data)
+
+        self.assertIn('<b>Cakes Da Killa</b>', result.data)
+        self.assertIn('Mykki Blanco &amp; Cakes Da Killa', result.data)
+        self.assertIn('<input type="hidden" class="songkick-id" value="2">', result.data)
+        self.assertIn('The New Parish', result.data)
+        self.assertIn('Fri Mar 03, 2017 at 8:00 PM', result.data)
+        self.assertIn('View this event on Songkick', result.data)
+
+    def test_profile_with_no_concerts(self):
+        with self.client.session_transaction() as sess:
+            sess['user_id'] = 3
+        result = self.client.get('/my-profile')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(': Your Profile', result.data)
+
+        self.assertIn('<h1>Your profile</h1>', result.data)
+        self.assertIn('Email: no@one', result.data)
+
+        self.assertNotIn('<h3>Your saved concerts</h3>', result.data)
+        self.assertIn('<h3>You have no saved concerts</h3>', result.data)
 
 
 if __name__ == "__main__":
