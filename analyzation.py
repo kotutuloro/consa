@@ -8,7 +8,7 @@ def find_spotify_artists(search_term):
 
     # Search for artists using the term
     sp = spotipy.Spotify()
-    artist_response = sp.search(search_term, type='artist')
+    artist_response = sp.search(search_term, type='artist', limit=5)
 
     # Create a list of search results
     artist_list = parse_artist_search(artist_response['artists']['items'])

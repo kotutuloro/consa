@@ -29,7 +29,7 @@
           <input type="text" id="artist-input" name="artist">
         <input type="submit" id="artist-search-button" value="Search">
       </form>
-
+      <hr>
       <div id="chosen-artists">
         <h3>Selected Artists:</h3>
       </div>
@@ -151,19 +151,25 @@
       // If artists found
       if (artists) {
 
-        // FIXME: needs updating for list
-        console.log(artists);
-          // // Iterate through dictionary of artist results
-          // for (var spotifyID in artists) {
+        // Iterate through list of artist results
+        for (var i = 0; i < artists.length; i++) {
+          var current = artists[i];
 
-          //   // Create div for the artist with data embedded
-          //   var artistDiv = $("<div>").addClass("artist-option");
-          //   artistDiv.data({"spotifyID": spotifyID, "artist": artists[spotifyID]});
-          //   var artistName = $("<h4>").text(artists[spotifyID]).appendTo(artistDiv);
+          // Create div for the artist with data embedded
+          var artistDiv = $("<div>").addClass("artist-option");
+          artistDiv.data({"spotifyID": current.spotify_id,
+                          "artist": current.artist
+                        });
+          $("<h4>").text(current.artist).appendTo(artistDiv);
+          
+          // Add artist image if url available
+          if (current.image_url) {
+            $("<img>").attr("src", current.image_url).css('max-width', '100px').prependTo(artistDiv);
+          }
 
-          //   // Append artist to selection div
-          //   $("#artist-selection").append(artistDiv);          
-          // }
+          // Append artist to selection div
+          $("#artist-selection").append(artistDiv);          
+        }
 
       // If no artists found, inform user
       } else {
@@ -184,6 +190,26 @@
 
     // Call Spotify artist search function on click
     $("#artist-search-button").on('click', searchSpotifyArtist);
+
+
+    // Add artist to chosen artists list on click
+    $("#artist-search-form").on('click', "div.artist-option", function(evt) {
+      // Clone clicked artist with data
+      var artist = $(this).clone(true);
+
+      // Check to see if clicked artist is already in the chosen artists div
+      var alreadyChosen = false;
+      $("#chosen-artists").children().each(function() {
+        if ($(this).data("spotifyID") === artist.data("spotifyID")) {
+          alreadyChosen = true;
+        }
+      });
+
+      // Add clicked artist to chosen artists div if not already there
+      if (!alreadyChosen) {
+        $("#chosen-artists").prepend(artist); 
+      }
+    });
 
 
     // Save location and redirect to Spotify authorization
