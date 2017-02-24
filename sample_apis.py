@@ -1,3 +1,171 @@
+clipping_search = {
+  "artists" : {
+    "href" : "https://api.spotify.com/v1/search?query=clipping&type=artist&offset=0&limit=10",
+    "items" : [ {
+      "external_urls" : {
+        "spotify" : "https://open.spotify.com/artist/5HJ2kX5UTwN4Ns8fB5Rn1I"
+      },
+      "followers" : {
+        "href" : None,
+        "total" : 32708
+      },
+      "genres" : [ "alternative hip hop", "escape room", "underground hip hop" ],
+      "href" : "https://api.spotify.com/v1/artists/5HJ2kX5UTwN4Ns8fB5Rn1I",
+      "id" : "5HJ2kX5UTwN4Ns8fB5Rn1I",
+      "images" : [ {
+        "height" : 849,
+        "url" : "https://i.scdn.co/image/96f3fd452d3871eea1ba9ba9cab63b002d8360bb",
+        "width" : 960
+      }, {
+        "height" : 566,
+        "url" : "https://i.scdn.co/image/0106dfdbd971940d5d086193793ffdff3f879f8e",
+        "width" : 640
+      }, {
+        "height" : 177,
+        "url" : "https://i.scdn.co/image/78735dcbb6433f5dd385df001ba7310e8251bd70",
+        "width" : 200
+      }, {
+        "height" : 57,
+        "url" : "https://i.scdn.co/image/d5b963a2d7f8ae014ff41777d5d007ff6646d977",
+        "width" : 64
+      } ],
+      "name" : "clipping.",
+      "popularity" : 52,
+      "type" : "artist",
+      "uri" : "spotify:artist:5HJ2kX5UTwN4Ns8fB5Rn1I"
+    }, {
+      "external_urls" : {
+        "spotify" : "https://open.spotify.com/artist/7iUaTsRiiEVbslUcOs5mpd"
+      },
+      "followers" : {
+        "href" : None,
+        "total" : 88
+      },
+      "genres" : [ ],
+      "href" : "https://api.spotify.com/v1/artists/7iUaTsRiiEVbslUcOs5mpd",
+      "id" : "7iUaTsRiiEVbslUcOs5mpd",
+      "images" : [ {
+        "height" : 640,
+        "url" : "https://i.scdn.co/image/de2a30f2207f682c5a6526ec248d25a9a3a0cfb8",
+        "width" : 640
+      }, {
+        "height" : 300,
+        "url" : "https://i.scdn.co/image/9a1f18134db7c3470bebbbb90af0aacaaa31deed",
+        "width" : 300
+      }, {
+        "height" : 64,
+        "url" : "https://i.scdn.co/image/b54e998aef1dcbaaa9625fe9a9afcba508508700",
+        "width" : 64
+      } ],
+      "name" : "Clipping",
+      "popularity" : 1,
+      "type" : "artist",
+      "uri" : "spotify:artist:7iUaTsRiiEVbslUcOs5mpd"
+    }, {
+      "external_urls" : {
+        "spotify" : "https://open.spotify.com/artist/1eaN7fgBEU7woIGZ7uAKIZ"
+      },
+      "followers" : {
+        "href" : None,
+        "total" : 14
+      },
+      "genres" : [ ],
+      "href" : "https://api.spotify.com/v1/artists/1eaN7fgBEU7woIGZ7uAKIZ",
+      "id" : "1eaN7fgBEU7woIGZ7uAKIZ",
+      "images" : [ ],
+      "name" : "clipping. feat. baseck",
+      "popularity" : 15,
+      "type" : "artist",
+      "uri" : "spotify:artist:1eaN7fgBEU7woIGZ7uAKIZ"
+    }, {
+      "external_urls" : {
+        "spotify" : "https://open.spotify.com/artist/4ZTFj2meuyjmk74UUjJ1V0"
+      },
+      "followers" : {
+        "href" : None,
+        "total" : 7
+      },
+      "genres" : [ ],
+      "href" : "https://api.spotify.com/v1/artists/4ZTFj2meuyjmk74UUjJ1V0",
+      "id" : "4ZTFj2meuyjmk74UUjJ1V0",
+      "images" : [ ],
+      "name" : "clipping. feat. jalene goodwin",
+      "popularity" : 12,
+      "type" : "artist",
+      "uri" : "spotify:artist:4ZTFj2meuyjmk74UUjJ1V0"
+    }, {
+      "external_urls" : {
+        "spotify" : "https://open.spotify.com/artist/0TtJyTEX7fq8j2jbXZ9ZsT"
+      },
+      "followers" : {
+        "href" : None,
+        "total" : 6
+      },
+      "genres" : [ ],
+      "href" : "https://api.spotify.com/v1/artists/0TtJyTEX7fq8j2jbXZ9ZsT",
+      "id" : "0TtJyTEX7fq8j2jbXZ9ZsT",
+      "images" : [ ],
+      "name" : "clipping. feat. ezra buchla",
+      "popularity" : 10,
+      "type" : "artist",
+      "uri" : "spotify:artist:0TtJyTEX7fq8j2jbXZ9ZsT"
+    }, {
+      "external_urls" : {
+        "spotify" : "https://open.spotify.com/artist/4atNL7GkDnZEfD20oz5oMn"
+      },
+      "followers" : {
+        "href" : None,
+        "total" : 3
+      },
+      "genres" : [ ],
+      "href" : "https://api.spotify.com/v1/artists/4atNL7GkDnZEfD20oz5oMn",
+      "id" : "4atNL7GkDnZEfD20oz5oMn",
+      "images" : [ ],
+      "name" : "clipping. feat. kill rogers",
+      "popularity" : 11,
+      "type" : "artist",
+      "uri" : "spotify:artist:4atNL7GkDnZEfD20oz5oMn"
+    }, {
+      "external_urls" : {
+        "spotify" : "https://open.spotify.com/artist/68oIILqspVnekLF9lk0szn"
+      },
+      "followers" : {
+        "href" : None,
+        "total" : 0
+      },
+      "genres" : [ ],
+      "href" : "https://api.spotify.com/v1/artists/68oIILqspVnekLF9lk0szn",
+      "id" : "68oIILqspVnekLF9lk0szn",
+      "images" : [ ],
+      "name" : "Clipping Pounders",
+      "popularity" : 0,
+      "type" : "artist",
+      "uri" : "spotify:artist:68oIILqspVnekLF9lk0szn"
+    }, {
+      "external_urls" : {
+        "spotify" : "https://open.spotify.com/artist/2PuU523omVAOhEjVrlaQRv"
+      },
+      "followers" : {
+        "href" : None,
+        "total" : 4
+      },
+      "genres" : [ ],
+      "href" : "https://api.spotify.com/v1/artists/2PuU523omVAOhEjVrlaQRv",
+      "id" : "2PuU523omVAOhEjVrlaQRv",
+      "images" : [ ],
+      "name" : "clipping. feat. kill rogers & TiVO",
+      "popularity" : 14,
+      "type" : "artist",
+      "uri" : "spotify:artist:2PuU523omVAOhEjVrlaQRv"
+    } ],
+    "limit" : 10,
+    "next" : None,
+    "offset" : 0,
+    "previous" : None,
+    "total" : 8
+  }
+}
+
 top_artists = {
   "items" : [ {
     "external_urls" : {

@@ -31,7 +31,18 @@ class TestAnalyzation(unittest.TestCase):
 
     def test_find_spotify_artists(self):
         result = analyzation.find_spotify_artists('Run the Jewels')
-        result.assertIn('Run The Jewels', result.data.values())
+        self.assertIn('Run The Jewels', result[0]['artist'])
+
+    def test_parse_artist_search(self):
+        clip_search = sample_apis.clipping_search['artists']['items']
+        result = analyzation.parse_artist_search(clip_search)
+
+        self.assertIsInstance(result, list)
+        self.assertIsInstance(result[0], dict)
+        self.assertEqual(result[0]['spotify_id'], '5HJ2kX5UTwN4Ns8fB5Rn1I')
+        self.assertEqual(result[0]['image_url'], 'https://i.scdn.co/image/96f3fd452d3871eea1ba9ba9cab63b002d8360bb')
+        self.assertEqual(result[1]['artist'], 'Clipping')
+        self.assertIsNone(result[2]['image_url'])
 
     def test_get_artist_recs(self):
         top_artist = {'6Tyzp9KzpiZ04DABQoedps': 'Little Dragon'}
