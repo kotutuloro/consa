@@ -6,15 +6,35 @@
 {% block content %}
 
   <div id="search-form">
+
     <form id="loc-search-form">
       <label for="location-input">Location:</label>
         <input type="text" id="location-input" name="location" value="{{ session.get('locName', 'SF Bay Area') }}">
       <input type="submit" id="loc-search-button" value="Search">
     </form>
+
     <br>
     <form id="spotify-auth-form">
-      <button id="spotify-auth" type="submit">Authorize your Spotify account</button>
+      <button id="spotify-auth" type="submit">Use your Spotify account's top artists</button>
     </form>
+
+    OR
+    <br>
+    <button id="specify-artists">Use specific artists instead</button>
+
+    <div id="spotify-artist-search" hidden>
+      <br>
+      <form id="artist-search-form">
+        <label for="artist-input">Search for up to 10 artists:</label>
+          <input type="text" id="artist-input" name="artist">
+        <input type="submit" id="artist-search-button" value="Search">
+      </form>
+
+      <div id="chosen-artists">
+        <h3>Selected Artists:</h3>
+      </div>
+    </div>
+
   </div>
   <br>
   <br>
@@ -42,7 +62,7 @@
 
       // Remove the previous fieldset and append new fieldset to form
       $("#loc-selection").remove();
-      $("#spotify-auth-form").prepend(locFieldset);
+      $("#loc-search-form").append(locFieldset);
       locFieldset.slideDown();
 
       // Make GET request to server and display locations
@@ -91,8 +111,72 @@
     }
 
 
+    // Send artist search to Spotify API via GET request
+    function searchSpotifyArtist(evt) {
+      evt.preventDefault();
+
+      // Create div for artist results
+      var artistSelectionDiv = $("<div>").attr("id", "artist-selection").hide();
+      var legend = $("<h3>").text("Choose the correct artist(s):");
+
+      var loadingDiv = $("<div>").attr("id", "artist-loading").text("Loading...")
+      var loadingImg = $("<img>").attr("src", "/static/img/load-gps.gif");
+      loadingDiv.append(loadingImg);
+
+      artistSelectionDiv.append(legend, loadingDiv);
+
+      // Remove the previous artist selection div and append new div to form
+      $("#artist-selection").remove();
+      $("#artist-search-form").append(artistSelectionDiv);
+      artistSelectionDiv.slideDown();
+
+      // Make GET request to server and display artist results
+      var searchTerm = $("#artist-input").val();
+      $.get("/artist-search", {'search-term': searchTerm}, displayArtists)
+
+          // Display error message if GET request fails
+          .fail(function(err){
+            $("#artist-loading").slideUp();
+            $("#artist-selection").append("Artist search failed <br>" + 
+                                          err.status + ": " + err.statusText);
+          });
+    }
+
+
+    // Display artists from JSON response from Spotify API
+    function displayArtists(artists) {
+      // Remove loading notification
+      $("#artist-loading").slideUp();
+
+      // If artists found
+      if (artists) {
+
+        // Iterate through list of artists
+        for (var i = 0; i < artists.length; i++) {
+
+          // FIXME: Display the artists in individual divs
+          
+        }
+
+      // If no artists found, inform user
+      } else {
+        $("#artist-selection").append("No matching artists found.");
+      }
+    }
+
+
     // Call Songkick Search function on click
     $("#loc-search-button").on('click', searchSongkickLoc);
+
+
+    // Toggle artist search div on click
+    $("#specify-artists").on('click', function(evt) {
+      $("#spotify-artist-search").slideToggle();
+    });
+
+
+    // Call Spotify artist search function on click
+    $("#artist-search-button").on('click', searchSpotifyArtist);
 
 
     // Save location and redirect to Spotify authorization

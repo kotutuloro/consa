@@ -157,7 +157,7 @@ class TestServer(unittest.TestCase):
         self.assertIn('Use your Spotify account', result.data)
 
         self.assertIn('<div id="spotify-artist-search" hidden>', result.data)
-        self.assertIn('Selected artists', result.data)
+        self.assertIn('Selected Artists', result.data)
 
     def test_nav_bar(self):
         result = self.client.get('/')
@@ -207,7 +207,7 @@ class TestServer(unittest.TestCase):
 
         self.assertNotIn('Logged out', result.data)
         self.assertIn('No user currently logged in.', result.data)
-        self.assertIn('Authorize your Spotify account', result.data)
+        self.assertIn('Use your Spotify account', result.data)
 
     def test_display_registration_form(self):
         result = self.client.get('/register')
@@ -342,7 +342,7 @@ class TestServerLoggedIn(unittest.TestCase):
 
         self.assertNotIn('<form action="/login" method="POST">', result.data)
         self.assertIn('already logged in', result.data)
-        self.assertIn('Authorize your Spotify account', result.data)
+        self.assertIn('Use your Spotify account', result.data)
 
     def test_log_out(self):
         result = self.client.get('/logout', follow_redirects=True)
@@ -351,7 +351,7 @@ class TestServerLoggedIn(unittest.TestCase):
 
         self.assertIn('Logged out', result.data)
         self.assertNotIn('No user currently logged in.', result.data)
-        self.assertIn('Authorize your Spotify account', result.data)
+        self.assertIn('Use your Spotify account', result.data)
 
         self.assertIn('Register', result.data)
         self.assertIn('Login', result.data)
@@ -365,7 +365,7 @@ class TestServerLoggedIn(unittest.TestCase):
 
         self.assertNotIn('<form action="/register" method="POST">', result.data)
         self.assertIn('already logged in', result.data)
-        self.assertIn('Authorize your Spotify account', result.data)
+        self.assertIn('Use your Spotify account', result.data)
 
     def test_profile(self):
         result = self.client.get('/my-profile')
