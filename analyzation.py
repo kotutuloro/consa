@@ -1,5 +1,18 @@
 """Functions for retrieving and analyzing Spotify user data"""
 
+import spotipy
+
+
+def find_spotify_artists(search_term):
+    """Returns dictionary of results for an artist matching the search term"""
+
+    sp = spotipy.Spotify()
+    artist_response = sp.search(search_term, type='artist')
+
+    artist_dict = parse_artist_response(artist_response['artists']['items'])
+
+    return artist_dict
+
 
 def get_artist_recs(spotify):
     """Returns dictionary of artist recommendations using Spotify API object"""

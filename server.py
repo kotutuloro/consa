@@ -7,7 +7,7 @@ from spotipy.oauth2 import SpotifyOauthError
 from model import User, Concert, db, connect_to_db
 from spotify_oauth_tools import get_spotify_oauth
 
-from analyzation import get_artist_recs
+from analyzation import get_artist_recs, find_spotify_artists
 from songkick import find_songkick_locations, find_songkick_concerts
 
 
@@ -193,6 +193,24 @@ def return_location_matches():
     # If list not empty, return a list of metro areas
     if metros:
         return jsonify(metros)
+
+    # Return empty string if or no results
+    else:
+        return ''
+
+
+@app.route('/artist-search')
+def return_artist_matches():
+    """Return list of Spotify artists matching search"""
+
+    # Get search term from AJAX request
+    search_term = request.args.get('search-term')
+
+    artists = find_spotify_artists(search_term)
+
+    # If list not empty, return a list of metro areas
+    if artists:
+        return jsonify(artists)
 
     # Return empty string if or no results
     else:

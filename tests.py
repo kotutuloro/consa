@@ -29,6 +29,10 @@ class TestSongkick(unittest.TestCase):
 
 class TestAnalyzation(unittest.TestCase):
 
+    def test_find_spotify_artists(self):
+        result = analyzation.find_spotify_artists('Run the Jewels')
+        result.assertIn('Run The Jewels', result.data.values())
+
     def test_get_artist_recs(self):
         top_artist = {'6Tyzp9KzpiZ04DABQoedps': 'Little Dragon'}
         result = analyzation.get_artist_recs(top_artist)
