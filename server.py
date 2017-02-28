@@ -7,7 +7,7 @@ from spotipy.oauth2 import SpotifyOauthError
 from model import User, Concert, db, connect_to_db
 from spotify_oauth_tools import get_spotify_oauth
 
-from analyzation import get_artist_recs, find_spotify_artists
+from analyzation import get_top_artist_recs, get_artist_recs, find_spotify_artists
 from songkick import find_songkick_locations, find_songkick_concerts
 
 
@@ -301,7 +301,7 @@ def return_recommendations():
     spotify = spotipy.Spotify(auth=access_token)
 
     # Get dictionary of concert recommendations
-    artist_recs = get_artist_recs(spotify)
+    artist_recs = get_top_artist_recs(spotify)
 
     return jsonify(artist_recs)
 

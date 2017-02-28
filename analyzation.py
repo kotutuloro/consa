@@ -43,7 +43,7 @@ def parse_artist_search(artists_response):
     return results_list
 
 
-def get_artist_recs(spotify):
+def get_top_artist_recs(spotify):
     """Returns dictionary of artist recommendations using Spotify API object"""
 
     # Get user's top artists
@@ -52,9 +52,20 @@ def get_artist_recs(spotify):
     top_artists_dict = parse_artist_response(top_artists_response['items'])
 
     # Get artists related to each of the user's top artists
+    related_artists_dict = get_artist_recs(top_artists_dict)
+
+    return related_artists_dict
+
+
+def get_artist_recs(artists_dict):
+    """Returns dictionary of artist recommendations using dictionary of artists"""
+
+    sp = spotipy.Spotify()
+
+    # Get artists related to each of the artists in the dictionary
     related_artists_dict = {}
-    for artist_id in top_artists_dict.keys():
-        rel_artists_resp = spotify.artist_related_artists(artist_id)
+    for artist_id in artists_dict.keys():
+        rel_artists_resp = sp.artist_related_artists(artist_id)
         new_rel_artists = parse_artist_response(rel_artists_resp['artists'])
         related_artists_dict.update(new_rel_artists)
 
