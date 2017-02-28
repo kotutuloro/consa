@@ -171,7 +171,7 @@ class TestServer(unittest.TestCase):
         self.assertIn('<form id="spotify-auth-form">', result.data)
         self.assertIn('Use your Spotify account', result.data)
 
-        self.assertIn('<div id="spotify-artist-search" hidden>', result.data)
+        self.assertIn('<div id="spotify-artist-search">', result.data)
         self.assertIn('Selected Artists', result.data)
 
     def test_nav_bar(self):
@@ -315,7 +315,7 @@ class TestServer(unittest.TestCase):
 
     def test_recs_from_search(self):
         artists = {'5HJ2kX5UTwN4Ns8fB5Rn1I': 'clipping.'}
-        result = self.client.post('/recs-from-search', data=artists)
+        result = self.client.get('/recs-from-search', data=artists)
         self.assertEqual(result.status_code, 200)
 
     def test_concerts(self):

@@ -30,7 +30,7 @@ function addConcert(evt){
         // Display error message if GET request fails
         alert("Concert addition failed: " +
               err.status + ": " + err.statusText);
-    });;
+    });
 }
 
 
@@ -91,12 +91,9 @@ function sortConcerts(evt){
 
 // Sort results by concert's date
 function sortByDate(a, b){
-    a = $(a);
-    b = $(b);
-
     // Get concert's date from its hidden form input as an ISO String
-    var aDate = new Date(a.find('input.start-datetime').val()).toISOString();
-    var bDate = new Date(b.find('input.start-datetime').val()).toISOString();
+    var aDate = new Date($(a).find('input.start-datetime').val()).toISOString();
+    var bDate = new Date($(b).find('input.start-datetime').val()).toISOString();
 
     // Sort ascending
     if (aDate > bDate) {
@@ -109,12 +106,9 @@ function sortByDate(a, b){
 
 // Sort results by artist's name
 function sortByArtist(a, b){
-    a = $(a);
-    b = $(b);
-
     // Get concert's date from its hidden form input as an ISO String
-    var aArtist = a.find('input.artist').val();
-    var bArtist = b.find('input.artist').val();
+    var aArtist = $(a).find('input.artist').val();
+    var bArtist = $(b).find('input.artist').val();
 
     // Sort ascending
     if (aArtist > bArtist) {
