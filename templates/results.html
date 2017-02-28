@@ -51,7 +51,13 @@
     // Make GET request to server and display recommended concerts
     if (authCode) {
       // Use Spotify authorization if authCode available
-      $.get('/recs', {'auth-code': authCode}, findConcerts);
+      $.get('/recs', {'auth-code': authCode}, findConcerts)
+
+      // Display error message if GET request fails
+          .fail(function(err){
+            displayError("Spotify authorization failed <br>" +
+                  err.status + ": " + err.statusText);
+          });
 
     } else {
       // Use selected artists from template render if no auth
@@ -60,7 +66,13 @@
         selectedArtists["{{ spotID }}"] = "{{ selected_artists[spotID] }}";
       {% endfor %}
 
-      $.get('/recs-from-search', selectedArtists, findConcerts);
+      $.get('/recs-from-search', selectedArtists, findConcerts)
+
+      // Display error message if GET request fails
+          .fail(function(err){
+            displayError("Artist search failed <br>" +
+                  err.status + ": " + err.statusText);
+          });
     
     }
 
@@ -84,7 +96,14 @@
             'spotify-id': spotifyID,
             'artist': artistRecs[spotifyID]
           };
-          $.get('/concerts', payload, displayConcerts);
+          $.get('/concerts', payload, displayConcerts)
+
+          // Display error message if GET request fails
+              .fail(function(err){
+                console.log("Concert search failed <br>" +
+                      err.status + ": " + err.statusText);
+                resultCount++;
+              });
         }
       }
     }

@@ -26,7 +26,11 @@ function addConcert(evt){
             // Alert user if unsuccessful
             alert('Cannot add this concert at this time.');
         }
-    });
+    }).fail(function(err){
+        // Display error message if GET request fails
+        alert("Concert addition failed: " +
+              err.status + ": " + err.statusText);
+    });;
 }
 
 
@@ -34,6 +38,7 @@ function addConcert(evt){
 function removeConcert(evt){
     evt.preventDefault();
 
+    var thisButton = $(this);
     var thisDiv = $(this).closest("div");
 
     // Confirm deletion
@@ -54,8 +59,11 @@ function removeConcert(evt){
                 // Alert user if unsuccessful
                 alert('Cannot remove this concert at this time.');
             }
-        });
-
+        }).fail(function(err){
+            // Display error message if GET request fails
+            alert("Concert removal failed: " +
+                  err.status + ": " + err.statusText);
+        });;
     }
 }
 

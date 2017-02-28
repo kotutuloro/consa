@@ -77,7 +77,12 @@
       // Send request to server with location's data and open returned url
       $.get('/spotify-auth', selectedLoc.data(), function(authurl) {
         window.location = authurl;
-      });
+      })
+      // Display error message if GET request fails
+          .fail(function(err){
+            alert("Artist search failed <br>" +
+                  err.status + ": " + err.statusText);
+          });
 
     });
 
@@ -138,7 +143,14 @@
 
       // Make GET request to server and display locations
       var searchTerm = $("#location-input").val();
-      $.get("/location-search", {'search-term': searchTerm}, displayLocs);
+      $.get("/location-search", {'search-term': searchTerm}, displayLocs)
+
+      // Display error message if GET request fails
+          .fail(function(err){
+            $("#loc-loading").slideUp();
+            $("#loc-selection").append("Location search failed <br>" +
+                                          err.status + ": " + err.statusText);
+          });
     }
 
 
