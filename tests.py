@@ -171,7 +171,7 @@ class TestServer(unittest.TestCase):
         self.assertIn('<form id="spotify-auth-form">', result.data)
         self.assertIn('Use your Spotify account', result.data)
 
-        self.assertIn('<div id="spotify-artist-search">', result.data)
+        self.assertIn('<div id="spotify-artist-search"', result.data)
         self.assertIn('Selected Artists', result.data)
 
     def test_nav_bar(self):

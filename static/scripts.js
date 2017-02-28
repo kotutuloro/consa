@@ -144,21 +144,40 @@ function displayArtists(artists) {
 
 // Add selected artist to chosen artists div
 function chooseArtist(evt) {
-    // Clone clicked artist with data
-    var artist = $(this).clone(true);
 
-    // Check to see if clicked artist is already in the chosen artists div
-    var alreadyChosen = false;
-    $("#chosen-artists-list").children("div").each(function() {
-        if ($(this).data("spotifyID") === artist.data("spotifyID")) {
-            alreadyChosen = true;
+    // Alert if too many artists chosen
+    var numChosen = $("#chosen-artists-list").children("div").length;
+    if (numChosen >= 10) {
+        alert('Max artists selected');
+
+    // If less than 10 artists chosen, add to div
+    } else {
+        // Clone clicked artist with data
+        var artist = $(this).clone(true);
+
+        // Check to see if clicked artist is already in the chosen artists div
+        var alreadyChosen = false;
+        $("#chosen-artists-list").children("div").each(function() {
+            if ($(this).data("spotifyID") === artist.data("spotifyID")) {
+                alreadyChosen = true;
+            }
+        });
+
+        // Add clicked artist to chosen artists div if not already there
+        if (!alreadyChosen) {
+            artist.hide().prependTo("#chosen-artists-list").slideDown();
         }
-    });
-
-    // Add clicked artist to chosen artists div if not already there
-    if (!alreadyChosen) {
-        artist.hide().prependTo("#chosen-artists-list").slideDown();
     }
+}
+
+
+// Remove selected artist from chosen artists div
+function removeChosenArtist(evt) {
+
+    // Remove selected div
+    $(this).slideUp(function() {
+        $(this).remove();
+    });
 }
 
 

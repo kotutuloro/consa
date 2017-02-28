@@ -20,7 +20,7 @@
 
     OR
     <br>
-    <button id="specify-artists">Use specific artists instead</button>
+    <button id="specify-artists">Choose specific artists instead</button>
 
     <div id="spotify-artist-search" class="row" hidden>
       <br>
@@ -62,6 +62,9 @@
 
     // Add artist to chosen artists list on click
     $("#artist-search-form").on('click', "div.artist-option", chooseArtist);
+
+    // Remove artist from chosen artists list on click
+    $("#chosen-artists-list").on('click', "div.artist-option", removeChosenArtist);
 
     // Save location and redirect to Spotify authorization
     $("#spotify-auth").on('click', submitSpotifyAuth);
