@@ -29,8 +29,8 @@
           </form>
           
           {% if concert.city %}
-            {% if concert.venue %}
-              {{ concert.venue }} in
+            {% if concert.venue_name %}
+              {{ concert.venue_name }} in
             {% endif %}
             
             {{ concert.city }}

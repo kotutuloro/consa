@@ -85,7 +85,9 @@ def find_songkick_concerts(spotify_id, artist, location="sk:26330"):
                     'songkick_url': event['uri'],
                     'artist': artist,
                     'spotify_id': spotify_id,
-                    'venue': event['venue']['displayName'],
+                    'venue_name': event['venue']['displayName'],
+                    'venue_lat': event['venue']['lat'],
+                    'venue_lng': event['venue']['lng'],
                     'city': event['location']['city'],
                 }
 

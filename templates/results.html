@@ -174,8 +174,8 @@
         location = concert.city + "<br>";
 
         // Add concert venue to location if available
-        if (concert.venue) {
-          location = concert.venue + " in " + location;
+        if (concert.venue_name) {
+          location = concert.venue_name + " in " + location;
         }
       }
 
@@ -230,8 +230,14 @@
       var spotifyID = $("<input>").attr("type", "hidden");
       spotifyID.addClass("spotify-id").val(concert.spotify_id);
 
-      var venue = $("<input>").attr("type", "hidden");
-      venue.addClass("venue").val(concert.venue);
+      var venue_name = $("<input>").attr("type", "hidden");
+      venue_name.addClass("venue-name").val(concert.venue_name);
+      
+      var venue_lat = $("<input>").attr("type", "hidden");
+      venue_lat.addClass("venue-lat").val(concert.venue_lat);
+
+      var venue_lng = $("<input>").attr("type", "hidden");
+      venue_lng.addClass("venue-lng").val(concert.venue_lng);
 
       var city = $("<input>").attr("type", "hidden");
       city.addClass("city").val(concert.city);
@@ -261,7 +267,7 @@
       {% endif %}
 
       // Add all inputs to form and return it
-      addForm.append(songkickID, artist, displayName, songkickURL, spotifyID, venue, city, start, submit);
+      addForm.append(songkickID, artist, displayName, songkickURL, spotifyID, venue_name, venue_lat, venue_lng, city, start, submit);
       return addForm;
     }
 
