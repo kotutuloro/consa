@@ -33,6 +33,7 @@
       <div id="chosen-artists">
         <h3>Selected Artists:</h3>
       </div>
+      <button id="no-auth">Search using these artists</button>
     </div>
 
   </div>
@@ -76,6 +77,41 @@
       $.get('/spotify-auth', selectedLoc.data(), function(authurl) {
         window.location = authurl;
       });
+
+    });
+
+
+    // Save location and send specified artists' information
+    $("#no-auth").on('click', function(evt) {
+      evt.preventDefault();
+
+      // Find selected location
+      var selectedLoc = $('input[name="sk-loc"]:checked').data();
+
+      // Get chosen artists' data
+      var selectedArtists = {}
+      $("#chosen-artists div.artist-option").each(function() {
+        selectedArtists[$(this).data('spotifyID')] = $(this).data('artist');
+      });
+
+      // Alert if no artists selected
+      if (Object.keys(selectedArtists).length === 0) {
+        alert('Please select artists to use for the search.');
+
+      // Otherwise, send data
+      } else {
+        // Merger selected artists & location data into payload
+        var payload = Object.assign({}, selectedArtists, selectedLoc);
+
+        // Create hidden form & inputs with location and chosen artists
+        var noAuthForm = $("<form>").attr({"method": "POST", "action": "/no-auth-search"});
+        for (var item in payload) {
+          $("<input>").attr("name", item).val(payload[item]).appendTo(noAuthForm);
+        }
+
+        // Submit hidden form
+        noAuthForm.hide().appendTo('body').submit();
+      }
 
     });
 
@@ -219,7 +255,7 @@
 
       // Check to see if clicked artist is already in the chosen artists div
       var alreadyChosen = false;
-      $("#chosen-artists").children().each(function() {
+      $("#chosen-artists").children("div").each(function() {
         if ($(this).data("spotifyID") === artist.data("spotifyID")) {
           alreadyChosen = true;
         }
@@ -227,7 +263,7 @@
 
       // Add clicked artist to chosen artists div if not already there
       if (!alreadyChosen) {
-        $("#chosen-artists").prepend(artist); 
+        $("#chosen-artists").append(artist); 
       }
     }
   </script>

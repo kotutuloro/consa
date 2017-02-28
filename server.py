@@ -238,7 +238,7 @@ def request_authorization():
 
 @app.route('/callback')
 def return_results_page():
-    """Display results page"""
+    """Saves location info and displays results page"""
 
     # Get authorization code from Spotify
     auth_code = request.args.get('code')
@@ -288,6 +288,27 @@ def return_recommendations():
     artist_recs = get_artist_recs(spotify)
 
     return jsonify(artist_recs)
+
+
+@app.route('/no-auth-search', methods=['POST'])
+def return_no_auth_results():
+    """Display results page"""
+
+    # Get location info from form
+    locID = request.form.get('locID')
+    locName = request.form.get('locName')
+
+    # Save location info to session if available
+    if locID:
+        session['locID'] = locID
+        session['locName'] = locName
+
+    # Create object of artist data from form data
+    selected_artists = {key: val for (key, val) in request.form.iteritems()
+                        if key != 'locID' and key != 'locName'}
+
+    # temp/test
+    return render_template('homepage.html')
 
 
 @app.route('/concerts')
