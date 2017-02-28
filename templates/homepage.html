@@ -22,18 +22,19 @@
     <br>
     <button id="specify-artists">Use specific artists instead</button>
 
-    <div id="spotify-artist-search" hidden>
+    <div id="spotify-artist-search" class="row" hidden>
       <br>
-      <form id="artist-search-form">
+      <form id="artist-search-form" class="col-xs-8">
         <label for="artist-input">Search for up to 10 artists:</label>
+          <br>
           <input type="text" id="artist-input" name="artist">
         <input type="submit" id="artist-search-button" value="Search">
       </form>
-      <hr>
-      <div id="chosen-artists">
+      <div id="chosen-artists" class="col-xs-4">
         <h3>Selected Artists:</h3>
+        <button id="no-auth">Search using these artists</button>
+        <div id="chosen-artists-list"></div>
       </div>
-      <button id="no-auth">Search using these artists</button>
     </div>
 
   </div>
@@ -90,7 +91,7 @@
 
       // Get chosen artists' data
       var selectedArtists = {}
-      $("#chosen-artists div.artist-option").each(function() {
+      $("#chosen-artists-list div.artist-option").each(function() {
         selectedArtists[$(this).data('spotifyID')] = $(this).data('artist');
       });
 
@@ -255,7 +256,7 @@
 
       // Check to see if clicked artist is already in the chosen artists div
       var alreadyChosen = false;
-      $("#chosen-artists").children("div").each(function() {
+      $("#chosen-artists-list").children("div").each(function() {
         if ($(this).data("spotifyID") === artist.data("spotifyID")) {
           alreadyChosen = true;
         }
@@ -263,7 +264,7 @@
 
       // Add clicked artist to chosen artists div if not already there
       if (!alreadyChosen) {
-        $("#chosen-artists").append(artist); 
+        artist.hide().prependTo("#chosen-artists-list").slideDown();
       }
     }
   </script>

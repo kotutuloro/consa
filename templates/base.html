@@ -7,57 +7,59 @@
       : Page Subtitle Missing
     {% endblock %}
   </title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <script src="http://code.jquery.com/jquery.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
   <script src="/static/scripts.js"></script>
 </head>
 <body>
+  <div class="container">
+    <div id="navbar">
+      Navbar Links:
+      <ul>
+        <li>
+          <a href="/">Home</a>
+        </li>
 
-  <div id="navbar">
-    Navbar Links:
-    <ul>
-      <li>
-        <a href="/">Home</a>
-      </li>
-
-      {% if session.get('user_id') %}
-        <li>
-          <a href="/my-profile">My Profile</a>
-        </li>
-        <li>
-          <a href="/logout">Logout</a>
-        </li>
-      {% else %}
-        <li>
-          <a href="/register">Register</a>
-        </li>
-        <li>
-          <a href="/login">Login</a>
-        </li>
-      {% endif %}
-    </ul>
-  </div>
-
-  {% if get_flashed_messages() %}
-    <div id="flashed-messages">
-      Flashed messages:
-      {% for message in get_flashed_messages() %}
-        <div id="flash-msg">
-          {{ message }}
-        </div>
-      {% endfor %}
+        {% if session.get('user_id') %}
+          <li>
+            <a href="/my-profile">My Profile</a>
+          </li>
+          <li>
+            <a href="/logout">Logout</a>
+          </li>
+        {% else %}
+          <li>
+            <a href="/register">Register</a>
+          </li>
+          <li>
+            <a href="/login">Login</a>
+          </li>
+        {% endif %}
+      </ul>
     </div>
-    <br>
-  {% endif %}
 
-  {% block content %}
-    Page content missing
-  {% endblock %}
+    {% if get_flashed_messages() %}
+      <div id="flashed-messages">
+        Flashed messages:
+        {% for message in get_flashed_messages() %}
+          <div id="flash-msg">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+      <br>
+    {% endif %}
 
-  {% block js %}
-    <script>
-      alert("This is the only javascript on this page")
-    </script>
-  {% endblock %}
+    {% block content %}
+      Page content missing
+    {% endblock %}
+
+    {% block js %}
+      <script>
+        alert("This is the only javascript on this page")
+      </script>
+    {% endblock %}
+  </div>
 </body>
 </html>
