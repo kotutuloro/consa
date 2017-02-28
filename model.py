@@ -82,7 +82,9 @@ class Concert(db.Model):
     artist = db.Column(db.String(64),
                        nullable=False)
     spotify_id = db.Column(db.String(64))
-    venue = db.Column(db.String(64))
+    venue_name = db.Column(db.String(64))
+    venue_lat = db.Column(db.Float)
+    venue_lng = db.Column(db.Float)
     city = db.Column(db.String(64))
     start_datetime = db.Column(db.DateTime)
     display_name = db.Column(db.String(128))
@@ -96,7 +98,9 @@ class Concert(db.Model):
         songkick_url = form.get('songkick-url')
         artist = form.get('artist')
         spotify_id = form.get('spotify-id')
-        venue = form.get('venue')
+        venue_name = form.get('venue-name')
+        venue_lat = form.get('venue-lat')
+        venue_lng = form.get('venue-lng')
         city = form.get('city')
         start_datetime = form.get('start-datetime')
         display_name = form.get('display-name')
@@ -106,7 +110,9 @@ class Concert(db.Model):
                           songkick_url=songkick_url,
                           artist=artist,
                           spotify_id=spotify_id,
-                          venue=venue,
+                          venue_name=venue_name,
+                          venue_lat=venue_lat,
+                          venue_lng=venue_lng,
                           city=city,
                           start_datetime=start_datetime,
                           display_name=display_name,
@@ -159,12 +165,16 @@ def example_data():
 
     c1 = Concert(songkick_id=1,
                  artist='clipping.',
-                 venue='Brick & Mortar',
+                 venue_name='Brick & Mortar',
+                 venue_lat=37.7697,
+                 venue_lng=-122.4203,
                  city='San Francisco, CA',
                  display_name='clipping. & Baseck')
     c2 = Concert(songkick_id=2,
                  artist='Cakes Da Killa',
-                 venue='The New Parish',
+                 venue_name='The New Parish',
+                 venue_lat=37.8077,
+                 venue_lng=-122.2727,
                  city='Oakland, CA',
                  display_name='Mykki Blanco & Cakes Da Killa',
                  songkick_url='https://www.songkick.com/concerts/28832389-mykki-blanco-at-new-parish',

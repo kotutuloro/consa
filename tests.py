@@ -116,7 +116,7 @@ class TestModel(unittest.TestCase):
         self.assertEqual(clip.city, 'San Francisco, CA')
         self.assertIsNone(clip.songkick_url)
         self.assertEqual(clip.venue_lat, 37.7697)
-        self.assertEqual(clip.venue_long, -122.4203)
+        self.assertEqual(clip.venue_lng, -122.4203)
         self.assertIsInstance(clip.users, list)
 
         cakes = model.Concert.query.get(2)
@@ -131,7 +131,7 @@ class TestModel(unittest.TestCase):
                 'artist': u'Princess Nokia',
                 'venue-name': u'Starline Social Club',
                 'venue-lat': u'37.8123',
-                'venue-long': u'-122.2725',
+                'venue-lng': u'-122.2725',
                 'city': u'Oakland, CA',
                 'start-datetime': u'Sat, 06 May 2017 21:00:00 GMT'}
 
@@ -144,7 +144,7 @@ class TestModel(unittest.TestCase):
         nokia = model.Concert.query.get(3)
         self.assertIsNotNone(nokia)
         self.assertEqual(nokia.artist, 'Princess Nokia')
-        self.assertEqual(nokia.venue_long, -122.2725)
+        self.assertEqual(nokia.venue_lng, -122.2725)
         self.assertEqual(nokia.venue_name, 'Starline Social Club')
         self.assertIsInstance(nokia.start_datetime, datetime)
 
