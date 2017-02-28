@@ -23,7 +23,7 @@ class TestSongkick(unittest.TestCase):
         self.assertEqual(songkick.find_songkick_locations("San Francisco, TX"), [])
 
     def test_concert(self):
-        concerts = songkick.find_songkick_concerts('1234', 'clipping.')
+        concerts = songkick.find_songkick_concerts('1234', 'Run The Jewels')
         self.assertIsInstance(concerts, list)
 
 
@@ -298,6 +298,10 @@ class TestServer(unittest.TestCase):
         result = self.client.get('/artist-search?search-term=Run+The+Jewels')
         self.assertEqual(result.status_code, 200)
         self.assertIn('Run The Jewels', result.data)
+
+        result = self.client.get('/artist-search?search-term=asdfasdfasdf')
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual('', result.data)
 
     def test_request_authorization(self):
         result = self.client.get('/spotify-auth')

@@ -35,6 +35,11 @@
     var userSavedConcerts = {{ user_saved_concerts }};
     var authCode = "{{ auth_code }}";
 
+    var selectedArtists = {};
+    {% for spotID in selected_artists %}
+      selectedArtists["{{ spotID }}"] = "{{ selected_artists[spotID] }}";
+    {% endfor %}
+
     // Declare variables to keep track of end of get requests 
     var resultCount;
     var expectedResults;
@@ -61,11 +66,6 @@
 
     } else {
       // Use selected artists from template render if no auth
-      var selectedArtists = {};
-      {% for spotID in selected_artists %}
-        selectedArtists["{{ spotID }}"] = "{{ selected_artists[spotID] }}";
-      {% endfor %}
-
       $.get('/recs-from-search', selectedArtists, findConcerts)
 
       // Display error message if GET request fails
