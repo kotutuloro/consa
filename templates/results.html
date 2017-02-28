@@ -44,11 +44,25 @@
       $("div#concert-results").on("click", "input.add-concert", addConcert);
     {% endif %}
 
+    // Sort results on button click
     $("button.sort-by-date").on("click", sortConcerts);
     $("button.sort-by-artist").on("click", sortConcerts);
 
     // Make GET request to server and display recommended concerts
-    $.get('/recs', {'auth-code': authCode}, findConcerts);
+    if (authCode) {
+      // Use Spotify authorization if authCode available
+      $.get('/recs', {'auth-code': authCode}, findConcerts);
+
+    } else {
+      // Use selected artists from template render if no auth
+      var selectedArtists = {};
+      {% for spotID in selected_artists %}
+        selectedArtists["{{ spotID }}"] = "{{ selected_artists[spotID] }}";
+      {% endfor %}
+
+      $.get('/recs-from-search', selectedArtists, findConcerts);
+    
+    }
 
 
     // Make GET request to find concerts for each artist

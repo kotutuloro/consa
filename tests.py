@@ -275,11 +275,12 @@ class TestServer(unittest.TestCase):
         self.assertIn('<div id="concert-results" hidden>', result.data)
 
     def test_no_auth_results_page(self):
-        result = self.client.get('/no-auth-search')
+        artists = {'5HJ2kX5UTwN4Ns8fB5Rn1I': 'clipping.'}
+        result = self.client.post('/no-auth-search', data=artists)
         self.assertEqual(result.status_code, 200)
         self.assertIn(': Concert Recommendations', result.data)
 
-        self.assertIn('authCode = null', result.data)
+        self.assertIn('authCode = ""', result.data)
         self.assertIn('<h2>FINDING CONCERTS...</h2>', result.data)
         self.assertIn('<div id="concert-results" hidden>', result.data)
 

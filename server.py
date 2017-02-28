@@ -263,7 +263,7 @@ def request_authorization():
 
 @app.route('/callback')
 def return_results_page():
-    """Saves location info and displays results page"""
+    """Displays results page"""
 
     # Get authorization code from Spotify
     auth_code = request.args.get('code')
@@ -278,7 +278,7 @@ def return_results_page():
 
 @app.route('/recs')
 def return_recommendations():
-    """Connects to Spotify API and displays JSON dictionary of recommended artists
+    """Connects to Spotify API and returns JSON dictionary of recommended artists
 
     Gets the Spotify access token if possible
     Returns error message if unsuccessful
@@ -308,7 +308,7 @@ def return_recommendations():
 
 @app.route('/no-auth-search', methods=['POST'])
 def return_no_auth_results():
-    """Display results page"""
+    """Saves location info and display results page"""
 
     # Save selected location data
     save_location(request.form)
@@ -320,9 +320,7 @@ def return_no_auth_results():
     # Get list of user's saved concerts
     user_saved_concerts = get_user_saved_concerts()
 
-    # temp/test
     return render_template('results.html',
-                           auth_code=None,
                            user_saved_concerts=user_saved_concerts,
                            selected_artists=selected_artists)
 
