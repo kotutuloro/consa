@@ -19,6 +19,37 @@ app.secret_key = "BleepBloop"
 SPOTIFY_OAUTH = get_spotify_oauth()
 
 
+def save_location(form):
+    """Save selected location data to session from form"""
+
+    # Get location info from form
+    locID = form.get('locID')
+    locName = form.get('locName')
+
+    # Save location info to session if available
+    if locID:
+        session['locID'] = locID
+        session['locName'] = locName
+
+
+def get_user_saved_concerts():
+    """Return list of current user's saved concerts"""
+
+    # Get logged in user's user_id
+    current_user_id = session.get('user_id')
+
+    # Create list of user's saved concert's songkick ids if logged in
+    if current_user_id:
+        current_user = User.query.get(current_user_id)
+        user_saved_concerts = [concert.songkick_id for concert in current_user.concerts]
+
+    # Set to empty list if not logged in
+    else:
+        user_saved_concerts = []
+
+    return user_saved_concerts
+
+
 @app.route('/')
 def return_homepage():
     """Displays the app's homepage"""
@@ -221,14 +252,8 @@ def return_artist_matches():
 def request_authorization():
     """Saves location info and returns url for Spotify authorization"""
 
-    # Get location info from form
-    locID = request.args.get('locID')
-    locName = request.args.get('locName')
-
-    # Save location info to session if available
-    if locID:
-        session['locID'] = locID
-        session['locName'] = locName
+    # Save selected location data
+    save_location(request.args)
 
     # Get url for Spotify authorization
     auth_url = SPOTIFY_OAUTH.get_authorize_url()
@@ -243,17 +268,8 @@ def return_results_page():
     # Get authorization code from Spotify
     auth_code = request.args.get('code')
 
-    # Get logged in user's user_id
-    current_user_id = session.get('user_id')
-
-    # Create list of user's saved concert's songkick ids if logged in
-    if current_user_id:
-        current_user = User.query.get(current_user_id)
-        user_saved_concerts = [concert.songkick_id for concert in current_user.concerts]
-
-    # Set to empty list if not logged in
-    else:
-        user_saved_concerts = []
+    # Get list of user's saved concerts
+    user_saved_concerts = get_user_saved_concerts()
 
     return render_template('results.html',
                            auth_code=auth_code,
@@ -294,21 +310,21 @@ def return_recommendations():
 def return_no_auth_results():
     """Display results page"""
 
-    # Get location info from form
-    locID = request.form.get('locID')
-    locName = request.form.get('locName')
-
-    # Save location info to session if available
-    if locID:
-        session['locID'] = locID
-        session['locName'] = locName
+    # Save selected location data
+    save_location(request.form)
 
     # Create object of artist data from form data
     selected_artists = {key: val for (key, val) in request.form.iteritems()
                         if key != 'locID' and key != 'locName'}
 
+    # Get list of user's saved concerts
+    user_saved_concerts = get_user_saved_concerts()
+
     # temp/test
-    return render_template('homepage.html')
+    return render_template('results.html',
+                           auth_code=None,
+                           user_saved_concerts=user_saved_concerts,
+                           selected_artists=selected_artists)
 
 
 @app.route('/concerts')
