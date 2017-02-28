@@ -325,6 +325,18 @@ def return_no_auth_results():
                            selected_artists=selected_artists)
 
 
+@app.route('/recs-from-search')
+def return_recs_from_search():
+    """Returns JSON dictionary of recommended artists using chosen artists"""
+
+    # Get selected artists from form data
+    selected_artists = {key: val for (key, val) in request.args.iteritems()}
+
+    artist_recs = get_artist_recs(selected_artists)
+
+    return jsonify(artist_recs)
+
+
 @app.route('/concerts')
 def return_concerts():
     """Returns JSON list of concerts for an artist and location"""
