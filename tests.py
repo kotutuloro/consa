@@ -115,17 +115,23 @@ class TestModel(unittest.TestCase):
         self.assertEqual(clip.artist, 'clipping.')
         self.assertEqual(clip.city, 'San Francisco, CA')
         self.assertIsNone(clip.songkick_url)
+        self.assertEqual(clip.venue_lat, 37.7697)
+        self.assertEqual(clip.venue_long, -122.4203)
         self.assertIsInstance(clip.users, list)
 
         cakes = model.Concert.query.get(2)
         self.assertEqual(cakes.artist, 'Cakes Da Killa')
+        self.assertEqual(cakes.venue_name, 'The New Parish')
+        self.assertEqual(cakes.venue_lat, 37.8077)
         self.assertIsInstance(cakes.start_datetime, datetime)
         self.assertEqual(2017, cakes.start_datetime.year)
 
     def test_concert_create_from_form(self):
         form = {'songkick-id': u'3',
                 'artist': u'Princess Nokia',
-                'venue': u'Starline Social Club',
+                'venue-name': u'Starline Social Club',
+                'venue-lat': u'37.8123',
+                'venue-long': u'-122.2725',
                 'city': u'Oakland, CA',
                 'start-datetime': u'Sat, 06 May 2017 21:00:00 GMT'}
 
@@ -134,9 +140,12 @@ class TestModel(unittest.TestCase):
 
         success = model.Concert.create_from_form(form)
         self.assertTrue(success)
+
         nokia = model.Concert.query.get(3)
         self.assertIsNotNone(nokia)
         self.assertEqual(nokia.artist, 'Princess Nokia')
+        self.assertEqual(nokia.venue_long, -122.2725)
+        self.assertEqual(nokia.venue_name, 'Starline Social Club')
         self.assertIsInstance(nokia.start_datetime, datetime)
 
         failure = model.Concert.create_from_form({})
@@ -399,6 +408,7 @@ class TestServerLoggedIn(unittest.TestCase):
         self.assertIn('Mykki Blanco &amp; Cakes Da Killa', result.data)
         self.assertIn('<input type="hidden" class="songkick-id" value="2">', result.data)
         self.assertIn('The New Parish', result.data)
+        self.assertIn('{lat: 37.8077, lng: -122.2727}', result.data)
         self.assertIn('Fri Mar 03, 2017 at 8:00 PM', result.data)
         self.assertIn('View this event on Songkick', result.data)
 
@@ -418,13 +428,9 @@ class TestServerLoggedIn(unittest.TestCase):
     def test_add_saved_concert(self):
         success_form = {'songkick-id': u'3',
                         'artist': u'Princess Nokia',
-                        'venue': u'Starline Social Club',
+                        'venue-name': u'Starline Social Club',
                         'city': u'Oakland, CA',
                         'start-datetime': u'Sat, 06 May 2017 21:00:00 GMT'}
-        success = self.client.post('/add-concert', data=success_form)
-        self.assertEqual(success.status_code, 200)
-        self.assertEqual(success.data, 'True')
-
         success = self.client.post('/add-concert', data=success_form)
         self.assertEqual(success.status_code, 200)
         self.assertEqual(success.data, 'True')
