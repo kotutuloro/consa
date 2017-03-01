@@ -368,12 +368,31 @@ function removeConcert(evt){
 function createConcertMap(index) {
 
     // Get concert's coordinates from hidden inputs
+    var venue = $(this).children("input.map-venue").val();
     var lat = $(this).children("input.map-lat").val();
     var lng = $(this).children("input.map-lng").val();
     var coords = {lat: parseFloat(lat),
-                lng: parseFloat(lng)};
+                  lng: parseFloat(lng)};
 
     // Create map and marker in the div
-    var map = new google.maps.Map(this, {center: coords, zoom: 14});
-    var marker = new google.maps.Marker({position: coords, map: map});
+    var map = new google.maps.Map(this, {center: coords,
+                                         zoom: 14,
+                                         gestureHandling: 'cooperative',
+                                         mapTypeControl: false,
+                                         streetViewControl: false
+                                        });
+
+    var marker = new google.maps.Marker({position: coords,
+                                         map: map,
+                                         animation: google.maps.Animation.DROP,
+                                         title: venue,
+                                        });
+
+    // Open info window on marker click
+    var infowindow = new google.maps.InfoWindow({
+        content: "<h4>" + venue + "</h4>"
+    });
+    marker.addListener('click', function() {
+        infowindow.open(map, marker);
+    });
 }

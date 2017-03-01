@@ -408,7 +408,8 @@ class TestServerLoggedIn(unittest.TestCase):
         self.assertIn('Mykki Blanco &amp; Cakes Da Killa', result.data)
         self.assertIn('<input type="hidden" class="songkick-id" value="2">', result.data)
         self.assertIn('The New Parish', result.data)
-        self.assertIn('{lat: 37.8077, lng: -122.2727}', result.data)
+        self.assertIn('<input type="hidden" class="map-lat" value="37.8077">', result.data)
+        self.assertIn('<input type="hidden" class="map-lng" value="-122.2727">', result.data)
         self.assertIn('Fri Mar 03, 2017 at 8:00 PM', result.data)
         self.assertIn('View this event on Songkick', result.data)
 
