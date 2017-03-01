@@ -250,6 +250,7 @@ function addConcert(evt){
         "display-name": $(this).siblings("input.display-name").val(),
         "artist": $(this).siblings("input.artist").val(),
         "spotify-id": $(this).siblings("input.spotify-id").val(),
+        "image-url": $(this).siblings("input.image-url").val(),
         "venue-name": $(this).siblings("input.venue-name").val(),
         "venue-lat": $(this).siblings("input.venue-lat").val(),
         "venue-lng": $(this).siblings("input.venue-lng").val(),

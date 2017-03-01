@@ -165,6 +165,18 @@
       // Set artist with bold tag 
       var artist = $("<b>").text(concert.artist);
 
+      var artistImg;
+      // Set image for artist if available
+      if (concert.image_url) {
+        var artistImg = "<br>" + $("<img>").attr("src", concert.image_url);
+      }
+
+      var source;
+      // Set concert's source artist if available
+      if (concert.source) {
+        source = "<br>Recommended based on your interest in " + concert.source;
+      }
+
       // Set display name with surrounding line breaks
       var displayName = "<br>" + concert.display_name + "<br>";
 
@@ -204,7 +216,7 @@
       var addForm = createAddConcertForm(concert);
 
       // Add all elements to concertDiv and return the div
-      concertDiv.append(artist, displayName, location, start, url, addForm, "<br>");
+      concertDiv.append(artist, artistImg, source, displayName, location, start, url, addForm, "<br>");
       return concertDiv;
     }
 
@@ -229,6 +241,9 @@
 
       var spotifyID = $("<input>").attr("type", "hidden");
       spotifyID.addClass("spotify-id").val(concert.spotify_id);
+
+      var imageURL = $("<input>").attr("type", "hidden");
+      imageURL.addClass("image-url").val(concert.image_url);
 
       var venue_name = $("<input>").attr("type", "hidden");
       venue_name.addClass("venue-name").val(concert.venue_name);
@@ -267,7 +282,7 @@
       {% endif %}
 
       // Add all inputs to form and return it
-      addForm.append(songkickID, artist, displayName, songkickURL, spotifyID, venue_name, venue_lat, venue_lng, city, start, submit);
+      addForm.append(songkickID, artist, displayName, songkickURL, spotifyID, imageURL, venue_name, venue_lat, venue_lng, city, start, submit);
       return addForm;
     }
 
