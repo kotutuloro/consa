@@ -82,6 +82,7 @@ class Concert(db.Model):
     artist = db.Column(db.String(64),
                        nullable=False)
     spotify_id = db.Column(db.String(64))
+    image_url = db.Column(db.String(256))
     venue_name = db.Column(db.String(64))
     venue_lat = db.Column(db.Float)
     venue_lng = db.Column(db.Float)
@@ -98,6 +99,7 @@ class Concert(db.Model):
         songkick_url = form.get('songkick-url')
         artist = form.get('artist')
         spotify_id = form.get('spotify-id')
+        image_url = form.get('image-url')
         venue_name = form.get('venue-name')
         venue_lat = form.get('venue-lat')
         venue_lng = form.get('venue-lng')
@@ -110,6 +112,7 @@ class Concert(db.Model):
                           songkick_url=songkick_url,
                           artist=artist,
                           spotify_id=spotify_id,
+                          image_url=image_url,
                           venue_name=venue_name,
                           venue_lat=venue_lat,
                           venue_lng=venue_lng,
@@ -165,6 +168,7 @@ def example_data():
 
     c1 = Concert(songkick_id=1,
                  artist='clipping.',
+                 image_url='https://i.scdn.co/image/96f3fd452d3871eea1ba9ba9cab63b002d8360bb',
                  venue_name='Brick & Mortar',
                  venue_lat=37.7697,
                  venue_lng=-122.4203,
@@ -172,6 +176,7 @@ def example_data():
                  display_name='clipping. & Baseck')
     c2 = Concert(songkick_id=2,
                  artist='Cakes Da Killa',
+                 image_url='https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791',
                  venue_name='The New Parish',
                  venue_lat=37.8077,
                  venue_lng=-122.2727,

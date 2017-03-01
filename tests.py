@@ -140,7 +140,7 @@ class TestModel(unittest.TestCase):
                 'venue-lat': u'37.8123',
                 'venue-lng': u'-122.2725',
                 'city': u'Oakland, CA',
-                'image_url': u'https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791',
+                'image-url': u'https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791',
                 'start-datetime': u'Sat, 06 May 2017 21:00:00 GMT'}
 
         nokia = model.Concert.query.get(3)
