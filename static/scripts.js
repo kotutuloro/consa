@@ -362,3 +362,18 @@ function removeConcert(evt){
         });
     }
 }
+
+
+// Create a Google Maps object for a concert div
+function createConcertMap(index) {
+
+    // Get concert's coordinates from hidden inputs
+    var lat = $(this).children("input.map-lat").val();
+    var lng = $(this).children("input.map-lng").val();
+    var coords = {lat: parseFloat(lat),
+                lng: parseFloat(lng)};
+
+    // Create map and marker in the div
+    var map = new google.maps.Map(this, {center: coords, zoom: 14});
+    var marker = new google.maps.Marker({position: coords, map: map});
+}
