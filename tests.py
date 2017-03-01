@@ -23,9 +23,10 @@ class TestSongkick(unittest.TestCase):
         self.assertEqual(songkick.find_songkick_locations("San Francisco, TX"), [])
 
     def test_concert(self):
-        artist = {'1234': {'artist': 'Open Mike Eagle',
-                           'image_url': 'https://i.scdn.co/image/7a79a4f7ef164f418034d6fe5e53be24123610bf',
-                           'source': 'Run The Jewels'}}
+        artist = {'spotify_id': '1234',
+                  'artist': 'Open Mike Eagle',
+                  'image_url': 'https://i.scdn.co/image/7a79a4f7ef164f418034d6fe5e53be24123610bf',
+                  'source': 'Run The Jewels'}
         concerts = songkick.find_songkick_concerts(artist)
         self.assertIsInstance(concerts, list)
 

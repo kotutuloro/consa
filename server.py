@@ -344,11 +344,18 @@ def return_concerts():
     # Get artist's spotify ID and name from request
     spotify_id = request.args.get('spotify-id')
     artist = request.args.get('artist')
+    image_url = request.args.get('image-url')
+    source = request.args.get('source')
+
+    search_dict = {'spotify_id': spotify_id,
+                   'artist': artist,
+                   'image_url': image_url,
+                   'source': source}
 
     # Get concert recommendations using saved location (SF Bay as default)
     locID = session.get('locID', 'sk:26330')
 
-    concert_recs = find_songkick_concerts(spotify_id, artist, locID)
+    concert_recs = find_songkick_concerts(search_dict, locID)
 
     return jsonify(concert_recs)
 

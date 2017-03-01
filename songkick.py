@@ -47,7 +47,7 @@ def find_songkick_locations(search_term):
     return metros
 
 
-def find_songkick_concerts(spotify_id, artist, location="sk:26330"):
+def find_songkick_concerts(search_dict, location="sk:26330"):
     """Takes Spotify artist info and returns a list of concert dictionaries
 
     Makes requests to the Songkick API for upcoming events in Songkick location
@@ -61,7 +61,7 @@ def find_songkick_concerts(spotify_id, artist, location="sk:26330"):
     # Make GET request to songkick API for this location & artist
     payload = {
         'apikey': songkick_key,
-        'artist_name': artist,
+        'artist_name': search_dict['artist'],
         'location': location,
     }
     event_response = requests.get(SONGKICK_API_URL + "/events.json", payload)
@@ -83,12 +83,14 @@ def find_songkick_concerts(spotify_id, artist, location="sk:26330"):
                     'display_name': event['displayName'],
                     'songkick_id': event['id'],
                     'songkick_url': event['uri'],
-                    'artist': artist,
-                    'spotify_id': spotify_id,
+                    'artist': search_dict['artist'],
+                    'spotify_id': search_dict['spotify_id'],
+                    'image_url': search_dict['image_url'],
                     'venue_name': event['venue']['displayName'],
                     'venue_lat': event['venue']['lat'],
                     'venue_lng': event['venue']['lng'],
                     'city': event['location']['city'],
+                    'source': search_dict['source'],
                 }
 
                 # Set concert dict's start_datetime as datetime, or date if datetime unavailable
