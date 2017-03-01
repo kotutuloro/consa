@@ -23,7 +23,10 @@ class TestSongkick(unittest.TestCase):
         self.assertEqual(songkick.find_songkick_locations("San Francisco, TX"), [])
 
     def test_concert(self):
-        concerts = songkick.find_songkick_concerts('1234', 'Run The Jewels')
+        artist = {'1234': {'artist': 'Open Mike Eagle',
+                           'image_url': 'https://i.scdn.co/image/7a79a4f7ef164f418034d6fe5e53be24123610bf',
+                           'source': 'Run The Jewels'}}
+        concerts = songkick.find_songkick_concerts(artist)
         self.assertIsInstance(concerts, list)
 
 
@@ -51,11 +54,14 @@ class TestAnalyzation(unittest.TestCase):
         self.assertNotEqual(len(result), 0)
 
     def test_parse_artist_response(self):
-        sample_response = sample_apis.top_artists['items']
-        true_result = analyzation.parse_artist_response(sample_response)
-        expected_result = {'5HJ2kX5UTwN4Ns8fB5Rn1I': 'clipping.',
-                           '6Tyzp9KzpiZ04DABQoedps': 'Little Dragon',
-                           '0QJIPDAEDILuo8AIq3pMuU': 'M.I.A.'}
+        sample_response = sample_apis.clipping_related_1['artists']
+        true_result = analyzation.parse_artist_response(sample_response, 'clipping.')
+        expected_result = {'0S05AeePINj4CeTVMfysIu': {'artist': 'Santigold',
+                                                      'source': 'clipping.',
+                                                      'image_url': 'https://i.scdn.co/image/c2c738528eb909cf6037cd6bafb4b1b24cf47b86'},
+                           '6Tyzp9KzpiZ04DABQoedps': {'artist': 'Rye Rye',
+                                                      'source': 'clipping.',
+                                                      'image_url': 'https://i.scdn.co/image/728d957b8f0304cf93d4b1593b4856ffb1d87ee8'}}
 
         self.assertEqual(true_result, expected_result)
 
@@ -117,7 +123,7 @@ class TestModel(unittest.TestCase):
         self.assertIsNone(clip.songkick_url)
         self.assertEqual(clip.venue_lat, 37.7697)
         self.assertEqual(clip.venue_lng, -122.4203)
-        self.assertIsInstance(clip.users, list)
+        self.assertEqual(clip.image_url, 'https://i.scdn.co/image/96f3fd452d3871eea1ba9ba9cab63b002d8360bb')
 
         cakes = model.Concert.query.get(2)
         self.assertEqual(cakes.artist, 'Cakes Da Killa')
@@ -125,6 +131,7 @@ class TestModel(unittest.TestCase):
         self.assertEqual(cakes.venue_lat, 37.8077)
         self.assertIsInstance(cakes.start_datetime, datetime)
         self.assertEqual(2017, cakes.start_datetime.year)
+        self.assertIsInstance(cakes.users, list)
 
     def test_concert_create_from_form(self):
         form = {'songkick-id': u'3',
@@ -133,6 +140,7 @@ class TestModel(unittest.TestCase):
                 'venue-lat': u'37.8123',
                 'venue-lng': u'-122.2725',
                 'city': u'Oakland, CA',
+                'image_url': u'https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791',
                 'start-datetime': u'Sat, 06 May 2017 21:00:00 GMT'}
 
         nokia = model.Concert.query.get(3)
@@ -146,6 +154,7 @@ class TestModel(unittest.TestCase):
         self.assertEqual(nokia.artist, 'Princess Nokia')
         self.assertEqual(nokia.venue_lng, -122.2725)
         self.assertEqual(nokia.venue_name, 'Starline Social Club')
+        self.assertEqual(nokia.image_url, 'https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791')
         self.assertIsInstance(nokia.start_datetime, datetime)
 
         failure = model.Concert.create_from_form({})
@@ -332,7 +341,7 @@ class TestServer(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
 
     def test_concerts(self):
-        result = self.client.get('/concerts?spotify-id=123&artist=clipping')
+        result = self.client.get('/concerts?spotify-id=123&artist=clipping&image-url=www.clip.com/img.jpg')
         self.assertEqual(result.status_code, 200)
         self.assertIsNotNone(result.data)
 
@@ -408,6 +417,7 @@ class TestServerLoggedIn(unittest.TestCase):
         self.assertIn('Mykki Blanco &amp; Cakes Da Killa', result.data)
         self.assertIn('<input type="hidden" class="songkick-id" value="2">', result.data)
         self.assertIn('The New Parish', result.data)
+        self.assertIn('src="https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791"', result.data)
         self.assertIn('<input type="hidden" class="map-lat" value="37.8077">', result.data)
         self.assertIn('<input type="hidden" class="map-lng" value="-122.2727">', result.data)
         self.assertIn('Fri Mar 03, 2017 at 8:00 PM', result.data)

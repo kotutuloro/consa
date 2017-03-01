@@ -85,8 +85,10 @@
       $("div.concert-map").each(createConcertMap);
     }
 
-    </script>
-    <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGqlMXnmcmuzeKnuaJKGZi0BEls3rJnmE&callback=initMaps">
-    </script>
+  </script>
+
+  <!-- Loads Google Maps API async and calls initMaps() -->
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGqlMXnmcmuzeKnuaJKGZi0BEls3rJnmE&callback=initMaps">
+  </script>
 {% endblock %}
