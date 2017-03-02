@@ -232,14 +232,14 @@ def return_location_matches():
 
 @app.route('/artist-search.json')
 def return_artist_matches():
-    """Return dictionary of Spotify artists matching search"""
+    """Return list of Spotify artists matching search"""
 
     # Get search term from AJAX request
     search_term = request.args.get('search-term')
 
     artists = find_spotify_artists(search_term)
 
-    # If dictionary not empty, return a dictionary of results
+    # If list not empty, return a list of results
     if artists:
         return jsonify(artists)
 
@@ -330,7 +330,7 @@ def return_recs_from_search():
     """Returns JSON dictionary of recommended artists using chosen artists"""
 
     # Get selected artists from form data
-    selected_artists = {key: {'artist': val} for (key, val) in request.args.iteritems()}
+    selected_artists = [{'spotify_id': key, 'artist': val} for (key, val) in request.args.iteritems()]
 
     artist_recs = get_artist_recs(selected_artists)
 

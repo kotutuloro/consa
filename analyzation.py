@@ -4,98 +4,71 @@ import spotipy
 
 
 def find_spotify_artists(search_term):
-    """Returns dictionary of results for artists matching the search term"""
+    """Returns list of results for artists matching the search term"""
 
     # Search for artists using the term
     sp = spotipy.Spotify()
     artist_response = sp.search(search_term, type='artist', limit=5)
 
     # Create a list of search results
-    artists_dict = parse_artist_response(artist_response['artists']['items'])
+    artist_list = parse_artist_response(artist_response['artists']['items'])
 
-    return artists_dict
-
-
-# def parse_artist_search(artists_response):
-#     """Returns a list of dictionaries for each artist
-
-#     Each dictionary in the returned list has a spotify ID, artist name, and image url"""
-
-#     results_list = []
-
-#     # Iterate through list of artist items in response
-#     for artist in artists_response:
-
-#         # Create dictionary for the artist
-#         artist_dict = {}
-#         artist_dict['spotify_id'] = artist['id']
-#         artist_dict['artist'] = artist['name']
-
-#         # Add a url for the artist's image if available
-#         try:
-#             artist_dict['image_url'] = artist['images'][0]['url']
-#         except IndexError:
-#             artist_dict['image_url'] = None
-
-#         # Add dictionary to the list
-#         results_list.append(artist_dict)
-
-#     return results_list
+    return artist_list
 
 
 def get_top_artist_recs(spotify):
-    """Returns dictionary of artist recommendations using Spotify API object"""
+    """Returns list of artist recommendations using Spotify API object"""
 
     # Get user's top artists
     top_artists_response = spotify.current_user_top_artists(limit=10,
                                                             time_range='medium_term')
-    top_artists_dict = parse_artist_response(top_artists_response['items'])
+    top_artists_list = parse_artist_response(top_artists_response['items'])
 
     # Get artists related to each of the user's top artists
-    related_artists_dict = get_artist_recs(top_artists_dict)
+    related_artists_dict = get_artist_recs(top_artists_list)
 
     return related_artists_dict
 
 
-def get_artist_recs(artists_dict):
-    """Returns dictionary of artist recommendations using dictionary of artists"""
+def get_artist_recs(artists_list):
+    """Returns list of artist recommendations using list of artist dicitonaries"""
 
     sp = spotipy.Spotify()
 
-    # Get artists related to each of the artists in the dictionary
-    related_artists_dict = {}
-    for artist_id, artist_info in artists_dict.iteritems():
-        rel_artists_resp = sp.artist_related_artists(artist_id)
-        new_rel_artists = parse_artist_response(rel_artists_resp['artists'], artist_info['artist'])
-        related_artists_dict.update(new_rel_artists)
+    related_artists_list = []
 
-    return related_artists_dict
+    # Get artists related to each of the artists in the list
+    for artist_dict in artists_list:
+        rel_artists_resp = sp.artist_related_artists(artist_dict['spotify_id'])
+        new_rel_artists = parse_artist_response(rel_artists_resp['artists'], artist_dict['artist'])
+        related_artists_list.extend(new_rel_artists)
+
+    return related_artists_list
 
 
 def parse_artist_response(artists_response, source=None):
-    """Takes results of API call for artists and returns a dictionary of artists
+    """Takes results of API call and returns a list of dictionaries for each artist
 
-    The returned dictionary uses Spotify IDs as keys and dicitonaries as values
-    with the artist's name, image url, and the artist that was used to recommend
-    this artist"""
+    Each dictionary in the returned list has a spotify ID, artist name, source, and image url"""
 
-    artists_dict = {}
+    results_list = []
 
     # Iterate through list of artist items in response
     for artist in artists_response:
 
-        # Assigns artist's name as value to key of dictionary
-        spotify_id = artist['id']
-        artist_name = artist['name']
+        # Create dictionary for the artist
+        artist_dict = {}
+        artist_dict['spotify_id'] = artist['id']
+        artist_dict['artist'] = artist['name']
+        artist_dict['source'] = source
 
         # Add a url for the artist's image if available
         try:
-            image_url = artist['images'][0]['url']
+            artist_dict['image_url'] = artist['images'][0]['url']
         except IndexError:
-            image_url = None
+            artist_dict['image_url'] = None
 
-        artists_dict[spotify_id] = {'artist': artist_name,
-                                    'source': source,
-                                    'image_url': image_url}
+        # Add dictionary to the list
+        results_list.append(artist_dict)
 
-    return artists_dict
+    return results_list

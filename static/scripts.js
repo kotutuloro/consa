@@ -115,13 +115,13 @@ function displayArtists(artists) {
     // If artists found
     if (artists) {
 
-        // Iterate through dictionary of artist results
-        for (var spotifyID in artists) {
-            var current = artists[spotifyID];
+        // Iterate through list of artist results
+        for (var i = 0; i < artists.length; i++) {
+            var current = artists[i];
 
             // Create div for the artist with data embedded
             var artistDiv = $("<div>").addClass("artist-option");
-            artistDiv.data({"spotifyID": spotifyID,
+            artistDiv.data({"spotifyID": current.spotify_id,
                             "artist": current.artist
                           });
             $("<h4>").text(current.artist).appendTo(artistDiv);

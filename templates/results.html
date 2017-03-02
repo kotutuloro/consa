@@ -86,17 +86,18 @@
       } else {
         // Initiate variables to keep track of end of get requests
         resultCount = 0;
-        expectedResults = Object.keys(artistRecs).length;
+        expectedResults = artistRecs.length;
 
-        // Iterate throuh dictionary of recommended artists
-        for (spotifyID in artistRecs) {
+        // Iterate throuh list of recommended artists
+        for (var i = 0; i < artistRecs.length; i++) {
+          var current = artistRecs[i]
   
           // Make GET request to server for each artist and display concerts
           payload = {
-            'spotify-id': spotifyID,
-            'artist': artistRecs[spotifyID]['artist'],
-            'image-url': artistRecs[spotifyID]['image_url'],
-            'source': artistRecs[spotifyID]['source'],
+            'spotify-id': current['spotifyID'],
+            'artist': current['artist'],
+            'image-url': current['image_url'],
+            'source': current['source'],
           };
           $.get('/concerts.json', payload, displayConcerts)
 
