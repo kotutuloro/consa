@@ -218,7 +218,7 @@ function submitNoAuth(evt) {
 
     // Otherwise, send data
     } else {
-        // Merger selected artists & location data into payload
+        // Merge selected artists & location data into payload
         var payload = Object.assign({}, selectedArtists, selectedLoc);
 
         // Create hidden form & inputs with location and chosen artists
