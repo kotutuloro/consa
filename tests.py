@@ -309,26 +309,26 @@ class TestServer(unittest.TestCase):
         self.assertIn('<div id="concert-results" hidden>', result.data)
 
     def test_location_matches(self):
-        result = self.client.get('/location-search?search-term=SanFrancisco,+TX')
+        result = self.client.get('/location-search.json?search-term=SanFrancisco,+TX')
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.data, '')
 
-        result = self.client.get('/location-search?search-term=Houston')
+        result = self.client.get('/location-search.json?search-term=Houston')
         self.assertNotEqual(result.data, '')
         self.assertIn('"displayName": "Houston"', result.data)
         self.assertIn('"displayName": "TX"', result.data)
 
     def test_artist_matches(self):
-        result = self.client.get('/artist-search?search-term=Run+The+Jewels')
+        result = self.client.get('/artist-search.json?search-term=Run+The+Jewels')
         self.assertEqual(result.status_code, 200)
         self.assertIn('Run The Jewels', result.data)
 
-        result = self.client.get('/artist-search?search-term=asdfasdfasdf')
+        result = self.client.get('/artist-search.json?search-term=asdfasdfasdf')
         self.assertEqual(result.status_code, 200)
         self.assertEqual('', result.data)
 
     def test_request_authorization(self):
-        result = self.client.get('/spotify-auth')
+        result = self.client.get('/spotify-auth.json')
         self.assertEqual(result.status_code, 200)
 
         client_id = os.getenv('SPOTIPY_CLIENT_ID')
@@ -337,17 +337,17 @@ class TestServer(unittest.TestCase):
         self.assertIn('accounts.spotify.com', result.data)
 
     def test_recommendations(self):
-        result = self.client.get('/recs?code=AbCdEf')
+        result = self.client.get('/recs.json?code=AbCdEf')
         self.assertEqual(result.status_code, 200)
         self.assertIn('Unable to authorize', result.data)
 
     def test_recs_from_search(self):
         artists = {'5HJ2kX5UTwN4Ns8fB5Rn1I': 'clipping.'}
-        result = self.client.get('/recs-from-search', data=artists)
+        result = self.client.get('/recs-from-search.json', data=artists)
         self.assertEqual(result.status_code, 200)
 
     def test_concerts(self):
-        result = self.client.get('/concerts?spotify-id=123&artist=clipping&image-url=www.clip.com/img.jpg')
+        result = self.client.get('/concerts.json?spotify-id=123&artist=clipping&image-url=www.clip.com/img.jpg')
         self.assertEqual(result.status_code, 200)
         self.assertIsNotNone(result.data)
 

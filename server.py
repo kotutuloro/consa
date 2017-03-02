@@ -208,7 +208,7 @@ def remove_saved_concert():
     return str(success)
 
 
-@app.route('/location-search')
+@app.route('/location-search.json')
 def return_location_matches():
     """Return list of Songkick metro areas matching search
 
@@ -230,7 +230,7 @@ def return_location_matches():
         return ''
 
 
-@app.route('/artist-search')
+@app.route('/artist-search.json')
 def return_artist_matches():
     """Return list of Spotify artists matching search"""
 
@@ -248,7 +248,7 @@ def return_artist_matches():
         return ''
 
 
-@app.route('/spotify-auth')
+@app.route('/spotify-auth.json')
 def request_authorization():
     """Saves location info and returns url for Spotify authorization"""
 
@@ -258,7 +258,7 @@ def request_authorization():
     # Get url for Spotify authorization
     auth_url = SPOTIFY_OAUTH.get_authorize_url()
 
-    return auth_url
+    return jsonify(auth_url)
 
 
 @app.route('/callback')
@@ -276,7 +276,7 @@ def return_results_page():
                            user_saved_concerts=user_saved_concerts)
 
 
-@app.route('/recs')
+@app.route('/recs.json')
 def return_recommendations():
     """Connects to Spotify API and returns JSON dictionary of recommended artists
 
@@ -325,7 +325,7 @@ def return_no_auth_results():
                            selected_artists=selected_artists)
 
 
-@app.route('/recs-from-search')
+@app.route('/recs-from-search.json')
 def return_recs_from_search():
     """Returns JSON dictionary of recommended artists using chosen artists"""
 
@@ -337,7 +337,7 @@ def return_recs_from_search():
     return jsonify(artist_recs)
 
 
-@app.route('/concerts')
+@app.route('/concerts.json')
 def return_concerts():
     """Returns JSON list of concerts for an artist and location"""
 

@@ -56,7 +56,7 @@
     // Make GET request to server and display recommended concerts
     if (authCode) {
       // Use Spotify authorization if authCode available
-      $.get('/recs', {'auth-code': authCode}, findConcerts)
+      $.get('/recs.json', {'auth-code': authCode}, findConcerts)
 
       // Display error message if GET request fails
           .fail(function(err){
@@ -66,7 +66,7 @@
 
     } else {
       // Use selected artists from template render if no auth
-      $.get('/recs-from-search', selectedArtists, findConcerts)
+      $.get('/recs-from-search.json', selectedArtists, findConcerts)
 
       // Display error message if GET request fails
           .fail(function(err){
@@ -98,7 +98,7 @@
             'image-url': artistRecs[spotifyID]['image_url'],
             'source': artistRecs[spotifyID]['source'],
           };
-          $.get('/concerts', payload, displayConcerts)
+          $.get('/concerts.json', payload, displayConcerts)
 
           // Display error message if GET request fails
               .fail(function(err){

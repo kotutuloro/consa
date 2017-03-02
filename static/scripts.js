@@ -23,7 +23,7 @@ function searchSongkickLoc(evt) {
 
     // Make GET request to server and display locations
     var searchTerm = $("#location-input").val();
-    $.get("/location-search", {'search-term': searchTerm}, displayLocs)
+    $.get("/location-search.json", {'search-term': searchTerm}, displayLocs)
 
     // Display error message if GET request fails
         .fail(function(err){
@@ -96,7 +96,7 @@ function searchSpotifyArtist(evt) {
 
     // Make GET request to server and display artist results
     var searchTerm = $("#artist-input").val();
-    $.get("/artist-search", {'search-term': searchTerm}, displayArtists)
+    $.get("/artist-search.json", {'search-term': searchTerm}, displayArtists)
 
         // Display error message if GET request fails
         .fail(function(err){
@@ -189,7 +189,7 @@ function submitSpotifyAuth(evt) {
     var selectedLoc = $('input[name="sk-loc"]:checked');
 
     // Send request to server with location's data and open returned url
-    $.get('/spotify-auth', selectedLoc.data(), function(authurl) {
+    $.get('/spotify-auth.json', selectedLoc.data(), function(authurl) {
         window.location = authurl;
     }).fail(function(err){
 
