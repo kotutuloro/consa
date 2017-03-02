@@ -21,6 +21,12 @@
           <div class="concert-info col-xs-8">
 
             <b>{{ concert.artist }}</b>
+            
+            {% if concert.image_url %}
+              <br>
+              <img class="saved-concert-img" src="{{ concert.image_url }}" style="max-width: 200px">
+            {% endif %}
+
             <br>
             {{ concert.display_name }} 
 

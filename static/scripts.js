@@ -336,7 +336,7 @@ function removeConcert(evt){
     evt.preventDefault();
 
     var thisButton = $(this);
-    var thisDiv = $(this).closest("div");
+    var thisDiv = $(this).closest("div.saved-concert");
 
     // Confirm deletion
     var confirmation = confirm("Are you sure you want to delete this?");
