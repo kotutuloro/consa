@@ -225,25 +225,25 @@ def return_location_matches():
     if metros:
         return jsonify(metros)
 
-    # Return empty string if or no results
+    # Return empty string if no results
     else:
         return ''
 
 
 @app.route('/artist-search.json')
 def return_artist_matches():
-    """Return list of Spotify artists matching search"""
+    """Return dictionary of Spotify artists matching search"""
 
     # Get search term from AJAX request
     search_term = request.args.get('search-term')
 
     artists = find_spotify_artists(search_term)
 
-    # If list not empty, return a list of metro areas
+    # If dictionary not empty, return a dictionary of results
     if artists:
         return jsonify(artists)
 
-    # Return empty string if or no results
+    # Return empty string if no results
     else:
         return ''
 

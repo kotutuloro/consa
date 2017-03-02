@@ -4,43 +4,43 @@ import spotipy
 
 
 def find_spotify_artists(search_term):
-    """Returns list of results for artists matching the search term"""
+    """Returns dictionary of results for artists matching the search term"""
 
     # Search for artists using the term
     sp = spotipy.Spotify()
     artist_response = sp.search(search_term, type='artist', limit=5)
 
     # Create a list of search results
-    artist_list = parse_artist_search(artist_response['artists']['items'])
+    artists_dict = parse_artist_response(artist_response['artists']['items'])
 
-    return artist_list
+    return artists_dict
 
 
-def parse_artist_search(artists_response):
-    """Returns a list of dictionaries for each artist
+# def parse_artist_search(artists_response):
+#     """Returns a list of dictionaries for each artist
 
-    Each dictionary in the returned list has a spotify ID, artist name, and image url"""
+#     Each dictionary in the returned list has a spotify ID, artist name, and image url"""
 
-    results_list = []
+#     results_list = []
 
-    # Iterate through list of artist items in response
-    for artist in artists_response:
+#     # Iterate through list of artist items in response
+#     for artist in artists_response:
 
-        # Create dictionary for the artist
-        artist_dict = {}
-        artist_dict['spotify_id'] = artist['id']
-        artist_dict['artist'] = artist['name']
+#         # Create dictionary for the artist
+#         artist_dict = {}
+#         artist_dict['spotify_id'] = artist['id']
+#         artist_dict['artist'] = artist['name']
 
-        # Add a url for the artist's image if available
-        try:
-            artist_dict['image_url'] = artist['images'][0]['url']
-        except IndexError:
-            artist_dict['image_url'] = None
+#         # Add a url for the artist's image if available
+#         try:
+#             artist_dict['image_url'] = artist['images'][0]['url']
+#         except IndexError:
+#             artist_dict['image_url'] = None
 
-        # Add dictionary to the list
-        results_list.append(artist_dict)
+#         # Add dictionary to the list
+#         results_list.append(artist_dict)
 
-    return results_list
+#     return results_list
 
 
 def get_top_artist_recs(spotify):
