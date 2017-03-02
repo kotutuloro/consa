@@ -40,21 +40,28 @@ def get_artist_recs(artists_list):
     # Get artists related to each of the artists in the list
     for artist_dict in artists_list:
         rel_artists_resp = sp.artist_related_artists(artist_dict['spotify_id'])
-        new_rel_artists = parse_artist_response(rel_artists_resp['artists'], artist_dict['artist'])
-        related_artists_list.extend(new_rel_artists)
+        related_artists_list = parse_artist_response(rel_artists_resp['artists'], related_artists_list, artist_dict['artist'])
 
     return related_artists_list
 
 
-def parse_artist_response(artists_response, source=None):
+def parse_artist_response(artists_response, results_list=None, source=None):
     """Takes results of API call and returns a list of dictionaries for each artist
 
     Each dictionary in the returned list has a spotify ID, artist name, source, and image url"""
 
-    results_list = []
+    if results_list is None:
+        results_list = []
+
+    # Create set of spotify ids for artists already in the results list
+    results_ids_set = {artist['spotify_id'] for artist in results_list}
 
     # Iterate through list of artist items in response
     for artist in artists_response:
+
+        # Skip this artist if it's already in the list
+        if artist['id'] in results_ids_set:
+            continue
 
         # Create dictionary for the artist
         artist_dict = {}
