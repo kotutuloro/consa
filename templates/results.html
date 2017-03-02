@@ -94,7 +94,9 @@
           // Make GET request to server for each artist and display concerts
           payload = {
             'spotify-id': spotifyID,
-            'artist': artistRecs[spotifyID]
+            'artist': artistRecs[spotifyID]['artist'],
+            'image-url': artistRecs[spotifyID]['image_url'],
+            'source': artistRecs[spotifyID]['source'],
           };
           $.get('/concerts', payload, displayConcerts)
 
@@ -163,22 +165,22 @@
       var concertDiv = $("<div>").addClass("concert-rec");
 
       // Set artist with bold tag 
-      var artist = $("<b>").text(concert.artist);
+      var artist = $("<b>").text(concert.artist) ;
 
       var artistImg;
       // Set image for artist if available
       if (concert.image_url) {
-        var artistImg = "<br>" + $("<img>").attr("src", concert.image_url);
+        var artistImg = $("<img>").attr("src", concert.image_url).css({'max-width': '150px', 'display': 'block'});
       }
 
       var source;
       // Set concert's source artist if available
       if (concert.source) {
-        source = "<br>Recommended based on your interest in " + concert.source;
+        source = "<br>Recommended based on your interest in " + concert.source + "<br>";
       }
 
       // Set display name with surrounding line breaks
-      var displayName = "<br>" + concert.display_name + "<br>";
+      var displayName = concert.display_name + "<br>";
 
       var location;
       // Set location to city if available

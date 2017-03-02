@@ -330,7 +330,7 @@ def return_recs_from_search():
     """Returns JSON dictionary of recommended artists using chosen artists"""
 
     # Get selected artists from form data
-    selected_artists = {key: val for (key, val) in request.args.iteritems()}
+    selected_artists = {key: {'artist': val} for (key, val) in request.args.iteritems()}
 
     artist_recs = get_artist_recs(selected_artists)
 

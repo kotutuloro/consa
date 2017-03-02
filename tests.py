@@ -49,18 +49,19 @@ class TestAnalyzation(unittest.TestCase):
         self.assertIsNone(result[2]['image_url'])
 
     def test_get_artist_recs(self):
-        top_artist = {'6Tyzp9KzpiZ04DABQoedps': 'Little Dragon'}
+        top_artist = {'6Tyzp9KzpiZ04DABQoedps': {'artist': 'Little Dragon'}}
         result = analyzation.get_artist_recs(top_artist)
         self.assertIsInstance(result, dict)
         self.assertNotEqual(len(result), 0)
+        self.assertEqual(result.values()[0]['source'], 'Little Dragon')
 
     def test_parse_artist_response(self):
         sample_response = sample_apis.clipping_related_1['artists']
         true_result = analyzation.parse_artist_response(sample_response, 'clipping.')
-        expected_result = {'0S05AeePINj4CeTVMfysIu': {'artist': 'Santigold',
+        expected_result = {'6Jrxnp0JgqmeUX1veU591p': {'artist': 'Santigold',
                                                       'source': 'clipping.',
                                                       'image_url': 'https://i.scdn.co/image/c2c738528eb909cf6037cd6bafb4b1b24cf47b86'},
-                           '6Tyzp9KzpiZ04DABQoedps': {'artist': 'Rye Rye',
+                           '0S05AeePINj4CeTVMfysIu': {'artist': 'Rye Rye',
                                                       'source': 'clipping.',
                                                       'image_url': 'https://i.scdn.co/image/728d957b8f0304cf93d4b1593b4856ffb1d87ee8'}}
 

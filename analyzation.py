@@ -64,27 +64,38 @@ def get_artist_recs(artists_dict):
 
     # Get artists related to each of the artists in the dictionary
     related_artists_dict = {}
-    for artist_id in artists_dict.keys():
+    for artist_id, artist_info in artists_dict.iteritems():
         rel_artists_resp = sp.artist_related_artists(artist_id)
-        new_rel_artists = parse_artist_response(rel_artists_resp['artists'])
+        new_rel_artists = parse_artist_response(rel_artists_resp['artists'], artist_info['artist'])
         related_artists_dict.update(new_rel_artists)
 
     return related_artists_dict
 
 
-def parse_artist_response(artists_response):
+def parse_artist_response(artists_response, source=None):
     """Takes results of API call for artists and returns a dictionary of artists
 
-    The returned dictionary uses Spotify IDs as keys and artist name as values"""
+    The returned dictionary uses Spotify IDs as keys and dicitonaries as values
+    with the artist's name, image url, and the artist that was used to recommend
+    this artist"""
 
     artists_dict = {}
 
     # Iterate through list of artist items in response
     for artist in artists_response:
 
-        # Assigns artist's name as value to key of Spotify ID
-        artist_id = artist['id']
+        # Assigns artist's name as value to key of dictionary
+        spotify_id = artist['id']
         artist_name = artist['name']
-        artists_dict[artist_id] = artist_name
+
+        # Add a url for the artist's image if available
+        try:
+            image_url = artist['images'][0]['url']
+        except IndexError:
+            image_url = None
+
+        artists_dict[spotify_id] = {'artist': artist_name,
+                                    'source': source,
+                                    'image_url': image_url}
 
     return artists_dict
