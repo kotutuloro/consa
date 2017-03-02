@@ -111,12 +111,16 @@ class TestModel(unittest.TestCase):
 
     def test_user_remove_concert(self):
         user = model.User.query.first()
+        clip = model.Concert.query.get(1)
         self.assertNotEqual(user.concerts, [])
         self.assertEqual(len(user.concerts), 1)
+        self.assertIsNotNone(clip)
 
         success = user.remove_concert(1)
+        clip = model.Concert.query.get(1)
         self.assertTrue(success)
         self.assertEqual(user.concerts, [])
+        self.assertIsNone(clip)
 
     def test_concerts(self):
         clip = model.Concert.query.get(1)

@@ -53,10 +53,15 @@ class User(db.Model):
         """
 
         # Delete all associations in users_concerts table between this user and concert
-        # Return True if successful
         try:
             UserConcert.query.filter(UserConcert.songkick_id == songkick_id,
                                      UserConcert.user_id == self.user_id).delete()
+
+            # Delete concert from database if no users associated
+            if not Concert.query.get(songkick_id).users:
+                Concert.query.filter(Concert.songkick_id == songkick_id).delete()
+
+            # Return True if successful
             db.session.commit()
             return True
 
