@@ -36,8 +36,12 @@ def find_songkick_locations(search_term):
             for loc in results['location']:
                 metro = loc['metroArea']
 
+                # Return a max of 5 matching areas
+                if len(metros) == 5:
+                    return metros
+
                 # If metro area has not already been added to list of metros
-                if metro['id'] not in metro_id_list:
+                elif metro['id'] not in metro_id_list:
 
                     # Add metro area to list
                     metros.append(metro)

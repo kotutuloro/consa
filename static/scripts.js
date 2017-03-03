@@ -75,6 +75,38 @@ function displayLocs(locations) {
 }
 
 
+// Toggle the visibility of the artist search area
+function toggleArtistSearch(evt) {
+
+    // If the artist search div is currently visible
+    if ($("#spotify-artist-search").is(":visible")) {
+
+        // Hide the div and scroll to the top of the body
+        $("#spotify-artist-search").slideUp();
+        $("#empty-landing").slideDown();
+        $("html, body").animate({
+            scrollTop: $("body").offset().top
+        }, 500);
+
+        // Change the button's text
+        $(this).text("Choose specific artists instead");
+
+    // If the artist search div is currently hidden
+    } else {
+
+        // Show the div and scroll down to it
+        $("#spotify-artist-search").slideDown();
+        $("#empty-landing").slideUp();
+        $("html, body").animate({
+            scrollTop: $("#specify-artists").offset().top
+        }, 500);
+
+        // Change the button's text
+        $(this).text("Hide specific artists");
+    }
+}
+
+
 // Send artist search to Spotify API via GET request
 function searchSpotifyArtist(evt) {
     evt.preventDefault();

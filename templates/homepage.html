@@ -5,43 +5,54 @@
 
 {% block content %}
 
-  <div id="search-form">
-
-    <form id="loc-search-form">
-      <label for="location-input">Location:</label>
-        <input type="text" id="location-input" name="location" value="{{ session.get('locName', 'SF Bay Area') }}">
-      <input type="submit" id="loc-search-button" value="Search">
-    </form>
-
-    <br>
-    <form id="spotify-auth-form">
-      <button id="spotify-auth" type="submit">Use your Spotify account's top artists</button>
-    </form>
-
-    OR
-    <br>
-    <button id="specify-artists">Choose specific artists instead</button>
-
-    <div id="spotify-artist-search" class="row" hidden>
-      <br>
-      <form id="artist-search-form" class="col-xs-8">
-        <label for="artist-input">Search for up to 10 artists:</label>
-          <br>
-          <input type="text" id="artist-input" name="artist">
-        <input type="submit" id="artist-search-button" value="Search">
-      </form>
-      <div id="chosen-artists" class="col-xs-4">
-        <h3>Selected Artists:</h3>
-        <button id="no-auth">Search using these artists</button>
-        <div id="chosen-artists-list"></div>
-      </div>
-    </div>
-
+  <div id="empty-landing" class="hidden-xs">
   </div>
+
+  <div class="row text-center">
+    <form id="loc-search-form" class=" col-lg-4 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
+      <label for="location-input">Location:</label>
+      <div clas="row">
+        <div class="col-xs-9">
+          <input type="text" id="location-input" class="form-control" name="location" value="{{ session.get('locName', 'SF Bay Area') }}">
+        </div>
+        <input type="submit" id="loc-search-button" class="btn col-xs-3" value="Search">
+      </div>
+    </form>
+  </div>
+
+  <div class="row text-center">
+    <br>
+    <div class="col-lg-4 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
+      <button id="spotify-auth" class="btn btn-block btn-success">Use your Spotify account's top artists</button>
+      
+      <span>OR</span>
+
+      <button id="specify-artists" class="btn btn-block btn-info">Choose specific artists instead</button>
+    </div>
+  </div>
+
+  <div id="spotify-artist-search" class="row" hidden>
+    <br>
+    <form id="artist-search-form" class="col-xs-8">
+      <label for="artist-input">Search for up to 10 artists:</label>
+        <br>
+        <input type="text" id="artist-input" name="artist">
+      <input type="submit" id="artist-search-button" value="Search">
+    </form>
+    <div id="chosen-artists" class="col-xs-4">
+      <h3>Selected Artists:</h3>
+      <button id="no-auth">Search using these artists</button>
+      <div id="chosen-artists-list"></div>
+    </div>
+  </div>
+
   <br>
+
   <br>
-  <div id="attributions">
-    Built using <img style="max-width: 100px" src="/static/img/spotify-logo-rgb-green.png"> and <img style="max-width: 100px" src="/static/img/by-songkick-black.png">
+  <div class="row">
+    <div id="attributions" class="text-center col-lg-4 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
+      Built using <img style="max-width: 100px" src="/static/img/spotify-logo-rgb-green.png"> and <img style="max-width: 100px" src="/static/img/by-songkick-black.png">
+    </div>
   </div>
   
 {% endblock %}
@@ -53,9 +64,7 @@
     $("#loc-search-button").on('click', searchSongkickLoc);
 
     // Toggle artist search div on click
-    $("#specify-artists").on('click', function(evt) {
-      $("#spotify-artist-search").slideToggle();
-    });
+    $("#specify-artists").on('click', toggleArtistSearch);
 
     // Call Spotify artist search function on click
     $("#artist-search-button").on('click', searchSpotifyArtist);
