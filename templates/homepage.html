@@ -9,13 +9,15 @@
   </div>
 
   <div class="row text-center">
-    <form id="loc-search-form" class=" col-lg-4 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
-      <label for="location-input">Location:</label>
-      <div clas="row">
+    <form id="loc-search-form" class="col-lg-4 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
+      <h3><label for="location-input">Search for your location:</label></h3>
+      <div class="row">
         <div class="col-xs-9">
-          <input type="text" id="location-input" class="form-control" name="location" value="{{ session.get('locName', 'SF Bay Area') }}">
+          <input type="text" id="location-input" class="form-control" name="location" placeholder="{{ session.get('locName', 'SF Bay Area, CA, US') }}">
         </div>
         <input type="submit" id="loc-search-button" class="btn col-xs-3" value="Search">
+      </div>
+      <div id="loc-search-results" class="row">
       </div>
     </form>
   </div>
@@ -23,31 +25,35 @@
   <div class="row text-center">
     <br>
     <div class="col-lg-4 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
-      <button id="spotify-auth" class="btn btn-block btn-success">Use your Spotify account's top artists</button>
+      <div id="auth-option">
+        <button id="spotify-auth" class="btn btn-block btn-success btn-lg">Use your Spotify account's top artists</button>
+        <span>OR</span>
+      </div>
       
-      <span>OR</span>
-
       <button id="specify-artists" class="btn btn-block btn-info">Choose specific artists instead</button>
     </div>
+    <br>
   </div>
 
   <div id="spotify-artist-search" class="row" hidden>
-    <br>
-    <form id="artist-search-form" class="col-xs-8">
-      <label for="artist-input">Search for up to 10 artists:</label>
-        <br>
-        <input type="text" id="artist-input" name="artist">
-      <input type="submit" id="artist-search-button" value="Search">
+    <form id="artist-search-form" class="col-md-6 col-md-offset-1 col-sm-7 col-xs-6">
+      <h4><label for="artist-input">Search for up to 10 artists:</label></h4>
+      <div class="row">
+        <div class="col-sm-9 col-xs-12">
+          <input type="text" class="form-control" id="artist-input" name="artist">
+        </div>
+        <input type="submit" class="btn col-sm-3 col-xs-12" id="artist-search-button" value="Search">
+      </div>
     </form>
-    <div id="chosen-artists" class="col-xs-4">
+
+    <div id="chosen-artists" class="col-md-3 col-sm-4 col-xs-5 col-xs-offset-1">
       <h3>Selected Artists:</h3>
-      <button id="no-auth">Search using these artists</button>
+      <button class="btn btn-block btn-success btn-lg" id="no-auth">Search for concerts</button>
       <div id="chosen-artists-list"></div>
     </div>
   </div>
 
   <br>
-
   <br>
   <div class="row">
     <div id="attributions" class="text-center col-lg-4 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">

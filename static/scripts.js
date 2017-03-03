@@ -18,7 +18,7 @@ function searchSongkickLoc(evt) {
 
     // Remove the previous fieldset and append new fieldset to form
     $("#loc-selection").remove();
-    $("#loc-search-form").append(locFieldset);
+    $("#loc-search-results").append(locFieldset);
     locFieldset.slideDown();
 
     // Make GET request to server and display locations
@@ -42,31 +42,31 @@ function displayLocs(locations) {
     // If locations found
     if (locations) {
 
-    // Iterate through list of locations
-    for (var i = 0; i < locations.length; i++) {
+        // Iterate through list of locations
+        for (var i = 0; i < locations.length; i++) {
 
-        // Get the metro area's information
-        var metro = locations[i];
-        var locID = metro.id;
-        var locName;
+            // Get the metro area's information
+            var metro = locations[i];
+            var locID = metro.id;
+            var locName;
 
-        // Create location's name from metro area's display name, county, and state (if available)
-        if (metro.state) {
-            locName = metro.displayName + ", " + metro.state.displayName + ", " + metro.country.displayName;
-        } else {
-            locName = metro.displayName + ", " + metro.country.displayName;
+            // Create location's name from metro area's display name, county, and state (if available)
+            if (metro.state) {
+                locName = metro.displayName + ", " + metro.state.displayName + ", " + metro.country.displayName;
+            } else {
+                locName = metro.displayName + ", " + metro.country.displayName;
+            }
+
+            // Create a radio button using the location's ID and name
+            var locRadio = '<input type="radio" name="sk-loc" value="sk:' + locID + '">' + locName + '<br>';
+
+            // Append radio button to location selection fieldset
+            $("#loc-selection").append(locRadio);
+
+            // Add ID & name to new radio button's data
+            var latest = $("#loc-selection input:last");
+            latest.data({"locID": "sk:" + locID, "locName": locName});
         }
-
-        // Create a radio button using the location's ID and name
-        var locRadio = '<input type="radio" name="sk-loc" value="sk:' + locID + '">' + locName + '<br>';
-
-        // Append radio button to location selection fieldset
-        $("#loc-selection").append(locRadio);
-
-        // Add ID & name to new radio button's data
-        var latest = $("#loc-selection input:last");
-        latest.data({"locID": "sk:" + locID, "locName": locName});
-    }
 
     // If no locations found, inform user
     } else {
@@ -84,6 +84,7 @@ function toggleArtistSearch(evt) {
         // Hide the div and scroll to the top of the body
         $("#spotify-artist-search").slideUp();
         $("#empty-landing").slideDown();
+        $("#auth-option").slideDown();
         $("html, body").animate({
             scrollTop: $("body").offset().top
         }, 500);
@@ -97,6 +98,7 @@ function toggleArtistSearch(evt) {
         // Show the div and scroll down to it
         $("#spotify-artist-search").slideDown();
         $("#empty-landing").slideUp();
+        $("#auth-option").slideUp();
         $("html, body").animate({
             scrollTop: $("#specify-artists").offset().top
         }, 500);
@@ -113,7 +115,7 @@ function searchSpotifyArtist(evt) {
 
     // Create div for artist results
     var artistSelectionDiv = $("<div>").attr("id", "artist-selection").hide();
-    var legend = $("<h3>").text("Choose the correct artist(s):");
+    var legend = $("<h4>").text("Choose the correct artist(s):");
 
     var loadingDiv = $("<div>").attr("id", "artist-loading").text("Loading...");
     var loadingImg = $("<img>").attr("src", "/static/img/load-gps.gif");
@@ -152,19 +154,22 @@ function displayArtists(artists) {
             var current = artists[i];
 
             // Create div for the artist with data embedded
-            var artistDiv = $("<div>").addClass("artist-option");
+            var artistDiv = $("<div>").addClass("artist-option row");
             artistDiv.data({"spotifyID": current.spotify_id,
                             "artist": current.artist
                           });
-            $("<h4>").text(current.artist).appendTo(artistDiv);
 
+            var nameDiv = $("<div>").addClass("col-sm-9 col-xs-12");
+            $("<h4>").text(current.artist).appendTo(nameDiv);
+
+            var imgDiv = $("<div>").addClass("col-sm-3 col-xs-12");
             // Add artist image if url available
             if (current.image_url) {
-                $("<img>").attr("src", current.image_url).css('max-width', '100px').prependTo(artistDiv);
+                $("<img>").attr("src", current.image_url).addClass("img-responsive img-rounded").css("max-height", "200px").appendTo(imgDiv);
             }
 
             // Append artist to selection div
-            $("#artist-selection").append(artistDiv);
+            artistDiv.append(imgDiv, nameDiv).appendTo("#artist-selection");
         }
 
     // If no artists found, inform user
