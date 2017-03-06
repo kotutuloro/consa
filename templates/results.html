@@ -11,16 +11,27 @@
       <div id="concert-results" hidden>
 
         <h1>Concerts you might be interested in</h1>
+
         <div class="row">
+
           <div class="col-xs-3">
             <img class="img-responsive" style="min-width: 100px" src="/static/img/powered-by-songkick-black.png">
           </div>
 
-          <div id="sort-results" class="col-sm-9 col-xs-12 text-right" hidden>
-            Sort results by
-            <button class="sort-by-date btn btn-sm">Date</button>
-            <button class="sort-by-artist btn btn-sm">Artist</button>
+          <div class="col-sm-9 col-xs-12">
+            <div id="sort-results" class="text-right" hidden>
+              Sort results by
+              <button class="sort-by-date btn btn-sm">Date</button>
+              <button class="sort-by-artist btn btn-sm">Artist</button>
+            </div>
+
+            <div class="progress">
+              <div id="results-progress" class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em">
+                0%
+              </div>
+            </div>
           </div>
+
         </div>
 
       </div>
@@ -86,7 +97,6 @@
             displayError("Artist search failed <br>" +
                   err.status + ": " + err.statusText);
           });
-    
     }
 
 
@@ -140,8 +150,14 @@
         recDiv.slideDown();
       }
 
-      // If this is part of last GET request, remove loading gif div
+      // Update progress bar div
       resultCount++;
+      var progPercent = resultCount / expectedResults * 100;
+      $("div#results-progress").text(Math.floor(progPercent) + "%");
+      $("div#results-progress").width(progPercent + "%");
+
+
+      // If this is part of last GET request, remove loading gif div
       if (resultCount === expectedResults) {
 
         // If there were no results, remove results div and display message
@@ -151,6 +167,7 @@
         // Otherwise, remove the loading div
         } else {
           $("#results-loading").fadeOut(); 
+          $("div.progress").slideUp();
           $("#sort-results").slideDown();
         }
       }
