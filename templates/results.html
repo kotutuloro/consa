@@ -5,27 +5,40 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Results</h1>
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
 
-  <div id="concert-results" hidden>
-    <h3>Concerts you might be interested in</h3>
-    <img style="max-width: 200px" src="/static/img/powered-by-songkick-black.png">
-    <div id="sort-results" hidden>
-      Sort results by
-      <button class="sort-by-date">Date</button>
-      <button class="sort-by-artist">Artist</button>
+      <div id="concert-results" hidden>
+
+        <h1>Concerts you might be interested in</h1>
+        <div class="row">
+          <div class="col-xs-3">
+            <img class="img-responsive" style="min-width: 100px" src="/static/img/powered-by-songkick-black.png">
+          </div>
+
+          <div id="sort-results" class="col-sm-9 col-xs-12 text-right" hidden>
+            Sort results by
+            <button class="sort-by-date btn btn-sm">Date</button>
+            <button class="sort-by-artist btn btn-sm">Artist</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="results-loading" class="text-center">
+        <h3>FINDING CONCERTS...</h3>
+        <img src="/static/img/load-hourglass.gif"><br>
+        This may take a minute
+      </div>
+
+      <div id="no-results" class="text-center" hidden>
+        <h1>Sorry!</h1>
+      </div>
+
     </div>
-    <br>
   </div>
 
-  <div id="results-loading">
-    <h2>FINDING CONCERTS...</h2>
-    <img src="/static/img/load-hourglass.gif"><br>
-    This may take a minute
-  </div>
 
-  <div id="no-results" hidden>
-  </div>
 
 {% endblock %}
 
@@ -163,16 +176,20 @@
     // Create a div.concert-rec for a concert object
     function createRecDiv(concert) {
       // Create a div with class concert-rec
-      var concertDiv = $("<div>").addClass("concert-rec");
+      var concertDiv = $("<div>").addClass("concert-rec row");
+
+      // Set image for artist if available
+      var imgDiv = $("<div>").addClass("concert-rec-img col-sm-3 col-xs-4");
+      if (concert.image_url) {
+        $("<img>").attr("src", concert.image_url).addClass("img-responsive")
+        // .css({'max-width': '150px', 'display': 'block'})
+        .appendTo(imgDiv);
+      }
+
+      var infoDiv = $("<div>").addClass("concert-rec-info col-sm-6 col-xs-8");
 
       // Set artist with bold tag 
-      var artist = $("<b>").text(concert.artist) ;
-
-      var artistImg;
-      // Set image for artist if available
-      if (concert.image_url) {
-        var artistImg = $("<img>").attr("src", concert.image_url).css({'max-width': '150px', 'display': 'block'});
-      }
+      var artist = $("<b>").text(concert.artist);
 
       var source;
       // Set concert's source artist if available
@@ -215,11 +232,14 @@
         });
       }
 
+      infoDiv.append(artist, "<br>", source, displayName, location, start, url);
+
       // Create a form for adding the concert
-      var addForm = createAddConcertForm(concert);
+      var formDiv = $("<div>").addClass("concert-rec-form col-sm-3 col-sm-offset-0 col-xs-8 col-xs-offset-2");
+      createAddConcertForm(concert).appendTo(formDiv);
 
       // Add all elements to concertDiv and return the div
-      concertDiv.append(artist, artistImg, source, displayName, location, start, url, addForm, "<br>");
+      concertDiv.append(imgDiv, infoDiv, formDiv, "<br>");
       return concertDiv;
     }
 
@@ -265,14 +285,14 @@
 
       // Create submit button
       var submit = $("<input>").attr("type", "submit");
-      submit.addClass("btn add-concert")
+      submit.addClass("btn btn-block add-concert")
 
       // If user logged in
       {% if session.get('user_id') %}
 
         // Disable submit button if concert in user's saved concerts
         if ( userSavedConcerts.includes( parseInt( songkickID.val() ) ) ) {
-          submit.prop("disabled", true).val("Concert previously saved");
+          submit.prop("disabled", true).val("Previously saved");
 
         // Enable submit button otherwise
         } else {
