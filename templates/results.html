@@ -12,10 +12,10 @@
 
         <h1>Concerts you might be interested in</h1>
 
-        <div class="row">
+        <div class="row results-options">
 
           <div class="col-xs-3">
-            <img class="img-responsive" style="min-width: 100px" src="/static/img/powered-by-songkick-black.png">
+            <img class="img-responsive" src="/static/img/powered-by-songkick-black.png">
           </div>
 
           <div class="col-sm-9 col-xs-12">
@@ -26,7 +26,7 @@
             </div>
 
             <div class="progress">
-              <div id="results-progress" class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em">
+              <div id="results-progress" class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
                 0%
               </div>
             </div>
@@ -197,9 +197,7 @@
       // Set image for artist if available
       var imgDiv = $("<div>").addClass("concert-rec-img col-sm-3 col-xs-4");
       if (concert.image_url) {
-        $("<img>").attr("src", concert.image_url).addClass("img-responsive")
-        // .css({'max-width': '150px', 'display': 'block'})
-        .appendTo(imgDiv);
+        $("<img>").attr("src", concert.image_url).addClass("img-responsive").appendTo(imgDiv);
       }
 
       var infoDiv = $("<div>").addClass("concert-rec-info col-sm-6 col-xs-8");

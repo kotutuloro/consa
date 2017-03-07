@@ -64,3 +64,32 @@
 #attributions img {
   max-width: 100px;
 }
+
+#concert-results h1 {
+  font-variant: small-caps;
+  text-decoration: overline underline;
+  font-size: 2.8em;
+  font-style: italic;
+}
+
+.results-options {
+  margin-bottom: 20px;
+}
+
+.results-options img {
+  min-width: 100px;
+  max-width: 125px;
+}
+
+#results-progress {
+  min-width: 2em;
+}
+
+.concert-rec {
+  border-top: 5px solid #484349;
+  padding: 25px;
+}
+
+.concert-rec-form {
+  padding: 10px;
+}
