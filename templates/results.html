@@ -21,8 +21,8 @@
           <div class="col-sm-9 col-xs-12">
             <div id="sort-results" class="text-right" hidden>
               Sort results by
-              <button class="sort-by-date btn btn-sm">Date</button>
-              <button class="sort-by-artist btn btn-sm">Artist</button>
+              <button class="sort-by-date btn btn-sm btn-info">Date</button>
+              <button class="sort-by-artist btn btn-sm btn-info">Artist</button>
             </div>
 
             <div class="progress">
@@ -155,7 +155,6 @@
       var progPercent = resultCount / expectedResults * 100;
       $("div#results-progress").text(Math.floor(progPercent) + "%");
       $("div#results-progress").width(progPercent + "%");
-
 
       // If this is part of last GET request, remove loading gif div
       if (resultCount === expectedResults) {
@@ -309,11 +308,11 @@
 
         // Disable submit button if concert in user's saved concerts
         if ( userSavedConcerts.includes( parseInt( songkickID.val() ) ) ) {
-          submit.prop("disabled", true).val("Previously saved");
+          submit.addClass("btn-default").prop("disabled", true).val("Previously saved");
 
         // Enable submit button otherwise
         } else {
-          submit.val("Add this concert");
+          submit.addClass("btn-info").val("Add this concert");
         }
 
       // If user not logged in, disable submit button

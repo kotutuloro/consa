@@ -299,8 +299,8 @@ function addConcert(evt){
     $.post("/add-concert", formInputs, function(data) {
         // If the removal is successful, disable the button
         if (data == "True") {
-            thisButton.prop("disabled", true);
-            thisButton.val("Saved!");
+            thisButton.prop("disabled", true).val("Saved!");
+            thisButton.removeClass("btn-info").addClass("btn-success");
         } else {
             // Alert user if unsuccessful
             alert('Cannot add this concert at this time.');
