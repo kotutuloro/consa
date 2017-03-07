@@ -20,17 +20,47 @@
       filter: blur(5px);
 }
 
+.translucent {
+    background: #F7F0F0;
+    background: rgba(255,255,255, 0.6);
+    padding: 10px 20px;
+}
+
+.btn-success {
+  background-color: #1DB954;
+}
 
 #empty-landing {
     margin-top: 15%;
+}
+
+.home-or {
+  font-size: 1.3em;
+  text-decoration: overline underline;
+}
+
+.artist-option {
+  font-size: 1.3em;
+  padding: 5px 0;
+  background: #484349;
+  color: #F7F0F0;
+  margin: 2px 0;
+  border-radius: 10px;
+  transition: background 1s;
+}
+
+.artist-option:hover {
+  background: transparent;
+}
+
+.artist-option img {
+  max-height: 200px;
 }
 
 #attributions {
     margin-top: 20px;
 }
 
-.translucent {
-    background: #F7F0F0;
-    background: rgba(255,255,255, 0.6);
-    padding: 10px 20px;
+#attributions img {
+  max-width: 100px;
 }

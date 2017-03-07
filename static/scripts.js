@@ -165,7 +165,7 @@ function displayArtists(artists) {
             var imgDiv = $("<div>").addClass("col-sm-3 col-xs-12");
             // Add artist image if url available
             if (current.image_url) {
-                $("<img>").attr("src", current.image_url).addClass("img-responsive img-rounded").css("max-height", "200px").appendTo(imgDiv);
+                $("<img>").attr("src", current.image_url).addClass("img-responsive img-rounded").appendTo(imgDiv);
             }
 
             // Append artist to selection div
