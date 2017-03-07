@@ -376,7 +376,7 @@ function removeConcert(evt){
     var thisDiv = $(this).closest("div.saved-concert");
 
     // Confirm deletion
-    var confirmation = confirm("Are you sure you want to delete this?");
+    var confirmation = confirm("Are you sure you want to remove this?");
     if (confirmation) {
 
         // Get hidden value of songkick id in form

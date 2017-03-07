@@ -5,77 +5,88 @@
 {% endblock %}
 
 {% block content %}
-  
-  <h1>Your profile</h1>
 
-  <div id="user-info">
-    Email: {{ current_user.email }}
-  </div>
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1 col-xs-12">
+      <h1>Your profile</h1>
 
-  {% if current_user.concerts %}
-    <h3>Your saved concerts</h3>
+      <div id="user-info">
+        Email: {{ current_user.email }}
+      </div>
 
-    <div id="saved-concerts-list">
-      {% for concert in current_user.concerts %}
-        <div class="saved-concert row">
-          <div class="concert-info col-xs-8">
+      {% if current_user.concerts %}
+        <h3>Your saved concerts</h3>
 
-            <b>{{ concert.artist }}</b>
-            
-            {% if concert.image_url %}
-              <br>
-              <img class="saved-concert-img" src="{{ concert.image_url }}" style="max-width: 200px">
-            {% endif %}
-
-            <br>
-            {{ concert.display_name }} 
-
-            <form action="/remove-concert">
-              <input type="hidden" class="songkick-id" value="{{ concert.songkick_id }}">
-              <input type="submit" class="remove-concert" value="Remove this concert">
-            </form>
-            
-            {% if concert.city %}
-              {% if concert.venue_name %}
-                {{ concert.venue_name }} in
-              {% endif %}
+        <div id="saved-concerts-list">
+          {% for concert in current_user.concerts %}
+            <div class="saved-concert row">
               
-              {{ concert.city }}
-              <br>
-            {% endif %}
+              <div class="concert-info col-sm-8 col-xs-12">
+                <div class="row">
 
-            {% if concert.start_datetime %}
-              {{ concert.start_datetime.strftime("%a %b %d, %Y at %-I:%M %p") }}
-              <br>
-            {% endif %}
+                  <div class="col-xs-5">
+                    {% if concert.image_url %}
+                      <img class="saved-concert-img img-responsive" src="{{ concert.image_url }}">
+                    {% endif %}
+                  </div>
 
-            {% if concert.songkick_url %}
-              <a href="{{ concert.songkick_url }}" target="_blank">
-                View this event on Songkick
-              </a>
-              <br>
-            {% endif %}
-            <br>
+                  <div class="col-xs-7">
+                    <b>{{ concert.artist }}</b>
+                    <br>
 
-          </div>
+                    {{ concert.display_name }}
+                    <br> 
+                    
+                    {% if concert.city %}
+                      {% if concert.venue_name %}
+                        {{ concert.venue_name }} in
+                      {% endif %}
+                      
+                      {{ concert.city }}
+                      <br>
+                    {% endif %}
 
-          {% if concert.venue_lat and concert.venue_lng %}
-            <div class="concert-map col-xs-4" style="min-height: 200px">
-              
-              <input type="hidden" class="map-venue" value="{{ concert.venue_name }}">
-              <input type="hidden" class="map-lat" value="{{ concert.venue_lat }}">
-              <input type="hidden" class="map-lng" value="{{ concert.venue_lng }}">
+                    {% if concert.start_datetime %}
+                      {{ concert.start_datetime.strftime("%a %b %d, %Y at %-I:%M %p") }}
+                      <br>
+                    {% endif %}
+
+                    {% if concert.songkick_url %}
+                      <a href="{{ concert.songkick_url }}" target="_blank">
+                        View this event on Songkick
+                      </a>
+                      <br>
+                    {% endif %}
+
+                    <form action="/remove-concert">
+                      <input type="hidden" class="songkick-id" value="{{ concert.songkick_id }}">
+                      <input type="submit" class="remove-concert btn btn-danger" value="Remove this concert">
+                    </form>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="concert-map col-sm-4 hidden-xs" style="min-height: 200px">
+                {% if concert.venue_lat and concert.venue_lng %}
+                  
+                  <input type="hidden" class="map-venue" value="{{ concert.venue_name }}">
+                  <input type="hidden" class="map-lat" value="{{ concert.venue_lat }}">
+                  <input type="hidden" class="map-lng" value="{{ concert.venue_lng }}">
+
+                {% endif %}
+              </div>
 
             </div>
-          {% endif %}
-
+          {% endfor %}
         </div>
-      {% endfor %}
-    </div>
 
-  {% else %}
-    <h3>You have no saved concerts</h3>
-  {% endif %}
+      {% else %}
+        <h3>You have no saved concerts</h3>
+      {% endif %}
+    </div>
+  </div>
+
 
 
 {% endblock %}
