@@ -6,20 +6,33 @@
 
 {% block content %}
 
-  <div id="registration-form">
-    <form action="/register" method="POST">
+  <div id="registration-form" class="row">
+    <div class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
 
-      <label for="reg-email">Email:</label>
-      <input type="email" name="email" id="reg-email">
-      <br>
+      <h1>Register</h1>
 
-      <label for="reg-pw">Password:</label>
-      <input type="password" name="password" id="reg-pw">
-      <br>
+      <form action="/register" method="POST" class="form-horizontal">
 
-      <input type="submit" value="Register">
-      
-    </form>
+        <div class="form-group">
+          <label for="reg-email" class="control-label col-sm-2">Email:</label>
+          <div class="col-sm-10">
+            <input type="email" name="email" id="reg-email" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-pw" class="control-label col-sm-2">Password:</label>
+          <div class="col-sm-10">
+            <input type="password" name="password" id="reg-pw" class="form-control">
+          </div>
+        </div>
+
+        <div class="form group">
+          <input type="submit" class="btn btn-default btn-info col-sm-offset-2" value="Register">
+        </div>
+
+      </form>
+    </div>
   </div>
 
 {% endblock %}
