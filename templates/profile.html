@@ -7,7 +7,7 @@
 {% block content %}
 
   <div class="row">
-    <div class="translucent col-md-10 col-md-offset-1 col-xs-12">
+    <div id="profile" class="translucent col-md-10 col-md-offset-1 col-xs-12">
       <h1>Your profile</h1>
 
       <div id="user-info">
@@ -15,9 +15,9 @@
       </div>
 
       {% if current_user.concerts %}
-        <h3>Your saved concerts</h3>
-
         <div id="saved-concerts-list">
+          <h3>Your saved concerts</h3>
+
           {% for concert in current_user.concerts %}
             <div class="saved-concert row">
               
@@ -67,7 +67,7 @@
                 </div>
               </div>
 
-              <div class="concert-map col-sm-4 hidden-xs" style="min-height: 200px">
+              <div class="concert-map col-sm-4 hidden-xs">
                 {% if concert.venue_lat and concert.venue_lng %}
                   
                   <input type="hidden" class="map-venue" value="{{ concert.venue_name }}">

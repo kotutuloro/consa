@@ -20,9 +20,22 @@
       filter: blur(5px);
 }
 
+.navbar-inverse .navbar-brand {
+  color: #F7F0F0;
+  font-size: 1.6em;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+  color: #F7F0F0;
+}
+
+.navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-nav>li>a:hover {
+  color: #875e9a;
+ }
+
 .translucent {
     background: #F7F0F0;
-    background: rgba(255,255,255, 0.6);
+    background: rgba(255,255,255, 0.5);
     padding: 10px 20px;
 }
 
@@ -37,6 +50,7 @@
 .home-or {
   font-size: 1.3em;
   text-decoration: overline underline;
+  padding: 5px 0;
 }
 
 .artist-option {
@@ -65,9 +79,8 @@
   max-width: 100px;
 }
 
-#concert-results h1 {
+#concert-results h1, #profile h1 {
   font-variant: small-caps;
-  text-decoration: overline underline;
   font-size: 2.8em;
   font-style: italic;
 }
@@ -81,6 +94,10 @@
   max-width: 125px;
 }
 
+.progress {
+  background-color: rgba(247, 240, 240 0.4);
+}
+
 #results-progress {
   min-width: 2em;
 }
@@ -92,4 +109,21 @@
 
 .concert-rec-form {
   padding: 10px;
+}
+
+#user-info {
+  font-weight: bold;
+}
+
+#saved-concerts-list {
+  margin-top: 30px;
+}
+
+.saved-concert {
+  border-top: 5px solid #484349;
+  padding: 15px 10px;
+}
+
+.concert-map {
+  min-height: 200px;
 }
