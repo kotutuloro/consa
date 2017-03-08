@@ -5,7 +5,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-variant: small-caps;
-  font-family: "Raleway";
+  font-family: "Raleway", "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 .navbar:before {
@@ -18,6 +18,7 @@ h1, h2, h3, h4, h5, h6 {
       display: block;
       height: 100%;
       width: 100%;
+      background-color: #484349;
       background: url("/static/img/main-bg.jpg") no-repeat center center;
       background-size: cover;
 
@@ -32,13 +33,13 @@ h1, h2, h3, h4, h5, h6 {
 .navbar-inverse .navbar-brand {
   color: #F7F0F0;
   font-variant: small-caps;
-  font-family: "Raleway";
+  font-family: "Raleway", "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 2.0em;
 }
 
 .navbar-inverse .navbar-nav>li>a {
   color: #F7F0F0;
-  font-family: "Raleway";
+  font-family: "Raleway", "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 .navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-nav>li>a:hover {
@@ -52,7 +53,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-lg {
-  font-family: "Raleway";
+  font-family: "Raleway", "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 .btn-success {
