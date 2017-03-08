@@ -1,4 +1,17 @@
 
+body {
+  font-family: "Roboto", "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-variant: small-caps;
+  font-family: "Raleway";
+}
+
+.btn-lg {
+  font-family: "Raleway";
+}
+
 .navbar:before {
       content: "";
       position: fixed;
@@ -22,11 +35,14 @@
 
 .navbar-inverse .navbar-brand {
   color: #F7F0F0;
-  font-size: 1.6em;
+  font-variant: small-caps;
+  font-family: "Raleway";
+  font-size: 2.0em;
 }
 
 .navbar-inverse .navbar-nav>li>a {
   color: #F7F0F0;
+  font-family: "Raleway";
 }
 
 .navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-nav>li>a:hover {
@@ -80,7 +96,6 @@
 }
 
 #concert-results h1, #profile h1 {
-  font-variant: small-caps;
   font-size: 2.8em;
   font-style: italic;
 }
@@ -112,7 +127,7 @@
 }
 
 #user-info {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 #saved-concerts-list {
