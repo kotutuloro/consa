@@ -367,5 +367,4 @@ if __name__ == '__main__':  # pragma: no cover
 
     DebugToolbarExtension(app)
 
-    app.run(threaded=True,
-            host='0.0.0.0')
+    app.run(threaded=True)
