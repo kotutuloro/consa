@@ -167,7 +167,7 @@ def return_user_profile():
         return redirect('/login')
 
 
-@app.route('/add-concert', methods=["POST"])
+@app.route('/add-concert.json', methods=["POST"])
 def add_saved_concert():
     """Adds concert to user's saved list"""
 
@@ -188,10 +188,10 @@ def add_saved_concert():
     add_success = current_user.add_concert(songkick_id)
 
     # Return T/F if successful or unsuccessful
-    return str(add_success and create_success)
+    return jsonify(add_success and create_success)
 
 
-@app.route('/remove-concert', methods=["POST"])
+@app.route('/remove-concert.json', methods=["POST"])
 def remove_saved_concert():
     """Removes concert from user's saved list"""
 
@@ -205,7 +205,7 @@ def remove_saved_concert():
     success = current_user.remove_concert(songkick_id)
 
     # Return T/F if successful or unsuccessful
-    return str(success)
+    return jsonify(success)
 
 
 @app.route('/location-search.json')
@@ -227,7 +227,7 @@ def return_location_matches():
 
     # Return empty string if no results
     else:
-        return ''
+        return jsonify('')
 
 
 @app.route('/artist-search.json')
@@ -245,7 +245,7 @@ def return_artist_matches():
 
     # Return empty string if no results
     else:
-        return ''
+        return jsonify('')
 
 
 @app.route('/spotify-auth.json')
@@ -295,7 +295,7 @@ def return_recommendations():
 
     # Return error message if getting access token fails
     except SpotifyOauthError, error:
-        return 'Unable to authorize: ' + str(error)
+        return jsonify('Unable to authorize: ' + str(error))
 
     # Create Spotify API object using access_token
     spotify = spotipy.Spotify(auth=access_token)

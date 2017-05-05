@@ -296,9 +296,9 @@ function addConcert(evt){
     };
 
     // POST AJAX request to server
-    $.post("/add-concert", formInputs, function(data) {
+    $.post("/add-concert.json", formInputs, function(data) {
         // If the removal is successful, disable the button
-        if (data == "True") {
+        if (data === true) {
             thisButton.prop("disabled", true).val("Saved!");
             thisButton.removeClass("btn-info").addClass("btn-success");
         } else {
@@ -385,9 +385,9 @@ function removeConcert(evt){
         };
 
         // POST AJAX request to server
-        $.post("/remove-concert", formInputs, function(data) {
+        $.post("/remove-concert.json", formInputs, function(data) {
             // If the removal is successful, remove the concert's div
-            if (data == "True") {
+            if (data === true) {
                 thisDiv.slideUp();
             } else {
                 // Alert user if unsuccessful
