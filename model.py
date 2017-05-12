@@ -166,11 +166,13 @@ class UserConcert(db.Model):
 ##############################################################################
 # Helper functions
 
+
 def example_data():
-    # SWITCH PASSWORDS TO HASHES
-    u1 = User(email='test@test.ts', password='testtesttest')
-    u2 = User(email='kiko@creat.er', password='kikokikokiko')
-    u3 = User(email='no@one', password='noone')
+    from passlib.hash import pbkdf2_sha256 as sha
+
+    u1 = User(email='test@test.ts', pw_hash=sha.hash('testtesttest'))
+    u2 = User(email='kiko@creat.er', pw_hash=sha.hash('kikokikokiko'))
+    u3 = User(email='no@one', pw_hash=sha.hash('noone'))
 
     c1 = Concert(songkick_id=1,
                  artist='clipping.',

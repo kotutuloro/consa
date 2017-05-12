@@ -2,6 +2,7 @@ import unittest
 from datetime import datetime
 import spotipy
 import os
+from passlib.hash import pbkdf2_sha256 as sha
 # from flask import session
 
 import sample_apis
@@ -10,8 +11,6 @@ import analyzation
 import spotify_oauth_tools
 import model
 import server
-
-# TODO: SWITCH USER.PASSWORD REFERENCES TO HASHES
 
 
 class TestSongkick(unittest.TestCase):
@@ -83,7 +82,7 @@ class TestModel(unittest.TestCase):
     def test_users(self):
         kiko = model.User.query.get(2)
         self.assertEqual(kiko.email, 'kiko@creat.er')
-        self.assertEqual(kiko.password, 'kikokikokiko')
+        self.assertTrue(sha.verify('kikokikokiko', kiko.pw_hash))
         self.assertIsInstance(kiko.concerts, list)
         self.assertIsInstance(kiko.concerts[0], model.Concert)
 
@@ -181,8 +180,8 @@ class TestServer(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn('Consa', result.data)
 
-        self.assertIn('Location', result.data)
-        self.assertIn('<form id="spotify-auth-form">', result.data)
+        self.assertIn('your location', result.data)
+        self.assertIn('<div id="auth-option"', result.data)
         self.assertIn('Use your Spotify account', result.data)
 
         self.assertIn('<div id="spotify-artist-search"', result.data)
@@ -202,7 +201,7 @@ class TestServer(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn(': Login', result.data)
 
-        self.assertIn('<form action="/login" method="POST">', result.data)
+        self.assertIn('<form action="/login" method="POST"', result.data)
         self.assertIn('Email', result.data)
         self.assertIn('Password', result.data)
         self.assertNotIn('already logged in', result.data)
@@ -225,7 +224,7 @@ class TestServer(unittest.TestCase):
                                   follow_redirects=True)
         self.assertEqual(result.status_code, 200)
 
-        self.assertIn('<form action="/login" method="POST">', result.data)
+        self.assertIn('<form action="/login" method="POST"', result.data)
         self.assertIn('Invalid username or password', result.data)
         self.assertNotIn('<h1>Your profile</h1>', result.data)
         self.assertNotIn('Login successful', result.data)
@@ -243,7 +242,7 @@ class TestServer(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn(': Register', result.data)
 
-        self.assertIn('<form action="/register" method="POST">', result.data)
+        self.assertIn('<form action="/register" method="POST"', result.data)
         self.assertIn('Email', result.data)
         self.assertIn('Password', result.data)
         self.assertNotIn('already logged in', result.data)
@@ -265,7 +264,7 @@ class TestServer(unittest.TestCase):
                                   follow_redirects=True)
         self.assertEqual(result.status_code, 200)
 
-        self.assertIn('<form action="/register" method="POST">', result.data)
+        self.assertIn('<form action="/register" method="POST"', result.data)
         self.assertIn('username already exists', result.data)
         self.assertNotIn('<h1>Your profile</h1>', result.data)
         self.assertNotIn('Registration successful', result.data)
@@ -275,7 +274,7 @@ class TestServer(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn(': Login', result.data)
 
-        self.assertIn('<form action="/login" method="POST">', result.data)
+        self.assertIn('<form action="/login" method="POST"', result.data)
         self.assertIn('must be logged in', result.data)
         self.assertNotIn('<h1>Your profile</h1>', result.data)
 
@@ -285,7 +284,7 @@ class TestServer(unittest.TestCase):
         self.assertIn(': Concert Recommendations', result.data)
 
         self.assertIn('authCode = "AbCdEf"', result.data)
-        self.assertIn('<h2>FINDING CONCERTS...</h2>', result.data)
+        self.assertIn('<h3>FINDING CONCERTS...</h3>', result.data)
         self.assertIn('<div id="concert-results" hidden>', result.data)
 
     def test_no_auth_results_page(self):
@@ -295,13 +294,13 @@ class TestServer(unittest.TestCase):
         self.assertIn(': Concert Recommendations', result.data)
 
         self.assertIn('authCode = ""', result.data)
-        self.assertIn('<h2>FINDING CONCERTS...</h2>', result.data)
+        self.assertIn('<h3>FINDING CONCERTS...</h3>', result.data)
         self.assertIn('<div id="concert-results" hidden>', result.data)
 
     def test_location_matches(self):
         result = self.client.get('/location-search.json?search-term=SanFrancisco,+TX')
         self.assertEqual(result.status_code, 200)
-        self.assertEqual(result.data, '')
+        self.assertEqual(result.data, '""\n')
 
         result = self.client.get('/location-search.json?search-term=Houston')
         self.assertNotEqual(result.data, '')
@@ -315,7 +314,7 @@ class TestServer(unittest.TestCase):
 
         result = self.client.get('/artist-search.json?search-term=asdfasdfasdf')
         self.assertEqual(result.status_code, 200)
-        self.assertEqual('', result.data)
+        self.assertEqual('""\n', result.data)
 
     def test_request_authorization(self):
         result = self.client.get('/spotify-auth.json')
@@ -438,22 +437,22 @@ class TestServerLoggedIn(unittest.TestCase):
                         'venue-name': u'Starline Social Club',
                         'city': u'Oakland, CA',
                         'start-datetime': u'Sat, 06 May 2017 21:00:00 GMT'}
-        success = self.client.post('/add-concert', data=success_form)
+        success = self.client.post('/add-concert.json', data=success_form)
         self.assertEqual(success.status_code, 200)
-        self.assertEqual(success.data, 'True')
+        self.assertEqual(success.data, 'true\n')
 
         user = model.User.query.get(2)
         self.assertEqual(user.concerts[1].artist, 'Princess Nokia')
 
         failure_form = {'songkick-id': u'99'}
-        failure = self.client.post('/add-concert', data=failure_form)
+        failure = self.client.post('/add-concert.json', data=failure_form)
         self.assertEqual(failure.status_code, 200)
-        self.assertEqual(failure.data, 'False')
+        self.assertEqual(failure.data, 'false\n')
 
     def test_remove_saved_concert(self):
-        result = self.client.post('/remove-concert', data={'songkick-id': '2'})
+        result = self.client.post('/remove-concert.json', data={'songkick-id': '2'})
         self.assertEqual(result.status_code, 200)
-        self.assertEqual(result.data, 'True')
+        self.assertEqual(result.data, 'true\n')
 
         user = model.User.query.get(2)
         self.assertEqual(user.concerts, [])
