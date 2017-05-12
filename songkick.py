@@ -73,6 +73,8 @@ def find_songkick_concerts(search_dict, location="sk:26330"):
     # If request is successful
     if event_response.ok:
 
+        # FIX ME: make everything in this if statement a separate function
+
         # Get list of events from response
         events = event_response.json()['resultsPage']['results'].get('event')
 
@@ -108,7 +110,7 @@ def find_songkick_concerts(search_dict, location="sk:26330"):
 
     # If request unsuccessful, print error
     else:      # pragma: no cover
-        artist = artist.encode('utf-8')
+        artist = search_dict['artist'].encode('utf-8')
         print "Failed: {}".format(artist)
 
     return concert_recs_list

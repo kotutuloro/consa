@@ -362,6 +362,16 @@ def return_concerts():
     return jsonify(concert_recs)
 
 
+# ********************************************
+# ~~~~~~~~~~~~~CONSTRUCTION ZONE~~~~~~~~~~~~~~
+# ********************************************
+
+@app.route('/testing')
+def test_original_artist_inclusion():
+    # FIX ME
+    pass
+
+
 if __name__ == '__main__':  # pragma: no cover
     app.debug = True
 

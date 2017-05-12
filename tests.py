@@ -41,6 +41,7 @@ class TestAnalyzation(unittest.TestCase):
     def test_parse_artist_response(self):
         clip_search = sample_apis.clipping_search['artists']['items']
         result = analyzation.parse_artist_response(clip_search)
+        # FIX ME: test source and results_list parameters as well
 
         self.assertIsInstance(result, list)
         self.assertIsInstance(result[0], dict)
