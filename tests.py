@@ -11,6 +11,8 @@ import spotify_oauth_tools
 import model
 import server
 
+# TODO: SWITCH USER.PASSWORD REFERENCES TO HASHES
+
 
 class TestSongkick(unittest.TestCase):
 

@@ -14,8 +14,8 @@ class User(db.Model):
     email = db.Column(db.String(64),
                       nullable=False,
                       unique=True)
-    password = db.Column(db.String(64),
-                         nullable=False)
+    pw_hash = db.Column(db.String(128),
+                        nullable=False)
 
     concerts = db.relationship("Concert",
                                order_by="Concert.start_datetime",
@@ -167,6 +167,7 @@ class UserConcert(db.Model):
 # Helper functions
 
 def example_data():
+    # SWITCH PASSWORDS TO HASHES
     u1 = User(email='test@test.ts', password='testtesttest')
     u2 = User(email='kiko@creat.er', password='kikokikokiko')
     u3 = User(email='no@one', password='noone')
@@ -208,7 +209,6 @@ def connect_to_db(app, db_uri='postgresql:///consa'):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
-    db.create_all()
 
 
 if __name__ == "__main__":      # pragma: no cover
@@ -217,4 +217,5 @@ if __name__ == "__main__":      # pragma: no cover
 
     from server import app
     connect_to_db(app)
+    db.create_all()
     print "Connected to DB."

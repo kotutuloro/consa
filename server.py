@@ -1,6 +1,8 @@
 from flask import Flask, render_template, flash, redirect, request, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 
+from passlib.hash import pbkdf2_sha256 as sha
+
 import spotipy
 from spotipy.oauth2 import SpotifyOauthError
 
@@ -82,7 +84,7 @@ def log_in():
     current_user = User.query.filter_by(email=email).first()
 
     # If user exists in database and password is correct
-    if current_user and current_user.password == password:
+    if current_user and sha.verify(password, current_user.pw_hash):
 
         # Set session and redirect to homepage
         session['user_id'] = current_user.user_id
@@ -142,7 +144,7 @@ def register():
 
     # Else add user to database
     else:
-        new_user = User(email=email, password=password)
+        new_user = User(email=email, pw_hash=sha.hash(password))
         db.session.add(new_user)
         db.session.commit()
         session['user_id'] = new_user.user_id
