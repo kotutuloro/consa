@@ -6,31 +6,36 @@
 function searchSongkickLoc(evt) {
     evt.preventDefault();
 
-    // Create fieldset for locations
-    var locFieldset = $("<fieldset>").attr("id", "loc-selection").hide();
-    var legend = $("<legend>").text("Choose your area:");
+    // Remove previous fieldset
+    $("#loc-selection").slideUp(function() {$("#loc-selection").remove();});
 
-    var loadingDiv = $("<div>").attr("id", "loc-loading").text("Loading...");
-    var loadingImg = $("<img>").attr("src", "/static/img/load-gps.gif");
-    loadingDiv.append(loadingImg);
-
-    locFieldset.append(legend, loadingDiv);
-
-    // Remove the previous fieldset and append new fieldset to form
-    $("#loc-selection").remove();
-    $("#loc-search-results").append(locFieldset);
-    locFieldset.slideDown();
-
-    // Make GET request to server and display locations
     var searchTerm = $("#location-input").val();
-    $.get("/location-search.json", {'search-term': searchTerm}, displayLocs)
+    if (searchTerm) {
+        // Create fieldset for locations
+        var locFieldset = $("<fieldset>").attr("id", "loc-selection").hide();
+        var legend = $("<legend>").text("Choose your area:");
 
-    // Display error message if GET request fails
-        .fail(function(err){
-            $("#loc-loading").slideUp();
-            $("#loc-selection").append("Location search failed <br>" +
-                                       err.status + ": " + err.statusText);
-        });
+        var loadingDiv = $("<div>").attr("id", "loc-loading").text("Loading...");
+        var loadingImg = $("<img>").attr("src", "/static/img/load-gps.gif");
+        loadingDiv.append(loadingImg);
+
+        locFieldset.append(legend, loadingDiv);
+
+        // Append new fieldset to form
+        $("#loc-search-results").append(locFieldset);
+        locFieldset.slideDown();
+
+        // Make GET request to server and display locations
+        $.get("/location-search.json", {'search-term': searchTerm}, displayLocs)
+
+        // Display error message if GET request fails
+            .fail(function(err){
+                $("#loc-loading").slideUp();
+                $("#loc-selection").append("Location search failed <br>" +
+                                           err.status + ": " + err.statusText);
+            });
+    }
+
 }
 
 
@@ -113,31 +118,35 @@ function toggleArtistSearch(evt) {
 function searchSpotifyArtist(evt) {
     evt.preventDefault();
 
-    // Create div for artist results
-    var artistSelectionDiv = $("<div>").attr("id", "artist-selection").hide();
-    var legend = $("<h4>").text("Choose the correct artist(s):");
-
-    var loadingDiv = $("<div>").attr("id", "artist-loading").text("Loading...");
-    var loadingImg = $("<img>").attr("src", "/static/img/load-gps.gif");
-    loadingDiv.append(loadingImg);
-
-    artistSelectionDiv.append(legend, loadingDiv);
-
-    // Remove the previous artist selection div and append new div to form
-    $("#artist-selection").remove();
-    $("#artist-search-form").append(artistSelectionDiv);
-    artistSelectionDiv.slideDown();
-
-    // Make GET request to server and display artist results
+    // Remove artist selection div
+    $("#artist-selection").slideUp(function() {$("#artist-selection").remove();});
+    
     var searchTerm = $("#artist-input").val();
-    $.get("/artist-search.json", {'search-term': searchTerm}, displayArtists)
+    if (searchTerm) {
+        // Create div for artist results
+        var artistSelectionDiv = $("<div>").attr("id", "artist-selection").hide();
+        var legend = $("<h4>").text("Choose the correct artist(s):");
 
-        // Display error message if GET request fails
-        .fail(function(err){
-            $("#artist-loading").slideUp();
-            $("#artist-selection").append("Artist search failed <br>" +
-                                          err.status + ": " + err.statusText);
-        });
+        var loadingDiv = $("<div>").attr("id", "artist-loading").text("Loading...");
+        var loadingImg = $("<img>").attr("src", "/static/img/load-gps.gif");
+        loadingDiv.append(loadingImg);
+
+        artistSelectionDiv.append(legend, loadingDiv);
+
+        // Append new artist selection div to form
+        $("#artist-search-form").append(artistSelectionDiv);
+        artistSelectionDiv.slideDown();
+
+        // Make GET request to server and display artist results
+        $.get("/artist-search.json", {'search-term': searchTerm}, displayArtists)
+
+            // Display error message if GET request fails
+            .fail(function(err){
+                $("#artist-loading").slideUp();
+                $("#artist-selection").append("Artist search failed <br>" +
+                                              err.status + ": " + err.statusText);
+            });
+    }
 }
 
 

@@ -70,14 +70,34 @@
 {% block js %}
   <script>
 
+    // Call Songkick Search with texy input on delay
+    var locDelay;
+    $("#location-input").on('input', function(evt){
+      clearTimeout(locDelay);
+      locDelay = setTimeout(function(){return searchSongkickLoc(evt)}, 700);
+    });
+
     // Call Songkick Search function on click
-    $("#loc-search-button").on('click', searchSongkickLoc);
+    $("#loc-search-form").on('submit', function(evt){
+      clearTimeout(locDelay);
+      searchSongkickLoc(evt);
+    });
 
     // Toggle artist search div on click
     $("#specify-artists").on('click', toggleArtistSearch);
 
+    // Call Spotify artist search with text input on delay
+    var artistDelay;
+    $("#artist-input").on('input', function(evt){
+      clearTimeout(artistDelay);
+      artistDelay = setTimeout(function(){return searchSpotifyArtist(evt)}, 700);
+    });
+
     // Call Spotify artist search function on click
-    $("#artist-search-button").on('click', searchSpotifyArtist);
+    $("#artist-search-form").on('submit', function(evt){
+      clearTimeout(artistDelay);
+      searchSpotifyArtist(evt);
+    });
 
     // Add artist to chosen artists list on click
     $("#artist-search-form").on('click', "div.artist-option", chooseArtist);
