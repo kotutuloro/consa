@@ -69,14 +69,30 @@ class TestAnalyzation(unittest.TestCase):
     def test_parse_artist_response(self):
         clip_search = sample_apis.clipping_search['artists']['items']
         result = analyzation.parse_artist_response(clip_search)
-        # FIX ME: test source and results_list parameters as well
 
-        self.assertIsInstance(result, list)
+        self.assertEqual(len(result), 3)
         self.assertIsInstance(result[0], dict)
         self.assertEqual(result[0]['spotify_id'], '5HJ2kX5UTwN4Ns8fB5Rn1I')
         self.assertEqual(result[0]['image_url'], 'https://i.scdn.co/image/96f3fd452d3871eea1ba9ba9cab63b002d8360bb')
         self.assertEqual(result[1]['artist'], 'Clipping')
         self.assertIsNone(result[2]['image_url'])
+        self.assertIsNone(result[0]['source'])
+
+    def test_parse_repeats(self):
+        clip_search = sample_apis.clipping_search['artists']['items']
+        initial_list = [{'artist': u'clipping.',
+                         'image_url': u'https://i.scdn.co/image/96f3fd452d3871eea1ba9ba9cab63b002d8360bb',
+                         'source': None,
+                         'spotify_id': u'5HJ2kX5UTwN4Ns8fB5Rn1I'},
+                        {'artist': u'Clipping',
+                         'image_url': u'https://i.scdn.co/image/1a08ba0b21ca3a1a9e9c1a460c6ced7e1fcdc4ef',
+                         'source': 'Death Grips',
+                         'spotify_id': u'7iUaTsRiiEVbslUcOs5mpd'}]
+        result = analyzation.parse_artist_response(clip_search, initial_list, 'Run the Jewels')
+
+        self.assertEqual(len(result), 3)
+        self.assertEqual(result[1]['source'], 'Death Grips')
+        self.assertEqual(result[2]['source'], 'Run the Jewels')
 
     def test_get_artist_recs(self):
         top_artist = [{'spotify_id': '6Tyzp9KzpiZ04DABQoedps', 'artist': 'Little Dragon'}]
