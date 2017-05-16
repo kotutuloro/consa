@@ -452,7 +452,8 @@ vw_concerts_json = """{
                       "lat": 51.4681089
                   },
                   "start": {
-                      "date": "2010-02-17"
+                      "date": "2010-02-17",
+                      "datetime": null
                   },
                   "performance": [{
                       "artist": {

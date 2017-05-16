@@ -39,11 +39,13 @@ class TestSongkick(unittest.TestCase):
         concerts = songkick.create_concert_list(sample_apis.vw_concerts, artist)
 
         self.assertEqual(len(concerts), 2)
-        self.assertIn(concerts[0]['display_name'], 'Weekend at O2')
+        self.assertIn('Weekend at O2', concerts[0]['display_name'])
+        self.assertIn('placemelon', concerts[0]['image_url'])
         self.assertEqual(concerts[0]['start_datetime'].hour, 19)
-        self.assertEqual(concerts[0]['start_datetime'].tzname, 'UTC')
+        self.assertEqual(concerts[0]['start_datetime'].tzname(), 'UTC')
         self.assertEqual(concerts[1]['start_datetime'].hour, 0)
         self.assertEqual(concerts[1]['spotify_id'], '9999')
+        self.assertEqual(concerts[1]['source'], 'Phoenix')
 
 
 class TestAnalyzation(unittest.TestCase):

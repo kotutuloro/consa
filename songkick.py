@@ -73,40 +73,8 @@ def find_songkick_concerts(search_dict, location="sk:26330"):
     # If request is successful
     if event_response.ok:
 
-        # FIX ME: make everything in this if statement a separate function
-
-        # Get list of events from response
-        events = event_response.json()['resultsPage']['results'].get('event')
-
-        # If event list not empty
-        if events:
-
-            # Iterate over event list
-            for event in events:
-
-                # Create dictionary of concert's information
-                concert = {
-                    'display_name': event['displayName'],
-                    'songkick_id': event['id'],
-                    'songkick_url': event['uri'],
-                    'artist': search_dict['artist'],
-                    'spotify_id': search_dict['spotify_id'],
-                    'image_url': search_dict['image_url'],
-                    'venue_name': event['venue']['displayName'],
-                    'venue_lat': event['venue']['lat'],
-                    'venue_lng': event['venue']['lng'],
-                    'city': event['location']['city'],
-                    'source': search_dict['source'],
-                }
-
-                # Set concert dict's start_datetime as datetime, or date if datetime unavailable
-                if event['start']['datetime']:
-                    concert['start_datetime'] = parser.parse(event['start']['datetime'])
-                elif event['start']['date']:
-                    concert['start_datetime'] = parser.parse(event['start']['date'])
-
-                # Add concert to recommendation list
-                concert_recs_list.append(concert)
+        # Add the concerts to our list
+        concert_recs_list = create_concert_list(event_response.json(), search_dict)
 
     # If request unsuccessful, print error
     else:      # pragma: no cover
@@ -114,3 +82,46 @@ def find_songkick_concerts(search_dict, location="sk:26330"):
         print "Failed: {}".format(artist)
 
     return concert_recs_list
+
+
+def create_concert_list(event_json, search_dict):
+    """Takes Songkick event search results JSON and returns list of concert dictionaries
+
+    Also takes a dictionary of the searched artist's information"""
+
+    event_list = []
+
+    # Get list of events from response
+    events = event_json['resultsPage']['results'].get('event')
+
+    # If event list not empty
+    if events:
+
+        # Iterate over event list
+        for event in events:
+
+            # Create dictionary of concert's information
+            concert = {
+                'display_name': event['displayName'],
+                'songkick_id': event['id'],
+                'songkick_url': event['uri'],
+                'artist': search_dict['artist'],
+                'spotify_id': search_dict['spotify_id'],
+                'image_url': search_dict['image_url'],
+                'venue_name': event['venue']['displayName'],
+                'venue_lat': event['venue']['lat'],
+                'venue_lng': event['venue']['lng'],
+                'city': event['location']['city'],
+                'source': search_dict['source'],
+            }
+
+            # Set concert dict's start_datetime as datetime, or date if datetime unavailable
+            if event['start']['datetime']:
+                concert['start_datetime'] = parser.parse(event['start']['datetime'])
+            elif event['start']['date']:
+                concert['start_datetime'] = parser.parse(event['start']['date'])
+
+            # Add concert to recommendation list
+            event_list.append(concert)
+
+    return event_list
