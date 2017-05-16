@@ -26,36 +26,52 @@ def find_songkick_locations(search_term):
 
     # If request is successful, get results from the response
     if loc_response.ok:
-        results = loc_response.json()['resultsPage']['results']
 
-        # If the results are not empty, create empty list of metro ids
-        if results:
-            metro_id_list = []
-
-            # Iterate over each location in results
-            for loc in results['location']:
-                metro = loc['metroArea']
-
-                # Return a max of 5 matching areas
-                if len(metros) == 5:
-                    return metros
-
-                # If metro area has not already been added to list of metros
-                elif metro['id'] not in metro_id_list:
-
-                    # Add metro area to list
-                    metros.append(metro)
-                    metro_id_list.append(metro['id'])
+        # Add the locations to our list
+        metros = create_location_list(loc_response.json())
 
     # Return list of metro areas for each location in results
     return metros
+
+
+def create_location_list(location_json):
+    """Takes SK loc search results JSON and returns list of metro area dicts
+
+    Iterates through data in JSON to return list of metro area information.
+    Returns max of 5 areas and avoids repeated locations (duplicate metro ids)
+    """
+
+    metro_list = []
+    results = location_json['resultsPage']['results']
+
+    # If the results are not empty, create empty set of metro ids
+    if results:
+        metro_id_set = set([])
+
+        # Iterate over each location in results
+        for loc in results['location']:
+            metro = loc['metroArea']
+
+            # Return a max of 5 matching areas
+            if len(metro_list) == 5:
+                return metro_list
+
+            # If metro area has not already been added to list of metros
+            elif metro['id'] not in metro_id_set:
+
+                # Add metro area to list
+                metro_list.append(metro)
+                metro_id_set.add(metro['id'])
+
+    return metro_list
 
 
 def find_songkick_concerts(search_dict, location="sk:26330"):
     """Takes Spotify artist info and returns a list of concert dictionaries
 
     Makes requests to the Songkick API for upcoming events in Songkick location
-    for the provided artist name"""
+    for the provided artist name
+    """
 
     songkick_key = os.getenv('SONGKICK_KEY')
 
@@ -87,7 +103,8 @@ def find_songkick_concerts(search_dict, location="sk:26330"):
 def create_concert_list(event_json, search_dict):
     """Takes Songkick event search results JSON and returns list of concert dictionaries
 
-    Also takes a dictionary of the searched artist's information"""
+    Also takes a dictionary of the searched artist's information
+    """
 
     event_list = []
 
