@@ -23,13 +23,27 @@ class TestSongkick(unittest.TestCase):
     def test_nowhere(self):
         self.assertEqual(songkick.find_songkick_locations("San Francisco, TX"), [])
 
-    def test_concert(self):
+    def test_concert_request(self):
         artist = {'spotify_id': '1234',
                   'artist': 'Open Mike Eagle',
                   'image_url': 'https://i.scdn.co/image/7a79a4f7ef164f418034d6fe5e53be24123610bf',
                   'source': 'Run The Jewels'}
         concerts = songkick.find_songkick_concerts(artist)
         self.assertIsInstance(concerts, list)
+
+    def test_concert_response(self):
+        artist = {'spotify_id': '9999',
+                  'artist': 'Vampire Weekend',
+                  'image_url': 'http://placemelon.com/200/200',
+                  'source': 'Phoenix'}
+        concerts = songkick.create_concert_list(sample_apis.vw_concerts, artist)
+
+        self.assertEqual(len(concerts), 2)
+        self.assertIn(concerts[0]['display_name'], 'Weekend at O2')
+        self.assertEqual(concerts[0]['start_datetime'].hour, 19)
+        self.assertEqual(concerts[0]['start_datetime'].tzname, 'UTC')
+        self.assertEqual(concerts[1]['start_datetime'].hour, 0)
+        self.assertEqual(concerts[1]['spotify_id'], '9999')
 
 
 class TestAnalyzation(unittest.TestCase):
