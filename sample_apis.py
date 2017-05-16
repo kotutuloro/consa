@@ -396,6 +396,125 @@ related_2_json = """{
   } ]
 }"""
 
+
+london_json = """{"resultsPage":
+    {"results":
+      {"location":[{
+        "city":{"displayName":"London",
+                "country":{"displayName":"UK"},
+                "lng":-0.128,"lat":51.5078},
+        "metroArea":{"uri":"http://www.songkick.com/metro_areas/24426-uk-london",
+                     "displayName":"London",
+                     "country":{"displayName":"UK"},
+                     "id":24426,
+                     "lng":-0.128,"lat":51.5078}},
+        {"city":{"displayName":"London",
+                "country":{"displayName":"UK"},
+                "lng":-0.128,"lat":51.5078},
+        "metroArea":{"uri":"http://www.songkick.com/metro_areas/24426-uk-london",
+                     "displayName":"London",
+                     "country":{"displayName":"UK"},
+                     "id":24426,
+                     "lng":-0.128,"lat":51.5078}},
+        {"city":{"displayName":"London",
+                 "country":{"displayName":"US"},
+                 "lng":null,"lat":null,
+                 "state":{"displayName":"KY"}},
+        "metroArea":{"uri":"http://www.songkick.com/metro_areas/24580",
+                     "displayName":"Lexington",
+                     "country":{"displayName":"US"},
+                     "id":24580,
+                     "lng":-84.4947,"lat":38.0297,
+                     "state":{"displayName":"KY"}}}
+    ]},
+    "totalEntries":2,"perPage":10,"page":1,"status":"ok"}}"""
+
+
+houston_json = """{"resultsPage": {"page": 1,
+                  "perPage": 50,
+                  "results": {"location": [{"city": {"country": {"displayName": "US"},
+                                                        "displayName": "Houston",
+                                                        "lat": 29.7629,
+                                                        "lng": -95.3832,
+                                                        "state": {"displayName": "TX"}},
+                                              "metroArea": {"country": {"displayName": "US"},
+                                                             "displayName": "Houston",
+                                                             "id": 15073,
+                                                             "lat": 29.7629,
+                                                             "lng": -95.3832,
+                                                             "state": {"displayName": "TX"},
+                                                             "uri": "http://www.songkick.com/metro_areas/15073-us-houston?utm_source=39427&utm_medium=partner"}},
+                                             {"city": {"country": {"displayName": "US"},
+                                                        "displayName": "Houston",
+                                                        "lat": 43.7632995,
+                                                        "lng": -91.5684764,
+                                                        "state": {"displayName": "MN"}},
+                                              "metroArea": {"country": {"displayName": "US"},
+                                                             "displayName": "Winona",
+                                                             "id": 57612,
+                                                             "lat": 44.0513,
+                                                             "lng": -91.6386,
+                                                             "state": {"displayName": "MN"},
+                                                             "uri": "http://www.songkick.com/metro_areas/57612-us-winona?utm_source=39427&utm_medium=partner"}},
+                                             {"city": {"country": {"displayName": "US"},
+                                                        "displayName": "Houston",
+                                                        "lat": 38.91853,
+                                                        "lng": -75.505058,
+                                                        "state": {"displayName": "DE"}},
+                                              "metroArea": {"country": {"displayName": "US"},
+                                                             "displayName": "Houston",
+                                                             "id": 83951,
+                                                             "lat": 38.91853,
+                                                             "lng": -75.505058,
+                                                             "state": {"displayName": "DE"},
+                                                             "uri": "http://www.songkick.com/metro_areas/83951-us-houston?utm_source=39427&utm_medium=partner"}},
+                                             {"city": {"country": {"displayName": "Canada"},
+                                                        "displayName": "Houston",
+                                                        "lat": 54.400639,
+                                                        "lng": -126.647049,
+                                                        "state": {"displayName": "BC"}},
+                                              "metroArea": {"country": {"displayName": "Canada"},
+                                                             "displayName": "Houston",
+                                                             "id": 50347,
+                                                             "lat": 54.400639,
+                                                             "lng": -126.647049,
+                                                             "state": {"displayName": "BC"},
+                                                             "uri": "http://www.songkick.com/metro_areas/50347-canada-houston?utm_source=39427&utm_medium=partner"}},
+                                             {"city": {"country": {"displayName": "US"},
+                                                        "displayName": "Houston",
+                                                        "lat": 38.16386,
+                                                        "lng": -89.783302,
+                                                        "state": {"displayName": "IL"}},
+                                              "metroArea": {"country": {"displayName": "US"},
+                                                             "displayName": "Houston",
+                                                             "id": 83956,
+                                                             "lat": 38.16386,
+                                                             "lng": -89.783302,
+                                                             "state": {"displayName": "IL"},
+                                                             "uri": "http://www.songkick.com/metro_areas/83956-us-houston?utm_source=39427&utm_medium=partner"}},
+                                             {"city": {"country": {"displayName": "US"},
+                                                        "displayName": "Houston",
+                                                        "lat": 30.549999,
+                                                        "lng": -92.807503,
+                                                        "state": {"displayName": "LA"}},
+                                              "metroArea": {"country": {"displayName": "US"},
+                                                             "displayName": "Houston",
+                                                             "id": 83961,
+                                                             "lat": 30.549999,
+                                                             "lng": -92.807503,
+                                                             "state": {"displayName": "LA"},
+                                                             "uri": "http://www.songkick.com/metro_areas/83961-us-houston?utm_source=39427&utm_medium=partner"}}]},
+                  "status": "ok",
+                  "totalEntries": 6}}"""
+
+
+nowhere_json = """{"resultsPage": {"page": 1,
+                  "perPage": 50,
+                  "results": {},
+                  "status": "ok",
+                  "totalEntries": 0}}"""
+
+
 vw_concerts_json = """{
       "resultsPage": {
           "page": 1,
@@ -478,4 +597,8 @@ clipping_search = json.loads(clipping_search_json)
 top_artists = json.loads(top_artists_json)
 related_1 = json.loads(related_1_json)
 related_2 = json.loads(related_2_json)
+
+london = json.loads(london_json)
+houston = json.loads(houston_json)
+nowhere = json.loads(nowhere_json)
 vw_concerts = json.loads(vw_concerts_json)

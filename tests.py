@@ -15,13 +15,25 @@ import server
 
 class TestSongkick(unittest.TestCase):
 
-    def test_san_francisco(self):
+    def test_location_request(self):
         SF_Metros = songkick.find_songkick_locations("San Francisco")
         self.assertIsInstance(SF_Metros, list)
         self.assertIn("SF Bay Area", SF_Metros[0]['displayName'])
 
+    def test_location_response(self):
+        locations = songkick.create_location_list(sample_apis.london)
+        self.assertEqual(len(locations), 2)
+        self.assertEqual(locations[0]['displayName'], 'London')
+        self.assertEqual(locations[0]['country']['displayName'], 'UK')
+        self.assertEqual(locations[1]['displayName'], 'Lexington')
+        self.assertEqual(locations[1]['state']['displayName'], 'KY')
+
+    def test_long_location_response(self):
+        locations = songkick.create_location_list(sample_apis.houston)
+        self.assertEqual(len(locations), 5)
+
     def test_nowhere(self):
-        self.assertEqual(songkick.find_songkick_locations("San Francisco, TX"), [])
+        self.assertEqual(songkick.create_location_list(sample_apis.nowhere), [])
 
     def test_concert_request(self):
         artist = {'spotify_id': '1234',
