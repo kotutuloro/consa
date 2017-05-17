@@ -3,6 +3,7 @@ from datetime import datetime
 import spotipy
 import os
 from passlib.hash import pbkdf2_sha256 as sha
+import json
 # from flask import session
 
 import sample_apis
@@ -99,7 +100,7 @@ class TestAnalyzation(unittest.TestCase):
         result = analyzation.get_artist_recs(top_artist)
         self.assertIsInstance(result, list)
         self.assertNotEqual(len(result), 0)
-        self.assertEqual(result[0]['source'], 'Little Dragon')
+        self.assertEqual(result[1]['source'], 'Little Dragon')
 
 
 class TestSpotifyOauth(unittest.TestCase):
@@ -333,12 +334,13 @@ class TestServer(unittest.TestCase):
         self.assertIn('<div id="concert-results" hidden>', result.data)
 
     def test_no_auth_results_page(self):
-        artists = {'5HJ2kX5UTwN4Ns8fB5Rn1I': 'clipping.'}
-        result = self.client.post('/no-auth-search', data=artists)
+        artists = [{'spotify_id': '5HJ2kX5UTwN4Ns8fB5Rn1I', 'artist': 'clipping.'}]
+        result = self.client.post('/no-auth-search', data={'artists': json.dumps(artists)})
         self.assertEqual(result.status_code, 200)
         self.assertIn(': Concert Recommendations', result.data)
 
         self.assertIn('authCode = ""', result.data)
+        self.assertIn('5HJ2kX5UTwN4Ns8fB5Rn1I', result.data)
         self.assertIn('<h3>FINDING CONCERTS...</h3>', result.data)
         self.assertIn('<div id="concert-results" hidden>', result.data)
 
@@ -376,8 +378,8 @@ class TestServer(unittest.TestCase):
         self.assertIn('Unable to authorize', result.data)
 
     def test_recs_from_search(self):
-        artists = {'5HJ2kX5UTwN4Ns8fB5Rn1I': 'clipping.'}
-        result = self.client.get('/recs-from-search.json', data=artists)
+        artists = [{'spotify_id': '5HJ2kX5UTwN4Ns8fB5Rn1I', 'artist': 'clipping.'}]
+        result = self.client.get('/recs-from-search.json', data={'artists': json.dumps(artists)})
         self.assertEqual(result.status_code, 200)
 
     def test_concerts(self):

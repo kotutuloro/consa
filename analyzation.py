@@ -25,9 +25,9 @@ def get_top_artist_recs(spotify):
     top_artists_list = parse_artist_response(top_artists_response['items'])
 
     # Get artists related to each of the user's top artists
-    related_artists_dict = get_artist_recs(top_artists_list)
+    related_artists_list = get_artist_recs(top_artists_list)
 
-    return related_artists_dict
+    return related_artists_list
 
 
 def get_artist_recs(artists_list):
@@ -39,6 +39,7 @@ def get_artist_recs(artists_list):
 
     # Get artists related to each of the artists in the list
     for artist_dict in artists_list:
+        related_artists_list.append(artist_dict)
         rel_artists_resp = sp.artist_related_artists(artist_dict['spotify_id'])
         related_artists_list = parse_artist_response(rel_artists_resp['artists'], related_artists_list, artist_dict['artist'])
 

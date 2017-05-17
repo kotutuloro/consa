@@ -164,8 +164,9 @@ function displayArtists(artists) {
 
             // Create div for the artist with data embedded
             var artistDiv = $("<div>").addClass("artist-option row");
-            artistDiv.data({"spotifyID": current.spotify_id,
-                            "artist": current.artist
+            artistDiv.data({"spotify_id": current.spotify_id,
+                            "artist": current.artist,
+                            "image_url": current.image_url
                           });
 
             var nameDiv = $("<div>").addClass("col-sm-9 col-xs-12");
@@ -204,7 +205,7 @@ function chooseArtist(evt) {
         // Check to see if clicked artist is already in the chosen artists div
         var alreadyChosen = false;
         $("#chosen-artists-list").children("div").each(function() {
-            if ($(this).data("spotifyID") === artist.data("spotifyID")) {
+            if ($(this).data("spotify_id") === artist.data("spotify_id")) {
                 alreadyChosen = true;
             }
         });
@@ -253,9 +254,9 @@ function submitNoAuth(evt) {
     var selectedLoc = $('input[name="sk-loc"]:checked').data();
 
     // Get chosen artists' data
-    var selectedArtists = {};
+    var selectedArtists = [];
     $("#chosen-artists-list div.artist-option").each(function() {
-        selectedArtists[$(this).data('spotifyID')] = $(this).data('artist');
+        selectedArtists.push($(this).data());
     });
 
     // Alert if no artists selected
@@ -265,7 +266,7 @@ function submitNoAuth(evt) {
     // Otherwise, send data
     } else {
         // Merge selected artists & location data into payload
-        var payload = Object.assign({}, selectedArtists, selectedLoc);
+        var payload = Object.assign({}, {artists: JSON.stringify(selectedArtists)}, selectedLoc);
 
         // Create hidden form & inputs with location and chosen artists
         var noAuthForm = $("<form>").attr({"method": "POST", "action": "/no-auth-search"});

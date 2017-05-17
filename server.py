@@ -2,6 +2,7 @@ from flask import Flask, render_template, flash, redirect, request, session, jso
 from flask_debugtoolbar import DebugToolbarExtension
 
 from passlib.hash import pbkdf2_sha256 as sha
+import json
 
 import spotipy
 from spotipy.oauth2 import SpotifyOauthError
@@ -315,9 +316,8 @@ def return_no_auth_results():
     # Save selected location data
     save_location(request.form)
 
-    # Create object of artist data from form data
-    selected_artists = {key: val for (key, val) in request.form.iteritems()
-                        if key != 'locID' and key != 'locName'}
+    # Get list of artist data objects from form data
+    selected_artists = request.form.get('artists')
 
     # Get list of user's saved concerts
     user_saved_concerts = get_user_saved_concerts()
@@ -332,7 +332,7 @@ def return_recs_from_search():
     """Returns JSON dictionary of recommended artists using chosen artists"""
 
     # Get selected artists from form data
-    selected_artists = [{'spotify_id': key, 'artist': val} for (key, val) in request.args.iteritems()]
+    selected_artists = json.loads(request.args.get('artists'))
 
     artist_recs = get_artist_recs(selected_artists)
 
@@ -360,16 +360,6 @@ def return_concerts():
     concert_recs = find_songkick_concerts(search_dict, locID)
 
     return jsonify(concert_recs)
-
-
-# ********************************************
-# ~~~~~~~~~~~~~CONSTRUCTION ZONE~~~~~~~~~~~~~~
-# ********************************************
-
-@app.route('/testing')
-def test_original_artist_inclusion():
-    # FIX ME
-    pass
 
 
 if __name__ == '__main__':  # pragma: no cover

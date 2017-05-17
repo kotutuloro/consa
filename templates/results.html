@@ -59,10 +59,11 @@
     var userSavedConcerts = {{ user_saved_concerts }};
     var authCode = "{{ auth_code }}";
 
-    var selectedArtists = {};
-    {% for spotID in selected_artists %}
-      selectedArtists["{{ spotID }}"] = "{{ selected_artists[spotID] }}";
-    {% endfor %}
+    var selected_artists;
+    {% if selected_artists %}
+    var selectedArtists = {{ selected_artists|tojson|safe }};
+    {% endif %}
+
 
     // Declare variables to keep track of end of get requests 
     var resultCount;
@@ -90,7 +91,7 @@
 
     } else {
       // Use selected artists from template render if no auth
-      $.get('/recs-from-search.json', selectedArtists, findConcerts)
+      $.get('/recs-from-search.json', {artists: selectedArtists}, findConcerts)
 
       // Display error message if GET request fails
           .fail(function(err){
@@ -117,7 +118,7 @@
   
           // Make GET request to server for each artist and display concerts
           payload = {
-            'spotify-id': current['spotifyID'],
+            'spotify-id': current['spotify_id'],
             'artist': current['artist'],
             'image-url': current['image_url'],
             'source': current['source'],
