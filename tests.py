@@ -262,13 +262,18 @@ class TestServer(unittest.TestCase):
         self.assertIn('Email: test@test.ts', result.data)
         self.assertIn('Login successful', result.data)
         self.assertNotIn('Invalid username or password', result.data)
-        # FIXME: self.assertEqual(session.get('user_id'), 1)
+
+        with self.client.session_transaction() as sess:
+            self.assertEqual(sess.get('user_id'), 1)
 
     def test_log_in_fail(self):
         result = self.client.post('/login',
                                   data={'email': 'test@test.ts', 'password': 'wrong'},
                                   follow_redirects=True)
         self.assertEqual(result.status_code, 200)
+
+        with self.client.session_transaction() as sess:
+            self.assertIsNone(sess.get('user_id'))
 
         self.assertIn('<form action="/login" method="POST"', result.data)
         self.assertIn('Invalid username or password', result.data)
@@ -298,6 +303,9 @@ class TestServer(unittest.TestCase):
                                   data={'email': 'new@cool.dude', 'password': 'c00ld00d'},
                                   follow_redirects=True)
         self.assertEqual(result.status_code, 200)
+
+        with self.client.session_transaction() as sess:
+            self.assertEqual(sess.get('user_id'), 4)
 
         self.assertIn('<h1>Your profile</h1>', result.data)
         self.assertIn('Email: new@cool.dude', result.data)
@@ -379,7 +387,7 @@ class TestServer(unittest.TestCase):
 
     def test_recs_from_search(self):
         artists = [{'spotify_id': '5HJ2kX5UTwN4Ns8fB5Rn1I', 'artist': 'clipping.'}]
-        result = self.client.get('/recs-from-search.json', data={'artists': json.dumps(artists)})
+        result = self.client.get('/recs-from-search.json?artists=' + json.dumps(artists))
         self.assertEqual(result.status_code, 200)
 
     def test_concerts(self):
@@ -427,7 +435,9 @@ class TestServerLoggedIn(unittest.TestCase):
     def test_log_out(self):
         result = self.client.get('/logout', follow_redirects=True)
         self.assertEqual(result.status_code, 200)
-        # FIXME: self.assertIsNone(session.get('user_id'))
+
+        with self.client.session_transaction() as sess:
+            self.assertIsNone(sess.get('user_id'))
 
         self.assertIn('Logged out', result.data)
         self.assertNotIn('No user currently logged in.', result.data)
@@ -469,6 +479,7 @@ class TestServerLoggedIn(unittest.TestCase):
         with self.client.session_transaction() as sess:
             sess['user_id'] = 3
         result = self.client.get('/my-profile')
+
         self.assertEqual(result.status_code, 200)
         self.assertIn(': Your Profile', result.data)
 
