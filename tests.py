@@ -1,5 +1,5 @@
 import unittest
-from datetime import datetime
+import datetime
 import spotipy
 import os
 from passlib.hash import pbkdf2_sha256 as sha
@@ -54,9 +54,11 @@ class TestSongkick(unittest.TestCase):
         self.assertEqual(len(concerts), 2)
         self.assertIn('Weekend at O2', concerts[0]['display_name'])
         self.assertIn('placemelon', concerts[0]['image_url'])
-        self.assertEqual(concerts[0]['start_datetime'].hour, 19)
-        self.assertEqual(concerts[0]['start_datetime'].tzname(), 'UTC')
-        self.assertEqual(concerts[1]['start_datetime'].hour, 0)
+        self.assertEqual(concerts[0]['start_time'].hour, 19)
+        self.assertEqual(concerts[0]['start_time'].tzname(), 'UTC')
+        self.assertIsNone(concerts[0]['end_date'])
+        self.assertEqual(concerts[1]['start_date'].month, 2)
+        self.assertIsNone(concerts[1]['start_time'])
         self.assertEqual(concerts[1]['spotify_id'], '9999')
         self.assertEqual(concerts[1]['source'], 'Phoenix')
 
@@ -170,8 +172,8 @@ class TestModel(unittest.TestCase):
         self.assertEqual(cakes.artist, 'Cakes Da Killa')
         self.assertEqual(cakes.venue_name, 'The New Parish')
         self.assertEqual(cakes.venue_lat, 37.8077)
-        self.assertIsInstance(cakes.start_datetime, datetime)
-        self.assertEqual(2017, cakes.start_datetime.year)
+        self.assertIsInstance(cakes.start_time, datetime.time)
+        self.assertEqual(2017, cakes.start_date.year)
         self.assertIsInstance(cakes.users, list)
 
     def test_concert_create_from_form(self):
@@ -182,7 +184,8 @@ class TestModel(unittest.TestCase):
                 'venue-lng': u'-122.2725',
                 'city': u'Oakland, CA',
                 'image-url': u'https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791',
-                'start-datetime': u'Sat, 06 May 2017 21:00:00 GMT'}
+                'start-date': u'Sat, 06 May 2017',
+                'start-time': u'21:00:00 GMT'}
 
         nokia = model.Concert.query.get(3)
         self.assertIsNone(nokia)
@@ -196,7 +199,8 @@ class TestModel(unittest.TestCase):
         self.assertEqual(nokia.venue_lng, -122.2725)
         self.assertEqual(nokia.venue_name, 'Starline Social Club')
         self.assertEqual(nokia.image_url, 'https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791')
-        self.assertIsInstance(nokia.start_datetime, datetime)
+        self.assertEqual(nokia.start_date.day, 6)
+        self.assertEqual(nokia.start_time.hour, 21)
 
         failure = model.Concert.create_from_form({})
         self.assertFalse(failure)
@@ -494,7 +498,7 @@ class TestServerLoggedIn(unittest.TestCase):
                         'artist': u'Princess Nokia',
                         'venue-name': u'Starline Social Club',
                         'city': u'Oakland, CA',
-                        'start-datetime': u'Sat, 06 May 2017 21:00:00 GMT'}
+                        'start-date': u'Sat, 06 May 2017'}
         success = self.client.post('/add-concert.json', data=success_form)
         self.assertEqual(success.status_code, 200)
         self.assertEqual(success.data, 'true\n')
