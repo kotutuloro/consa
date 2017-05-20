@@ -18,7 +18,7 @@ class User(db.Model):
                         nullable=False)
 
     concerts = db.relationship("Concert",
-                               order_by="Concert.start_datetime",
+                               order_by="Concert.start_date",
                                secondary="users_concerts",
                                backref="users")
 
@@ -92,7 +92,10 @@ class Concert(db.Model):
     venue_lat = db.Column(db.Float)
     venue_lng = db.Column(db.Float)
     city = db.Column(db.String(64))
-    start_datetime = db.Column(db.DateTime)
+    start_date = db.Column(db.Date)
+    start_time = db.Column(db.Time)
+    end_date = db.Column(db.Date)
+    end_time = db.Column(db.Time)
     display_name = db.Column(db.String(128))
 
     @classmethod
@@ -109,7 +112,10 @@ class Concert(db.Model):
         venue_lat = form.get('venue-lat')
         venue_lng = form.get('venue-lng')
         city = form.get('city')
-        start_datetime = form.get('start-datetime')
+        start_date = form.get('start-date')
+        start_time = form.get('start-time')
+        end_date = form.get('end-date')
+        end_time = form.get('end-time')
         display_name = form.get('display-name')
 
         # Create new concert object from data
@@ -122,7 +128,10 @@ class Concert(db.Model):
                           venue_lat=venue_lat,
                           venue_lng=venue_lng,
                           city=city,
-                          start_datetime=start_datetime,
+                          start_date=start_date,
+                          start_time=start_time,
+                          end_date=end_date,
+                          end_time=end_time,
                           display_name=display_name,
                           )
 
@@ -191,7 +200,8 @@ def example_data():
                  city='Oakland, CA',
                  display_name='Mykki Blanco & Cakes Da Killa',
                  songkick_url='https://www.songkick.com/concerts/28832389-mykki-blanco-at-new-parish',
-                 start_datetime='2017-03-03 20:00')
+                 start_date='2017-03-03',
+                 start_time='20:00')
 
     db.session.add_all([u1, u2, u3, c1, c2])
     db.session.commit()
