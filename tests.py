@@ -56,11 +56,25 @@ class TestSongkick(unittest.TestCase):
         self.assertIn('placemelon', concerts[0]['image_url'])
         self.assertEqual(concerts[0]['start_time'].hour, 19)
         self.assertEqual(concerts[0]['start_time'].tzname(), 'UTC')
-        self.assertIsNone(concerts[0]['end_date'])
+        self.assertIsNone(concerts[0].get('end_date'))
         self.assertEqual(concerts[1]['start_date'].month, 2)
-        self.assertIsNone(concerts[1]['start_time'])
+        self.assertIsNone(concerts[1].get('start_time'))
         self.assertEqual(concerts[1]['spotify_id'], '9999')
         self.assertEqual(concerts[1]['source'], 'Phoenix')
+
+    def test_festival_response(self):
+        artist = {'spotify_id': '5555',
+                  'artist': 'Little Dragon',
+                  'image_url': 'xyz',
+                  'source': None}
+        festival = songkick.create_concert_list(sample_apis.outside_lands, artist)[0]
+
+        self.assertIsInstance(festival['start_date'], datetime.date)
+        self.assertEqual(festival['start_date'].month, 8)
+        self.assertEqual(festival['start_date'].day, 11)
+        self.assertIsNone(festival.get('start_time'))
+        self.assertEqual(festival['end_date'].day, 13)
+        self.assertIsNone(festival.get('end_time'))
 
 
 class TestAnalyzation(unittest.TestCase):
