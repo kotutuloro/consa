@@ -55,7 +55,6 @@ class TestSongkick(unittest.TestCase):
         self.assertIn('Weekend at O2', concerts[0]['display_name'])
         self.assertIn('placemelon', concerts[0]['image_url'])
         self.assertEqual(concerts[0]['start_time'].hour, 19)
-        self.assertEqual(concerts[0]['start_time'].tzname(), 'UTC')
         self.assertIsNone(concerts[0].get('end_date'))
         self.assertEqual(concerts[1]['start_date'].month, 2)
         self.assertIsNone(concerts[1].get('start_time'))

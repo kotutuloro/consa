@@ -2,7 +2,7 @@
 
 import os
 import requests
-from dateutil import parser
+import arrow
 
 SONGKICK_API_URL = "http://api.songkick.com/api/3.0"
 
@@ -132,11 +132,15 @@ def create_concert_list(event_json, search_dict):
                 'source': search_dict['source'],
             }
 
-            # Set concert dict's start_datetime as datetime, or date if datetime unavailable
-            if event['start']['datetime']:
-                concert['start_datetime'] = parser.parse(event['start']['datetime'])
-            elif event['start']['date']:
-                concert['start_datetime'] = parser.parse(event['start']['date'])
+            # Set concert dict's start & end date & time
+            if event.get('start'):
+                concert['start_date'] = arrow.get(event['start']['date']).date()
+                if event['start'].get('time'):
+                    concert['start_time'] = arrow.get(event['start']['time'], 'HH:mm:ss').time()
+            if event.get('end'):
+                concert['end_date'] = arrow.get(event['end']['date']).date()
+                if event['end'].get('time'):
+                    concert['end_time'] = arrow.get(event['end']['time']).time()
 
             # Add concert to recommendation list
             event_list.append(concert)
