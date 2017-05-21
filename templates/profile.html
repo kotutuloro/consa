@@ -46,10 +46,20 @@
                       <br>
                     {% endif %}
 
-                    {% if concert.start_datetime %}
-                      {{ concert.start_datetime.strftime("%a %b %d, %Y at %-I:%M %p") }}
-                      <br>
+                    {% if concert.start_date %}
+                      {{ concert.start_date.strftime("%a %b %d, %Y") }}
+                      {% if concert.start_time %}
+                        {{ concert.start_time.strftime(" at %-I:%M %p")}}
+                      {% endif %}
                     {% endif %}
+
+                    {% if concert.end_date %}
+                      {{ concert.end_date.strftime(" to %a %b %d, %Y") }}
+                      {% if concert.end_time %}
+                        {{ concert.end_time.strftime(" at %-I:%M %p")}}
+                      {% endif %}
+                    {% endif %}
+                    <br>
 
                     {% if concert.songkick_url %}
                       <a href="{{ concert.songkick_url }}" target="_blank">

@@ -489,12 +489,12 @@ class TestServerLoggedIn(unittest.TestCase):
         self.assertIn('src="https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791"', result.data)
         self.assertIn('<input type="hidden" class="map-lat" value="37.8077">', result.data)
         self.assertIn('<input type="hidden" class="map-lng" value="-122.2727">', result.data)
-        self.assertIn('Fri Mar 03, 2017 at 8:00 PM', result.data)
+        self.assertRegexpMatches(result.data, 'Fri Mar 03, 2017\s+at 8:00 PM')
         self.assertIn('View this event on Songkick', result.data)
 
         self.assertIn('<b>Sleigh Bells</b>', result.data)
         self.assertIn('Outside Lands', result.data)
-        self.assertIn('Fri Aug 11, 2017 to Sun Aug 13, 2017', result.data)
+        self.assertRegexpMatches(result.data, 'Fri Aug 11, 2017\s+to Sun Aug 13, 2017')
 
     def test_profile_with_no_concerts(self):
         with self.client.session_transaction() as sess:
