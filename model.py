@@ -202,14 +202,23 @@ def example_data():
                  songkick_url='https://www.songkick.com/concerts/28832389-mykki-blanco-at-new-parish',
                  start_date='2017-03-03',
                  start_time='20:00')
+    c3 = Concert(songkick_id=3,
+                 artist='Sleigh Bells',
+                 image_url='https://placemelon.com/200/200',
+                 venue_name='Golden Gate Park',
+                 city='San Francisco',
+                 display_name='Outside Lands Music & Arts Festival',
+                 start_date='2017-08-11',
+                 end_date='2017-08-13')
 
-    db.session.add_all([u1, u2, u3, c1, c2])
+    db.session.add_all([u1, u2, u3, c1, c2, c3])
     db.session.commit()
 
     a1 = UserConcert(user_id=1, songkick_id=1)
     a2 = UserConcert(user_id=2, songkick_id=2)
+    a3 = UserConcert(user_id=2, songkick_id=3)
 
-    db.session.add_all([a1, a2])
+    db.session.add_all([a1, a2, a3])
     db.session.commit()
 
 

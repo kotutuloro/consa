@@ -169,7 +169,7 @@ class TestModel(unittest.TestCase):
         success = user.remove_concert(1)
         clip = model.Concert.query.get(1)
         self.assertTrue(success)
-        self.assertEqual(user.concerts, [])
+        self.assertEqual(len(user.concerts), 0)
         self.assertIsNone(clip)
 
     def test_concerts(self):
@@ -190,7 +190,7 @@ class TestModel(unittest.TestCase):
         self.assertIsInstance(cakes.users, list)
 
     def test_concert_create_from_form(self):
-        form = {'songkick-id': u'3',
+        form = {'songkick-id': u'4',
                 'artist': u'Princess Nokia',
                 'venue-name': u'Starline Social Club',
                 'venue-lat': u'37.8123',
@@ -200,13 +200,13 @@ class TestModel(unittest.TestCase):
                 'start-date': u'Sat, 06 May 2017',
                 'start-time': u'21:00:00 GMT'}
 
-        nokia = model.Concert.query.get(3)
+        nokia = model.Concert.query.get(4)
         self.assertIsNone(nokia)
 
         success = model.Concert.create_from_form(form)
         self.assertTrue(success)
 
-        nokia = model.Concert.query.get(3)
+        nokia = model.Concert.query.get(4)
         self.assertIsNotNone(nokia)
         self.assertEqual(nokia.artist, 'Princess Nokia')
         self.assertEqual(nokia.venue_lng, -122.2725)
@@ -492,6 +492,10 @@ class TestServerLoggedIn(unittest.TestCase):
         self.assertIn('Fri Mar 03, 2017 at 8:00 PM', result.data)
         self.assertIn('View this event on Songkick', result.data)
 
+        self.assertIn('<b>Sleigh Bells</b>', result.data)
+        self.assertIn('Outside Lands', result.data)
+        self.assertIn('Fri Aug 11, 2017 to Sun Aug 13, 2017', result.data)
+
     def test_profile_with_no_concerts(self):
         with self.client.session_transaction() as sess:
             sess['user_id'] = 3
@@ -507,7 +511,7 @@ class TestServerLoggedIn(unittest.TestCase):
         self.assertIn('<h3>You have no saved concerts</h3>', result.data)
 
     def test_add_saved_concert(self):
-        success_form = {'songkick-id': u'3',
+        success_form = {'songkick-id': u'4',
                         'artist': u'Princess Nokia',
                         'venue-name': u'Starline Social Club',
                         'city': u'Oakland, CA',
@@ -530,7 +534,7 @@ class TestServerLoggedIn(unittest.TestCase):
         self.assertEqual(result.data, 'true\n')
 
         user = model.User.query.get(2)
-        self.assertEqual(user.concerts, [])
+        self.assertEqual(len(user.concerts), 1)
 
 
 if __name__ == "__main__":
