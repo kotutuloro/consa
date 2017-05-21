@@ -18,7 +18,7 @@ class User(db.Model):
                         nullable=False)
 
     concerts = db.relationship("Concert",
-                               order_by="Concert.start_date",
+                               order_by="Concert.start_datetime",
                                secondary="users_concerts",
                                backref="users")
 
@@ -93,9 +93,9 @@ class Concert(db.Model):
     venue_lng = db.Column(db.Float)
     city = db.Column(db.String(64))
     start_date = db.Column(db.Date)
-    start_time = db.Column(db.Time)
+    start_datetime = db.Column(db.DateTime)
     end_date = db.Column(db.Date)
-    end_time = db.Column(db.Time)
+    end_datetime = db.Column(db.DateTime)
     display_name = db.Column(db.String(128))
 
     @classmethod
@@ -113,9 +113,9 @@ class Concert(db.Model):
         venue_lng = form.get('venue-lng')
         city = form.get('city')
         start_date = form.get('start-date')
-        start_time = form.get('start-time')
+        start_datetime = form.get('start-datetime')
         end_date = form.get('end-date')
-        end_time = form.get('end-time')
+        end_datetime = form.get('end-datetime')
         display_name = form.get('display-name')
 
         # Create new concert object from data
@@ -129,9 +129,9 @@ class Concert(db.Model):
                           venue_lng=venue_lng,
                           city=city,
                           start_date=start_date,
-                          start_time=start_time,
+                          start_datetime=start_datetime,
                           end_date=end_date,
-                          end_time=end_time,
+                          end_datetime=end_datetime,
                           display_name=display_name,
                           )
 
@@ -200,8 +200,7 @@ def example_data():
                  city='Oakland, CA',
                  display_name='Mykki Blanco & Cakes Da Killa',
                  songkick_url='https://www.songkick.com/concerts/28832389-mykki-blanco-at-new-parish',
-                 start_date='2017-03-03',
-                 start_time='20:00')
+                 start_datetime='2017-03-03 20:00')
     c3 = Concert(songkick_id=3,
                  artist='Sleigh Bells',
                  image_url='https://placemelon.com/200/200',
@@ -209,7 +208,9 @@ def example_data():
                  city='San Francisco',
                  display_name='Outside Lands Music & Arts Festival',
                  start_date='2017-08-11',
-                 end_date='2017-08-13')
+                 start_datetime='2017-08-11',
+                 end_date='2017-08-13',
+                 end_datetime='2017-08-13')
 
     db.session.add_all([u1, u2, u3, c1, c2, c3])
     db.session.commit()

@@ -48,16 +48,14 @@
 
                     {% if concert.start_date %}
                       {{ concert.start_date.strftime("%a %b %d, %Y") }}
-                      {% if concert.start_time %}
-                        {{ concert.start_time.strftime(" at %-I:%M %p")}}
-                      {% endif %}
+                    {% elif concert.start_datetime %}
+                      {{ concert.start_datetime.strftime("%a %b %d, %Y at %-I:%M %p")}}
                     {% endif %}
 
                     {% if concert.end_date %}
                       {{ concert.end_date.strftime(" to %a %b %d, %Y") }}
-                      {% if concert.end_time %}
-                        {{ concert.end_time.strftime(" at %-I:%M %p")}}
-                      {% endif %}
+                    {% elif concert.end_datetime %}
+                        {{ concert.end_datetime.strftime(" to %a %b %d, %Y at %-I:%M %p")}}
                     {% endif %}
                     <br>
 

@@ -54,10 +54,10 @@ class TestSongkick(unittest.TestCase):
         self.assertEqual(len(concerts), 2)
         self.assertIn('Weekend at O2', concerts[0]['display_name'])
         self.assertIn('placemelon', concerts[0]['image_url'])
-        self.assertEqual(concerts[0]['start_time'].hour, 19)
+        self.assertEqual(concerts[0]['start_datetime'].hour, 19)
         self.assertIsNone(concerts[0].get('end_date'))
         self.assertEqual(concerts[1]['start_date'].month, 2)
-        self.assertIsNone(concerts[1].get('start_time'))
+        self.assertEqual(concerts[1]['start_datetime'].hour, 0)
         self.assertEqual(concerts[1]['spotify_id'], '9999')
         self.assertEqual(concerts[1]['source'], 'Phoenix')
 
@@ -71,9 +71,9 @@ class TestSongkick(unittest.TestCase):
         self.assertIsInstance(festival['start_date'], datetime.date)
         self.assertEqual(festival['start_date'].month, 8)
         self.assertEqual(festival['start_date'].day, 11)
-        self.assertIsNone(festival.get('start_time'))
+        self.assertEqual(festival['start_datetime'].hour, 0)
         self.assertEqual(festival['end_date'].day, 13)
-        self.assertIsNone(festival.get('end_time'))
+        self.assertEqual(festival['end_datetime'].hour, 0)
 
 
 class TestAnalyzation(unittest.TestCase):
@@ -185,8 +185,8 @@ class TestModel(unittest.TestCase):
         self.assertEqual(cakes.artist, 'Cakes Da Killa')
         self.assertEqual(cakes.venue_name, 'The New Parish')
         self.assertEqual(cakes.venue_lat, 37.8077)
-        self.assertIsInstance(cakes.start_time, datetime.time)
-        self.assertEqual(2017, cakes.start_date.year)
+        self.assertIsInstance(cakes.start_datetime, datetime.datetime)
+        self.assertEqual(2017, cakes.start_datetime.year)
         self.assertIsInstance(cakes.users, list)
 
     def test_concert_create_from_form(self):
@@ -197,8 +197,7 @@ class TestModel(unittest.TestCase):
                 'venue-lng': u'-122.2725',
                 'city': u'Oakland, CA',
                 'image-url': u'https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791',
-                'start-date': u'Sat, 06 May 2017',
-                'start-time': u'21:00:00 GMT'}
+                'start-datetime': u'Sat, 06 May 2017 21:00:00 GMT'}
 
         nokia = model.Concert.query.get(4)
         self.assertIsNone(nokia)
@@ -212,8 +211,8 @@ class TestModel(unittest.TestCase):
         self.assertEqual(nokia.venue_lng, -122.2725)
         self.assertEqual(nokia.venue_name, 'Starline Social Club')
         self.assertEqual(nokia.image_url, 'https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791')
-        self.assertEqual(nokia.start_date.day, 6)
-        self.assertEqual(nokia.start_time.hour, 21)
+        self.assertEqual(nokia.start_datetime.day, 6)
+        self.assertEqual(nokia.start_datetime.hour, 21)
 
         failure = model.Concert.create_from_form({})
         self.assertFalse(failure)
@@ -515,7 +514,7 @@ class TestServerLoggedIn(unittest.TestCase):
                         'artist': u'Princess Nokia',
                         'venue-name': u'Starline Social Club',
                         'city': u'Oakland, CA',
-                        'start-date': u'Sat, 06 May 2017'}
+                        'start-datetime': u'Sat, 06 May 2017 21:00:00 GMT'}
         success = self.client.post('/add-concert.json', data=success_form)
         self.assertEqual(success.status_code, 200)
         self.assertEqual(success.data, 'true\n')
