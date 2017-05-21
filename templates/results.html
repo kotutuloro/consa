@@ -228,13 +228,40 @@
 
       var start;
       // Set start date/time if available
-      if (concert.start_datetime) {
-        // Format start date/time with JS and moment.js
+      if (concert.start_date) {
+        // Format start date with JS and moment.js
+        var startISO = new Date(concert.start_date);
+        var startMoment = moment(startISO).utc();
+        var formattedStart = startMoment.format("ddd MMM DD, Y");
+
+        start = formattedStart;
+
+      } else if (concert.start_datetime) {
+        // Format start datetime with JS and moment.js
         var startISO = new Date(concert.start_datetime);
         var startMoment = moment(startISO).utc();
-        var formattedStart = startMoment.format("ddd MMM DD, Y [at] LT")
+        var formattedStart = startMoment.format("ddd MMM DD, Y [at] LT");
 
-        start = formattedStart + "<br>";
+        start = formattedStart;
+      }
+
+      var end = "<br>";
+      // Set end date/time if available
+      if (concert.end_date) {
+        // Format end date with JS and moment.js
+        var endISO = new Date(concert.end_date);
+        var endMoment = moment(endISO).utc();
+        var formattedEnd = endMoment.format("ddd MMM DD, Y");
+
+        end = " to " + formattedEnd + "<br>";
+
+      } else if (concert.end_datetime) {
+        // Format end datetime with JS and moment.js
+        var endISO = new Date(concert.end_datetime);
+        var endMoment = moment(endISO).utc();
+        var formattedEnd = endMoment.format("ddd MMM DD, Y [at] LT");
+
+        end = " to " + formattedEnd + "<br>";
       }
 
       var url;
@@ -247,7 +274,7 @@
         });
       }
 
-      infoDiv.append(artist, "<br>", source, displayName, location, start, url);
+      infoDiv.append(artist, "<br>", source, displayName, location, start, end, url);
 
       // Create a form for adding the concert
       var formDiv = $("<div>").addClass("concert-rec-form col-sm-3 col-sm-offset-0 col-xs-8 col-xs-offset-2");
@@ -295,8 +322,17 @@
       var city = $("<input>").attr("type", "hidden");
       city.addClass("city").val(concert.city);
 
-      var start = $("<input>").attr("type", "hidden");
-      start.addClass("start-datetime").val(concert.start_datetime);
+      var start_date = $("<input>").attr("type", "hidden");
+      start_date.addClass("start-date").val(concert.start_date);
+
+      var start_datetime = $("<input>").attr("type", "hidden");
+      start_datetime.addClass("start-datetime").val(concert.start_datetime);
+
+      var end_date = $("<input>").attr("type", "hidden");
+      end_date.addClass("end-date").val(concert.end_date);
+
+      var end_datetime = $("<input>").attr("type", "hidden");
+      end_datetime.addClass("end-datetime").val(concert.end_datetime);
 
       // Create submit button
       var submit = $("<input>").attr("type", "submit");
@@ -320,7 +356,9 @@
       {% endif %}
 
       // Add all inputs to form and return it
-      addForm.append(songkickID, artist, displayName, songkickURL, spotifyID, imageURL, venue_name, venue_lat, venue_lng, city, start, submit);
+      addForm.append(songkickID, artist, displayName, songkickURL, spotifyID, 
+                     imageURL, venue_name, venue_lat, venue_lng, city, 
+                     start_date, start_datetime, end_date, end_datetime, submit);
       return addForm;
     }
 

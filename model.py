@@ -112,10 +112,10 @@ class Concert(db.Model):
         venue_lat = form.get('venue-lat')
         venue_lng = form.get('venue-lng')
         city = form.get('city')
-        start_date = form.get('start-date')
-        start_datetime = form.get('start-datetime')
-        end_date = form.get('end-date')
-        end_datetime = form.get('end-datetime')
+        start_date = form.get('start-date') or None
+        start_datetime = form.get('start-datetime') or None
+        end_date = form.get('end-date') or None
+        end_datetime = form.get('end-datetime') or None
         display_name = form.get('display-name')
 
         # Create new concert object from data

@@ -288,6 +288,7 @@ function submitNoAuth(evt) {
 function addConcert(evt){
     evt.preventDefault();
 
+
     var thisButton = $(this);
 
     // Get hidden values of concert data in form
@@ -302,7 +303,10 @@ function addConcert(evt){
         "venue-lat": $(this).siblings("input.venue-lat").val(),
         "venue-lng": $(this).siblings("input.venue-lng").val(),
         "city": $(this).siblings("input.city").val(),
+        "start-date": $(this).siblings("input.start-date").val(),
         "start-datetime": $(this).siblings("input.start-datetime").val(),
+        "end-date": $(this).siblings("input.end-date").val(),
+        "end-datetime": $(this).siblings("input.end-datetime").val(),
     };
 
     // POST AJAX request to server
