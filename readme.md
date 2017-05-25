@@ -6,24 +6,24 @@ _(Under Construction)_
 Consa allows users to find concerts in their area for artists based on their musical interests. Authorize your Spotify account, and Consa will determine your musical interests from your account’s top artists and find more related artists using the Spotify API. No Spotify account? No problem! If you don’t want to use your top Spotify artists, you can choose specific artists to use as starting points for your concert search instead. Consa will then use the Songkick API to search for upcoming concerts for these artists in your selected metropolitan area. Registered users can save the concerts they are interested in attending and keep track of them on their profile where they can also view the concert’s location using the Google Maps API.
 
 
-### Features
+## Features
 
-##### Search for your location
+#### Search for your location
 ![Location searching][locgif]
 
-##### Authorize your Spotify account
+#### Authorize your Spotify account
 ![Spotify authorization][authgif]
 
-##### (Or name up to 10 artists you like)
+#### (Or name up to 10 artists you like)
 ![Artist searching][artistgif]
 
-##### View concerts in your area
+#### View concerts in your area
 ![Concert results][resultsgif]
 
-##### Keep track of concerts you've saved
+#### Keep track of concerts you've saved
 ![Your profile and saved concerts][profgif]
 
-### About the app
+## About the app
 
 Consa was created by Kiko Otutuloro as their final project at Hackbright Academy.
 Check Kiko out on [LinkedIn](https://www.linkedin.com/in/kotutuloro/)!
