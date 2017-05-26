@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block subtitle %}
+  : About
+{% endblock %}
+
+{% block content %}
+  <div id="about" class="row">
+    <div class="translucent col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
+      <h1>About the app</h1>
+      <p>Consa allows users to find concerts in their area for artists based on their musical interests. Authorize your Spotify account, and Consa will determine your musical interests from your account’s top artists and find more related artists using the Spotify API. No Spotify account? No problem! If you don’t want to use your top Spotify artists, you can choose specific artists to use as starting points for your concert search instead. Consa will then use the Songkick API to search for upcoming concerts for these artists in your selected metropolitan area. Registered users can save the concerts they are interested in attending and keep track of them on their profile where they can also view the concert’s location using the Google Maps API.</p>
+      <p><i><a href="https://github.com/kotutuloro/consa">Check out Consa on Github!</a></i></p>
+
+      <hr>
+
+      <h1>About the creator</h1>
+      <p>Consa was created by Kiko Otutuloro as their final project at Hackbright Academy. Kiko is a software engineer living in the San Francisco Bay Area. Prior to attending Hackbright, Kiko grew up in Houston, TX and graduated with a degree in nursing from the University of Pennsylvania. They really enjoy listening to new music and spending money on concerts.</p>
+
+      <div id="contacts" class="row text-center">
+        <div class="col-sm-4 col-sm-offset-0 col-xs-6">
+          <a href="https://twitter.com/kotutuloro">
+            <img class="contact-img img-responsive img-rounded center-block" src="/static/img/Twitter_Logo_White_On_Blue.png">
+            @kotutuloro
+          </a>
+        </div>
+        <div class="col-sm-4 col-sm-offset-0 col-xs-6">
+          <a href="https://github.com/kotutuloro">
+            <img class="contact-img img-responsive img-rounded center-block" src="/static/img/GitHub-Mark-64px.png">
+            @kotutuloro
+          </a>
+        </div>
+        <div class="col-sm-4 col-sm-offset-0 col-xs-6 col-xs-offset-3">
+          <a href="mailto:k.otutuloro@gmail.com">
+            <img class="contact-img img-responsive img-rounded center-block" src="/static/img/logo_gmail_64px.png">
+            k.otutuloro@gmail
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  <script>
+  </script>
+{% endblock %}

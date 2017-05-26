@@ -60,6 +60,13 @@ def return_homepage():
     return render_template('homepage.html')
 
 
+@app.route('/about')
+def return_about_page():
+    """Display the app's about page"""
+
+    return render_template('about.html')
+
+
 @app.route('/login', methods=["GET"])
 def return_login_form():
     """Displays the login form"""
