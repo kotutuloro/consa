@@ -1,13 +1,15 @@
 """Functions for retrieving and analyzing Spotify user data"""
 
 import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+CLIENT_CREDENTIALS_MANAGER = SpotifyClientCredentials()
 
 
 def find_spotify_artists(search_term):
     """Returns list of results for artists matching the search term"""
 
     # Search for artists using the term
-    sp = spotipy.Spotify()
+    sp = spotipy.Spotify(client_credentials_manager=CLIENT_CREDENTIALS_MANAGER)
     artist_response = sp.search(search_term, type='artist', limit=5)
 
     # Create a list of search results
@@ -33,7 +35,7 @@ def get_top_artist_recs(spotify):
 def get_artist_recs(artists_list):
     """Returns list of artist recommendations using list of artist dicitonaries"""
 
-    sp = spotipy.Spotify()
+    sp = spotipy.Spotify(client_credentials_manager=CLIENT_CREDENTIALS_MANAGER)
 
     related_artists_list = []
 
