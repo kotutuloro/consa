@@ -230,18 +230,12 @@
       // Set start date/time if available
       if (concert.start_date) {
         // Format start date with JS and moment.js
-        var startISO = new Date(concert.start_date);
-        var startMoment = moment(startISO).utc();
-        var formattedStart = startMoment.format("ddd MMM DD, Y");
-
+        var formattedStart = moment.parseZone(concert.start_date).format("ddd MMM DD, Y");
         start = formattedStart;
 
       } else if (concert.start_datetime) {
         // Format start datetime with JS and moment.js
-        var startISO = new Date(concert.start_datetime);
-        var startMoment = moment(startISO).utc();
-        var formattedStart = startMoment.format("ddd MMM DD, Y [at] LT");
-
+        var formattedStart = moment.parseZone(concert.start_datetime).format("ddd MMM DD, Y [at] LT");
         start = formattedStart;
       }
 
@@ -249,18 +243,12 @@
       // Set end date/time if available
       if (concert.end_date) {
         // Format end date with JS and moment.js
-        var endISO = new Date(concert.end_date);
-        var endMoment = moment(endISO).utc();
-        var formattedEnd = endMoment.format("ddd MMM DD, Y");
-
+        var formattedEnd = moment.parseZone(concert.end_date).format("ddd MMM DD, Y");
         end = " to " + formattedEnd + "<br>";
 
       } else if (concert.end_datetime) {
         // Format end datetime with JS and moment.js
-        var endISO = new Date(concert.end_datetime);
-        var endMoment = moment(endISO).utc();
-        var formattedEnd = endMoment.format("ddd MMM DD, Y [at] LT");
-
+        var formattedEnd = moment.parseZone(concert.end_datetime).format("ddd MMM DD, Y [at] LT");
         end = " to " + formattedEnd + "<br>";
       }
 

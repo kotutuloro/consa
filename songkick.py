@@ -135,19 +135,19 @@ def create_concert_list(event_json, search_dict):
             # Set concert dict's start & end date & time
             if event.get('start'):
                 if event['start']['datetime']:
-                    concert['start_datetime'] = arrow.get(event['start']['datetime']).datetime
+                    concert['start_datetime'] = arrow.get(event['start']['datetime']).isoformat()
                 # Only use date if there's no time
                 else:
-                    concert['start_datetime'] = arrow.get(event['start']['date']).datetime
-                    concert['start_date'] = arrow.get(event['start']['date']).date()
+                    concert['start_datetime'] = arrow.get(event['start']['date']).isoformat()
+                    concert['start_date'] = arrow.get(event['start']['date']).isoformat()
 
             if event.get('end'):
                 if event['end']['datetime']:
-                    concert['end_datetime'] = arrow.get(event['end']['datetime']).datetime
+                    concert['end_datetime'] = arrow.get(event['end']['datetime']).isoformat()
                 # Only use date if there's no time
                 else:
-                    concert['end_datetime'] = arrow.get(event['end']['date']).datetime
-                    concert['end_date'] = arrow.get(event['end']['date']).date()
+                    concert['end_datetime'] = arrow.get(event['end']['date']).isoformat()
+                    concert['end_date'] = arrow.get(event['end']['date']).isoformat()
 
             # Add concert to recommendation list
             event_list.append(concert)

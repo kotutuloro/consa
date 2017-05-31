@@ -351,8 +351,8 @@ function sortConcerts(evt){
 // Sort results by concert's date
 function sortByDate(a, b){
     // Get concert's date from its hidden form input as an ISO String
-    var aDate = new Date($(a).find('input.start-datetime').val()).toISOString();
-    var bDate = new Date($(b).find('input.start-datetime').val()).toISOString();
+    var aDate = new Date($(a).find('input.start-datetime').val());
+    var bDate = new Date($(b).find('input.start-datetime').val());
 
     // Sort ascending
     if (aDate > bDate) {

@@ -139,6 +139,7 @@ class Concert(db.Model):
         try:
             db.session.add(new_concert)
             db.session.commit()
+
             return True
 
         # Rollback session and return False if unsuccessful
@@ -200,17 +201,17 @@ def example_data():
                  city='Oakland, CA',
                  display_name='Mykki Blanco & Cakes Da Killa',
                  songkick_url='https://www.songkick.com/concerts/28832389-mykki-blanco-at-new-parish',
-                 start_datetime='2017-03-03 20:00')
+                 start_datetime='2017-03-03T20:00:00-0400')
     c3 = Concert(songkick_id=3,
                  artist='Sleigh Bells',
                  image_url='https://placemelon.com/200/200',
                  venue_name='Golden Gate Park',
                  city='San Francisco',
                  display_name='Outside Lands Music & Arts Festival',
-                 start_date='2017-08-11',
-                 start_datetime='2017-08-11',
-                 end_date='2017-08-13',
-                 end_datetime='2017-08-13')
+                 start_date='2017-08-11T00:00:00+00:00',
+                 start_datetime='2017-08-11T10:00:00+00:00',
+                 end_date='2017-08-13T00:00:00+00:00',
+                 end_datetime='2017-08-13T00:00:00+00:00')
 
     db.session.add_all([u1, u2, u3, c1, c2, c3])
     db.session.commit()

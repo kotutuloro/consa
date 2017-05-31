@@ -52,12 +52,14 @@ class TestSongkick(unittest.TestCase):
         concerts = songkick.create_concert_list(sample_apis.vw_concerts, artist)
 
         self.assertEqual(len(concerts), 2)
+
         self.assertIn('Weekend at O2', concerts[0]['display_name'])
         self.assertIn('placemelon', concerts[0]['image_url'])
-        self.assertEqual(concerts[0]['start_datetime'].hour, 19)
+        self.assertIn('2010-02-16T19:30:00', concerts[0]['start_datetime'])
         self.assertIsNone(concerts[0].get('end_date'))
-        self.assertEqual(concerts[1]['start_date'].month, 2)
-        self.assertEqual(concerts[1]['start_datetime'].hour, 0)
+
+        self.assertIn('2010-02-17T00:00:00', concerts[1]['start_date'])
+        self.assertIn('2010-02-17T00:00:00', concerts[1]['start_datetime'])
         self.assertEqual(concerts[1]['spotify_id'], '9999')
         self.assertEqual(concerts[1]['source'], 'Phoenix')
 
@@ -68,12 +70,10 @@ class TestSongkick(unittest.TestCase):
                   'source': None}
         festival = songkick.create_concert_list(sample_apis.outside_lands, artist)[0]
 
-        self.assertIsInstance(festival['start_date'], datetime.date)
-        self.assertEqual(festival['start_date'].month, 8)
-        self.assertEqual(festival['start_date'].day, 11)
-        self.assertEqual(festival['start_datetime'].hour, 0)
-        self.assertEqual(festival['end_date'].day, 13)
-        self.assertEqual(festival['end_datetime'].hour, 0)
+        self.assertIn('2017-08-11T00:00:00', festival['start_date'])
+        self.assertIn('2017-08-11T00:00:00', festival['start_datetime'])
+        self.assertIn('2017-08-13T00:00:00', festival['end_date'])
+        self.assertIn('2017-08-13T00:00:00', festival['end_datetime'])
 
 
 class TestAnalyzation(unittest.TestCase):
@@ -197,7 +197,7 @@ class TestModel(unittest.TestCase):
                 'venue-lng': u'-122.2725',
                 'city': u'Oakland, CA',
                 'image-url': u'https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791',
-                'start-datetime': u'Sat, 06 May 2017 21:00:00 GMT'}
+                'start-datetime': u'2017-05-06T21:00:00-0500'}
 
         nokia = model.Concert.query.get(4)
         self.assertIsNone(nokia)
