@@ -206,6 +206,8 @@ def example_data():
                  artist='Sleigh Bells',
                  image_url='https://placemelon.com/200/200',
                  venue_name='Golden Gate Park',
+                 venue_lat=35,
+                 venue_lng=-123,
                  city='San Francisco',
                  display_name='Outside Lands Music & Arts Festival',
                  start_date='2017-08-11T00:00:00+00:00',
