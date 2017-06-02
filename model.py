@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-
+from datetime import datetime
 db = SQLAlchemy()
 
 
@@ -173,6 +173,20 @@ class UserConcert(db.Model):
                 .format(self.user_id, self.songkick_id))
 
 
+# Create relationships between users and concerts for past and future concerts
+User.future_concerts = db.relationship("Concert",
+                                       order_by="Concert.start_datetime",
+                                       secondary="users_concerts",
+                                       secondaryjoin=db.and_(UserConcert.songkick_id == Concert.songkick_id,
+                                                             Concert.start_datetime > datetime.now()))
+
+User.past_concerts = db.relationship("Concert",
+                                     order_by="Concert.start_datetime.desc()",
+                                     secondary="users_concerts",
+                                     secondaryjoin=db.and_(UserConcert.songkick_id == Concert.songkick_id,
+                                                           Concert.start_datetime < datetime.now()))
+
+
 ##############################################################################
 # Helper functions
 
@@ -210,6 +224,7 @@ def example_data():
                  venue_lng=-123,
                  city='San Francisco',
                  display_name='Outside Lands Music & Arts Festival',
+                 songkick_url='https://wherever',
                  start_date='2017-08-11T00:00:00+00:00',
                  start_datetime='2017-08-11T10:00:00+00:00',
                  end_date='2017-08-13T00:00:00+00:00',

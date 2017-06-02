@@ -1,24 +1,23 @@
 {% extends 'base.html' %}
 
 {% block subtitle %}
-  : Your Profile
+  : Your Past Concerts
 {% endblock %}
 
 {% block content %}
 
   <div class="row">
     <div id="profile" class="translucent col-md-10 col-md-offset-1 col-xs-12">
-      <h1>Your profile</h1>
+      <h1>Your past concerts</h1>
 
       <div id="user-info">
         Email: {{ current_user.email }}
       </div>
 
-      {% if current_user.future_concerts %}
+      {% if current_user.past_concerts %}
         <div id="saved-concerts-list">
-          <h3>Your saved concerts</h3>
 
-          {% for concert in current_user.future_concerts %}
+          {% for concert in current_user.past_concerts %}
             <div class="saved-concert row">
               
               <div class="concert-info col-sm-8 col-xs-12">
@@ -65,11 +64,6 @@
                       </a>
                       <br>
                     {% endif %}
-
-                    <form action="/remove-concert">
-                      <input type="hidden" class="songkick-id" value="{{ concert.songkick_id }}">
-                      <input type="submit" class="remove-concert btn btn-danger" value="Remove this concert">
-                    </form>
                   </div>
 
                 </div>
@@ -90,7 +84,7 @@
         </div>
 
       {% else %}
-        <h3>You have no saved concerts</h3>
+        <h3>You have no past saved concerts</h3>
       {% endif %}
     </div>
   </div>

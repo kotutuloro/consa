@@ -177,6 +177,22 @@ def return_user_profile():
         return redirect('/login')
 
 
+@app.route('/my-profile/past')
+def return_user_past_concerts():
+    """Displays the logged in user's past concerts"""
+
+    # Display user's profile page if logged in
+    if session.get('user_id'):
+        current_user = User.query.get(session['user_id'])
+        return render_template('past.html',
+                               current_user=current_user)
+
+    # Return redirect to login page if not logged in
+    else:
+        flash('You must be logged in to view your profile.')
+        return redirect('/login')
+
+
 @app.route('/add-concert.json', methods=["POST"])
 def add_saved_concert():
     """Adds concert to user's saved list"""
