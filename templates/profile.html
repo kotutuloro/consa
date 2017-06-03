@@ -92,6 +92,10 @@
       {% else %}
         <h3>You have no saved concerts</h3>
       {% endif %}
+
+      {% if current_user.past_concerts %}
+        <a href="/my-profile/past"><h4>View your past concerts</h4></a>
+      {% endif %}
     </div>
   </div>
 

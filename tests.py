@@ -4,7 +4,6 @@ import spotipy
 import os
 from passlib.hash import pbkdf2_sha256 as sha
 import json
-from freezegun import freeze_time
 
 import sample_apis
 import songkick
@@ -132,6 +131,7 @@ class TestSpotifyOauth(unittest.TestCase):
 class TestModel(unittest.TestCase):
 
     def setUp(self):
+        import model
         model.connect_to_db(server.app, "postgresql:///testconsa")
         model.db.create_all()
         model.example_data()
@@ -140,19 +140,12 @@ class TestModel(unittest.TestCase):
         model.db.session.close()
         model.db.drop_all()
 
-    @freeze_time('2017-06-01 23:00:00', tz_offset=-7)
     def test_users(self):
         kiko = model.User.query.get(2)
         self.assertEqual(kiko.email, 'kiko@creat.er')
         self.assertTrue(sha.verify('kikokikokiko', kiko.pw_hash))
         self.assertIsInstance(kiko.concerts, list)
         self.assertIsInstance(kiko.concerts[0], model.Concert)
-
-        self.assertEqual(len(kiko.concerts), 2)
-        self.assertEqual(len(kiko.past_concerts), 1)
-        self.assertEqual(kiko.past_concerts[0].artist, 'Cakes Da Killa')
-        self.assertEqual(len(kiko.future_concerts), 1)
-        self.assertEqual(kiko.future_concerts[0].artist, 'Sleigh Bells')
 
     def test_user_add_concert(self):
         noone = model.User.query.get(3)
@@ -428,7 +421,6 @@ class TestServer(unittest.TestCase):
         self.assertIsNotNone(result.data)
 
 
-@freeze_time('2017-06-01 23:00:00', tz_offset=-7)
 class TestServerLoggedIn(unittest.TestCase):
 
     def setUp(self):
@@ -489,43 +481,6 @@ class TestServerLoggedIn(unittest.TestCase):
         self.assertNotIn('<form action="/register" method="POST">', result.data)
         self.assertIn('already logged in', result.data)
         self.assertIn('Use your Spotify account', result.data)
-
-    def test_profile(self):
-        result = self.client.get('/my-profile')
-        self.assertEqual(result.status_code, 200)
-        self.assertIn(': Your Profile', result.data)
-
-        self.assertIn('<h1>Your profile</h1>', result.data)
-        self.assertIn('Email: kiko@creat.er', result.data)
-
-        self.assertIn('<b>Sleigh Bells</b>', result.data)
-        self.assertIn('Outside Lands', result.data)
-        self.assertIn('<input type="hidden" class="map-lat" value="35.0">', result.data)
-        self.assertIn('<input type="hidden" class="map-lng" value="-123.0">', result.data)
-        self.assertIn('<input type="hidden" class="songkick-id" value="3">', result.data)
-        self.assertRegexpMatches(result.data, 'Fri Aug 11, 2017\s+to Sun Aug 13, 2017')
-        self.assertIn('View this event on Songkick', result.data)
-
-        self.assertNotIn('<b>Cakes Da Killa</b>', result.data)
-        self.assertNotIn('Mykki Blanco &amp; Cakes Da Killa', result.data)
-
-    def test_past(self):
-        result = self.client.get('/my-profile/past')
-        self.assertEqual(result.status_code, 200)
-        self.assertIn(': Your Past Concerts', result.data)
-
-        self.assertIn('<h1>Your past concerts</h1>', result.data)
-        self.assertIn('Email: kiko@creat.er', result.data)
-
-        self.assertIn('<b>Cakes Da Killa</b>', result.data)
-        self.assertIn('Mykki Blanco &amp; Cakes Da Killa', result.data)
-        self.assertIn('The New Parish', result.data)
-        self.assertIn('src="https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791"', result.data)
-        self.assertRegexpMatches(result.data, 'Fri Mar 03, 2017\s+at 8:00 PM')
-        self.assertIn('View this event on Songkick', result.data)
-
-        self.assertNotIn('<b>Sleigh Bells</b>', result.data)
-        self.assertNotIn('Outside Lands', result.data)
 
     def test_profile_with_no_concerts(self):
         with self.client.session_transaction() as sess:
