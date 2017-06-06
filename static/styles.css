@@ -22,11 +22,10 @@ h1, h2, h3, h4, h5, h6 {
       background: url("/static/img/main-bg.jpg") no-repeat center center;
       background-size: cover;
 
-      /*
       -webkit-filter: blur(5px);
       -moz-filter: blur(5px);
       -o-filter: blur(5px);
-      -ms-filter: blur(5px);*/
+      -ms-filter: blur(5px);
       filter: blur(5px);
 }
 
@@ -61,7 +60,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #empty-landing {
-  margin-top: 15%;
+  margin-top: 5%;
 }
 
 #home-header h1 {
@@ -147,4 +146,12 @@ h1, h2, h3, h4, h5, h6 {
 
 .concert-map {
   min-height: 200px;
+}
+
+#contacts {
+  padding-top: 15px;
+}
+
+.contact-img {
+  max-height: 50px;
 }
