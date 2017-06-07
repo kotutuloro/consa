@@ -21,7 +21,7 @@
           {% for concert in current_user.future_concerts %}
             <div class="saved-concert row">
               
-              <div class="concert-info col-sm-8 col-xs-12">
+              <div class="concert-rec-info col-sm-8 col-xs-12">
                 <div class="row">
 
                   <div class="col-xs-5">
@@ -31,10 +31,9 @@
                   </div>
 
                   <div class="col-xs-7">
-                    <b>{{ concert.artist }}</b>
-                    <br>
+                    <h4>{{ concert.artist }}</h4>
 
-                    {{ concert.display_name }}
+                    <i>{{ concert.display_name }}</i>
                     <br> 
                     
                     {% if concert.city %}

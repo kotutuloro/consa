@@ -204,16 +204,16 @@
       var infoDiv = $("<div>").addClass("concert-rec-info col-sm-6 col-xs-8");
 
       // Set artist with bold tag 
-      var artist = $("<b>").text(concert.artist);
+      var artist = $("<h4>").text(concert.artist);
 
       var source;
       // Set concert's source artist if available
       if (concert.source) {
-        source = "Recommended based on your interest in " + concert.source + "<br>";
+        source = "(Recommended based on your interest in " + concert.source + ")<br>";
       }
 
       // Set display name with surrounding line breaks
-      var displayName = concert.display_name + "<br>";
+      var displayName = $("<i>").text(concert.display_name);
 
       var location;
       // Set location to city if available
@@ -262,7 +262,7 @@
         });
       }
 
-      infoDiv.append(artist, "<br>", source, displayName, location, start, end, url);
+      infoDiv.append(artist, source, displayName, "<br>", location, start, end, url);
 
       // Create a form for adding the concert
       var formDiv = $("<div>").addClass("concert-rec-form col-sm-3 col-sm-offset-0 col-xs-8 col-xs-offset-2");

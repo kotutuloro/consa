@@ -131,6 +131,11 @@ h1, h2, h3, h4, h5, h6 {
   padding: 10px;
 }
 
+.concert-rec-info h4 {
+  margin-top: 0;
+  text-decoration: underline;
+}
+
 #user-info {
   font-weight: 600;
 }
