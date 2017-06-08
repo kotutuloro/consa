@@ -1,8 +1,8 @@
 from flask import Flask, render_template, flash, redirect, request, session, jsonify
-from flask_debugtoolbar import DebugToolbarExtension
 
 from passlib.hash import pbkdf2_sha256 as sha
 import json
+import os
 
 import spotipy
 from spotipy.oauth2 import SpotifyOauthError
@@ -16,7 +16,7 @@ from songkick import find_songkick_locations, find_songkick_concerts
 
 app = Flask(__name__)
 
-app.secret_key = "BleepBloop"
+app.secret_key = os.getenv('FLASK_KEY')
 
 # Create Spotify OAuth object for use with spotipy
 SPOTIFY_OAUTH = get_spotify_oauth()
@@ -385,11 +385,18 @@ def return_concerts():
     return jsonify(concert_recs)
 
 
+@app.route('/errrr')
+def return_error():
+    """Raise an error
+
+    For testing purposes
+    """
+
+    raise Exception("Oh no! A mysterious error!")
+
+
 if __name__ == '__main__':  # pragma: no cover
-    app.debug = True
 
     connect_to_db(app)
-
-    DebugToolbarExtension(app)
 
     app.run(threaded=True)
