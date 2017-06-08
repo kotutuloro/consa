@@ -1,4 +1,5 @@
 from flask import Flask, render_template, flash, redirect, request, session, jsonify
+from flask_debugtoolbar import DebugToolbarExtension
 
 from passlib.hash import pbkdf2_sha256 as sha
 import json
@@ -397,6 +398,10 @@ def return_error():
 
 if __name__ == '__main__':  # pragma: no cover
 
+    app.debug = True
+
     connect_to_db(app)
+
+    DebugToolbarExtension(app)
 
     app.run(threaded=True)
