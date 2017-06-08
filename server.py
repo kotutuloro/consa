@@ -399,4 +399,4 @@ if __name__ == '__main__':  # pragma: no cover
 
     connect_to_db(app)
 
-    app.run()
+    app.run(threaded=True)

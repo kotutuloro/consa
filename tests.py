@@ -570,7 +570,7 @@ class TestFrozenMid(unittest.TestCase):
         self.assertIn('<h1>Your profile</h1>', result.data)
         self.assertIn('Email: kiko@creat.er', result.data)
 
-        self.assertIn('<b>Sleigh Bells</b>', result.data)
+        self.assertIn('<h4>Sleigh Bells</h4>', result.data)
         self.assertIn('Outside Lands', result.data)
         self.assertIn('<input type="hidden" class="map-lat" value="35.0">', result.data)
         self.assertIn('<input type="hidden" class="map-lng" value="-123.0">', result.data)
@@ -578,7 +578,7 @@ class TestFrozenMid(unittest.TestCase):
         self.assertRegexpMatches(result.data, 'Fri Aug 11, 2017\s+to Sun Aug 13, 2017')
         self.assertIn('View this event on Songkick', result.data)
 
-        self.assertNotIn('<b>Cakes Da Killa</b>', result.data)
+        self.assertNotIn('<h4>Cakes Da Killa</h4>', result.data)
         self.assertNotIn('Mykki Blanco &amp; Cakes Da Killa', result.data)
 
     def test_past(self):
@@ -589,14 +589,14 @@ class TestFrozenMid(unittest.TestCase):
         self.assertIn('<h1>Your past concerts</h1>', result.data)
         self.assertIn('Email: kiko@creat.er', result.data)
 
-        self.assertIn('<b>Cakes Da Killa</b>', result.data)
+        self.assertIn('<h4>Cakes Da Killa</h4>', result.data)
         self.assertIn('Mykki Blanco &amp; Cakes Da Killa', result.data)
         self.assertIn('The New Parish', result.data)
         self.assertIn('src="https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791"', result.data)
         self.assertRegexpMatches(result.data, 'Fri Mar 03, 2017\s+at 8:00 PM')
         self.assertIn('View this event on Songkick', result.data)
 
-        self.assertNotIn('<b>Sleigh Bells</b>', result.data)
+        self.assertNotIn('<h4>Sleigh Bells</h4>', result.data)
         self.assertNotIn('Outside Lands', result.data)
 
 
