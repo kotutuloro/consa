@@ -399,7 +399,7 @@ def print_referrer():
     """Print/log info about how each route is accessed"""
 
     import sys
-    print sys.stderr, "{} {} accessed on {} via {}".format(request.method,
+    print >> sys.stderr, "{} {} accessed on {} via {}".format(request.method,
                                                            request.path,
                                                            request.user_agent,
                                                            request.referrer)
