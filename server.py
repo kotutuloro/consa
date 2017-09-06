@@ -395,7 +395,18 @@ def return_error():
     raise Exception("Oh no! A mysterious error!")
 
 
+def print_referrer():
+    """Print/log info about how each route is accessed"""
+
+    print "{} {} accessed on {} via {}".format(request.method,
+                                               request.path,
+                                               request.user_agent,
+                                               request.referrer)
+
+
 if __name__ == '__main__':  # pragma: no cover
+
+    app.before_request(print_referrer)
 
     connect_to_db(app)
 
