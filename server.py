@@ -399,10 +399,10 @@ def print_referrer():
     """Print/log info about how each route is accessed"""
 
     import sys
-    print >> sys.stderr, "{} {} accessed on {} via {}".format(request.method,
-                                                           request.path,
-                                                           request.user_agent,
-                                                           request.referrer)
+    print >> sys.stderr, "\n{} {} accessed on {} via {}".format(request.method,
+                                                                request.path,
+                                                                request.user_agent,
+                                                                request.referrer)
 
 
 if __name__ == '__main__':  # pragma: no cover
