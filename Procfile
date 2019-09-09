@@ -1,0 +1,1 @@
+web: gunicorn consa:application
