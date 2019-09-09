@@ -42,9 +42,9 @@ class User(db.Model):
             return True
 
         # Rollback transaction and return False if not successful
-        except Exception, msg:
+        except Exception as msg:
             db.session.rollback()
-            print msg
+            print(msg)
             return False
 
     def remove_concert(self, songkick_id):
@@ -68,9 +68,9 @@ class User(db.Model):
             return True
 
         # Rollback transaction and return False if not successful
-        except Exception, msg:      # pragma: no cover
+        except Exception as msg:      # pragma: no cover
             db.session.rollback()
-            print msg
+            print(msg)
             return False
 
     def __repr__(self):     # pragma: no cover
@@ -145,14 +145,14 @@ class Concert(db.Model):
             return True
 
         # Rollback session and return False if unsuccessful
-        except Exception, msg:
+        except Exception as msg:
             db.session.rollback()
-            print msg
+            print(msg)
             return False
 
     def __repr__(self):     # pragma: no cover
         return ("<Concert songkick_id={} display_name={}>"
-                .format(self.songkick_id, self.display_name.encode('utf-8')))
+                .format(self.songkick_id, self.display_name))
 
 
 class UserConcert(db.Model):
@@ -263,4 +263,4 @@ if __name__ == "__main__":      # pragma: no cover
     from server import app
     connect_to_db(app)
     db.create_all()
-    print "Connected to DB."
+    print("Connected to DB.")

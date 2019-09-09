@@ -320,7 +320,7 @@ def return_recommendations():
         access_token = token_info.get('access_token')
 
     # Return error message if getting access token fails
-    except SpotifyOauthError, error:
+    except SpotifyOauthError as error:
         return jsonify('Unable to authorize: ' + str(error))
 
     # Create Spotify API object using access_token
@@ -399,10 +399,10 @@ def print_referrer():
     """Print/log info about how each route is accessed"""
 
     import sys
-    print >> sys.stderr, "\n{} {} accessed on {} via {}".format(request.method,
-                                                                request.path,
-                                                                request.user_agent,
-                                                                request.referrer)
+    print("\n{} {} accessed on {} via {}".format(request.method,
+                                                 request.path,
+                                                 request.user_agent,
+                                                 request.referrer))
 
 
 if __name__ == '__main__':  # pragma: no cover

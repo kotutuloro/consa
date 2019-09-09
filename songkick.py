@@ -92,10 +92,10 @@ def find_songkick_concerts(search_dict, location="sk:26330"):
         # Add the concerts to our list
         concert_recs_list = create_concert_list(event_response.json(), search_dict)
 
-    # If request unsuccessful, print error
+    # If request unsuccessful, print(error)
     else:      # pragma: no cover
-        artist = search_dict['artist'].encode('utf-8')
-        print "Failed: {}".format(artist)
+        artist = search_dict['artist']
+        print("Failed: {}".format(artist))
 
     return concert_recs_list
 

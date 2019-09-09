@@ -241,33 +241,33 @@ class TestServer(unittest.TestCase):
     def test_homepage(self):
         result = self.client.get('/')
         self.assertEqual(result.status_code, 200)
-        self.assertIn('Consa', result.data)
+        self.assertIn('Consa', result.data.decode('utf-8'))
 
-        self.assertIn('your location', result.data)
-        self.assertIn('<div id="auth-option"', result.data)
-        self.assertIn('Use your Spotify account', result.data)
+        self.assertIn('your location', result.data.decode('utf-8'))
+        self.assertIn('<div id="auth-option"', result.data.decode('utf-8'))
+        self.assertIn('Use your Spotify account', result.data.decode('utf-8'))
 
-        self.assertIn('<div id="spotify-artist-search"', result.data)
-        self.assertIn('Selected Artists', result.data)
+        self.assertIn('<div id="spotify-artist-search"', result.data.decode('utf-8'))
+        self.assertIn('Selected Artists', result.data.decode('utf-8'))
 
     def test_nav_bar(self):
         result = self.client.get('/')
         self.assertEqual(result.status_code, 200)
 
-        self.assertIn('Register', result.data)
-        self.assertIn('Login', result.data)
-        self.assertNotIn('My Profile', result.data)
-        self.assertNotIn('Logout', result.data)
+        self.assertIn('Register', result.data.decode('utf-8'))
+        self.assertIn('Login', result.data.decode('utf-8'))
+        self.assertNotIn('My Profile', result.data.decode('utf-8'))
+        self.assertNotIn('Logout', result.data.decode('utf-8'))
 
     def test_display_login_form(self):
         result = self.client.get('/login')
         self.assertEqual(result.status_code, 200)
-        self.assertIn(': Login', result.data)
+        self.assertIn(': Login', result.data.decode('utf-8'))
 
-        self.assertIn('<form action="/login" method="POST"', result.data)
-        self.assertIn('Email', result.data)
-        self.assertIn('Password', result.data)
-        self.assertNotIn('already logged in', result.data)
+        self.assertIn('<form action="/login" method="POST"', result.data.decode('utf-8'))
+        self.assertIn('Email', result.data.decode('utf-8'))
+        self.assertIn('Password', result.data.decode('utf-8'))
+        self.assertNotIn('already logged in', result.data.decode('utf-8'))
 
     def test_log_in(self):
         result = self.client.post('/login',
@@ -275,10 +275,10 @@ class TestServer(unittest.TestCase):
                                   follow_redirects=True)
         self.assertEqual(result.status_code, 200)
 
-        self.assertIn('<h1>Your profile</h1>', result.data)
-        self.assertIn('Email: test@test.ts', result.data)
-        self.assertIn('Login successful', result.data)
-        self.assertNotIn('Invalid username or password', result.data)
+        self.assertIn('<h1>Your profile</h1>', result.data.decode('utf-8'))
+        self.assertIn('Email: test@test.ts', result.data.decode('utf-8'))
+        self.assertIn('Login successful', result.data.decode('utf-8'))
+        self.assertNotIn('Invalid username or password', result.data.decode('utf-8'))
 
         with self.client.session_transaction() as sess:
             self.assertEqual(sess.get('user_id'), 1)
@@ -292,28 +292,28 @@ class TestServer(unittest.TestCase):
         with self.client.session_transaction() as sess:
             self.assertIsNone(sess.get('user_id'))
 
-        self.assertIn('<form action="/login" method="POST"', result.data)
-        self.assertIn('Invalid username or password', result.data)
-        self.assertNotIn('<h1>Your profile</h1>', result.data)
-        self.assertNotIn('Login successful', result.data)
+        self.assertIn('<form action="/login" method="POST"', result.data.decode('utf-8'))
+        self.assertIn('Invalid username or password', result.data.decode('utf-8'))
+        self.assertNotIn('<h1>Your profile</h1>', result.data.decode('utf-8'))
+        self.assertNotIn('Login successful', result.data.decode('utf-8'))
 
     def test_log_out(self):
         result = self.client.get('/logout', follow_redirects=True)
         self.assertEqual(result.status_code, 200)
 
-        self.assertNotIn('Logged out', result.data)
-        self.assertIn('No user currently logged in.', result.data)
-        self.assertIn('Use your Spotify account', result.data)
+        self.assertNotIn('Logged out', result.data.decode('utf-8'))
+        self.assertIn('No user currently logged in.', result.data.decode('utf-8'))
+        self.assertIn('Use your Spotify account', result.data.decode('utf-8'))
 
     def test_display_registration_form(self):
         result = self.client.get('/register')
         self.assertEqual(result.status_code, 200)
-        self.assertIn(': Register', result.data)
+        self.assertIn(': Register', result.data.decode('utf-8'))
 
-        self.assertIn('<form action="/register" method="POST"', result.data)
-        self.assertIn('Email', result.data)
-        self.assertIn('Password', result.data)
-        self.assertNotIn('already logged in', result.data)
+        self.assertIn('<form action="/register" method="POST"', result.data.decode('utf-8'))
+        self.assertIn('Email', result.data.decode('utf-8'))
+        self.assertIn('Password', result.data.decode('utf-8'))
+        self.assertNotIn('already logged in', result.data.decode('utf-8'))
 
     def test_register(self):
         result = self.client.post('/register',
@@ -324,10 +324,10 @@ class TestServer(unittest.TestCase):
         with self.client.session_transaction() as sess:
             self.assertEqual(sess.get('user_id'), 4)
 
-        self.assertIn('<h1>Your profile</h1>', result.data)
-        self.assertIn('Email: new@cool.dude', result.data)
-        self.assertIn('Registration successful', result.data)
-        self.assertNotIn('username already exists', result.data)
+        self.assertIn('<h1>Your profile</h1>', result.data.decode('utf-8'))
+        self.assertIn('Email: new@cool.dude', result.data.decode('utf-8'))
+        self.assertIn('Registration successful', result.data.decode('utf-8'))
+        self.assertNotIn('username already exists', result.data.decode('utf-8'))
 
     def test_register_fail(self):
         result = self.client.post('/register',
@@ -335,81 +335,81 @@ class TestServer(unittest.TestCase):
                                   follow_redirects=True)
         self.assertEqual(result.status_code, 200)
 
-        self.assertIn('<form action="/register" method="POST"', result.data)
-        self.assertIn('username already exists', result.data)
-        self.assertNotIn('<h1>Your profile</h1>', result.data)
-        self.assertNotIn('Registration successful', result.data)
+        self.assertIn('<form action="/register" method="POST"', result.data.decode('utf-8'))
+        self.assertIn('username already exists', result.data.decode('utf-8'))
+        self.assertNotIn('<h1>Your profile</h1>', result.data.decode('utf-8'))
+        self.assertNotIn('Registration successful', result.data.decode('utf-8'))
 
     def test_profile(self):
         result = self.client.get('/my-profile', follow_redirects=True)
         self.assertEqual(result.status_code, 200)
-        self.assertIn(': Login', result.data)
+        self.assertIn(': Login', result.data.decode('utf-8'))
 
-        self.assertIn('<form action="/login" method="POST"', result.data)
-        self.assertIn('must be logged in', result.data)
-        self.assertNotIn('<h1>Your profile</h1>', result.data)
+        self.assertIn('<form action="/login" method="POST"', result.data.decode('utf-8'))
+        self.assertIn('must be logged in', result.data.decode('utf-8'))
+        self.assertNotIn('<h1>Your profile</h1>', result.data.decode('utf-8'))
 
     def test_past(self):
         result = self.client.get('/my-profile/past', follow_redirects=True)
         self.assertEqual(result.status_code, 200)
-        self.assertIn(': Login', result.data)
+        self.assertIn(': Login', result.data.decode('utf-8'))
 
-        self.assertIn('<form action="/login" method="POST"', result.data)
-        self.assertIn('must be logged in', result.data)
-        self.assertNotIn('<h1>Your past concerts</h1>', result.data)
+        self.assertIn('<form action="/login" method="POST"', result.data.decode('utf-8'))
+        self.assertIn('must be logged in', result.data.decode('utf-8'))
+        self.assertNotIn('<h1>Your past concerts</h1>', result.data.decode('utf-8'))
 
     def test_callback_results_page(self):
         result = self.client.get('/callback?code=AbCdEf')
         self.assertEqual(result.status_code, 200)
-        self.assertIn(': Concert Recommendations', result.data)
+        self.assertIn(': Concert Recommendations', result.data.decode('utf-8'))
 
-        self.assertIn('authCode = "AbCdEf"', result.data)
-        self.assertIn('<h3>FINDING CONCERTS...</h3>', result.data)
-        self.assertIn('<div id="concert-results" hidden>', result.data)
+        self.assertIn('authCode = "AbCdEf"', result.data.decode('utf-8'))
+        self.assertIn('<h3>FINDING CONCERTS...</h3>', result.data.decode('utf-8'))
+        self.assertIn('<div id="concert-results" hidden>', result.data.decode('utf-8'))
 
     def test_no_auth_results_page(self):
         artists = [{'spotify_id': '5HJ2kX5UTwN4Ns8fB5Rn1I', 'artist': 'clipping.'}]
         result = self.client.post('/no-auth-search', data={'artists': json.dumps(artists)})
         self.assertEqual(result.status_code, 200)
-        self.assertIn(': Concert Recommendations', result.data)
+        self.assertIn(': Concert Recommendations', result.data.decode('utf-8'))
 
-        self.assertIn('authCode = ""', result.data)
-        self.assertIn('5HJ2kX5UTwN4Ns8fB5Rn1I', result.data)
-        self.assertIn('<h3>FINDING CONCERTS...</h3>', result.data)
-        self.assertIn('<div id="concert-results" hidden>', result.data)
+        self.assertIn('authCode = ""', result.data.decode('utf-8'))
+        self.assertIn('5HJ2kX5UTwN4Ns8fB5Rn1I', result.data.decode('utf-8'))
+        self.assertIn('<h3>FINDING CONCERTS...</h3>', result.data.decode('utf-8'))
+        self.assertIn('<div id="concert-results" hidden>', result.data.decode('utf-8'))
 
     def test_location_matches(self):
         result = self.client.get('/location-search.json?search-term=SanFrancisco,+TX')
         self.assertEqual(result.status_code, 200)
-        self.assertEqual(result.data, '""\n')
+        self.assertEqual(result.data.decode('utf-8'), '""\n')
 
         result = self.client.get('/location-search.json?search-term=Houston')
-        self.assertNotEqual(result.data, '')
-        self.assertIn('"displayName": "Houston"', result.data)
-        self.assertIn('"displayName": "TX"', result.data)
+        self.assertNotEqual(result.data.decode('utf-8'), '')
+        self.assertIn('"displayName":"Houston"', result.data.decode('utf-8'))
+        self.assertIn('"displayName":"TX"', result.data.decode('utf-8'))
 
     def test_artist_matches(self):
         result = self.client.get('/artist-search.json?search-term=Run+The+Jewels')
         self.assertEqual(result.status_code, 200)
-        self.assertIn('Run The Jewels', result.data)
+        self.assertIn('Run The Jewels', result.data.decode('utf-8'))
 
         result = self.client.get('/artist-search.json?search-term=asdfasdfasdf')
         self.assertEqual(result.status_code, 200)
-        self.assertEqual('""\n', result.data)
+        self.assertEqual('""\n', result.data.decode('utf-8'))
 
     def test_request_authorization(self):
         result = self.client.get('/spotify-auth.json')
         self.assertEqual(result.status_code, 200)
 
         client_id = os.getenv('SPOTIPY_CLIENT_ID')
-        self.assertIn(client_id, result.data)
-        self.assertIn('user-top-read', result.data)
-        self.assertIn('accounts.spotify.com', result.data)
+        self.assertIn(client_id, result.data.decode('utf-8'))
+        self.assertIn('user-top-read', result.data.decode('utf-8'))
+        self.assertIn('accounts.spotify.com', result.data.decode('utf-8'))
 
     def test_recommendations(self):
         result = self.client.get('/recs.json?code=AbCdEf')
         self.assertEqual(result.status_code, 200)
-        self.assertIn('Unable to authorize', result.data)
+        self.assertIn('Unable to authorize', result.data.decode('utf-8'))
 
     def test_recs_from_search(self):
         artists = [{'spotify_id': '5HJ2kX5UTwN4Ns8fB5Rn1I', 'artist': 'clipping.'}]
@@ -444,19 +444,19 @@ class TestServerLoggedIn(unittest.TestCase):
         result = self.client.get('/')
         self.assertEqual(result.status_code, 200)
 
-        self.assertIn('My Profile', result.data)
-        self.assertIn('Logout', result.data)
-        self.assertNotIn('Register', result.data)
-        self.assertNotIn('Login', result.data)
+        self.assertIn('My Profile', result.data.decode('utf-8'))
+        self.assertIn('Logout', result.data.decode('utf-8'))
+        self.assertNotIn('Register', result.data.decode('utf-8'))
+        self.assertNotIn('Login', result.data.decode('utf-8'))
 
     def test_display_login_form(self):
         result = self.client.get('/login', follow_redirects=True)
         self.assertEqual(result.status_code, 200)
-        self.assertNotIn(': Login', result.data)
+        self.assertNotIn(': Login', result.data.decode('utf-8'))
 
-        self.assertNotIn('<form action="/login" method="POST">', result.data)
-        self.assertIn('already logged in', result.data)
-        self.assertIn('Use your Spotify account', result.data)
+        self.assertNotIn('<form action="/login" method="POST">', result.data.decode('utf-8'))
+        self.assertIn('already logged in', result.data.decode('utf-8'))
+        self.assertIn('Use your Spotify account', result.data.decode('utf-8'))
 
     def test_log_out(self):
         result = self.client.get('/logout', follow_redirects=True)
@@ -465,23 +465,23 @@ class TestServerLoggedIn(unittest.TestCase):
         with self.client.session_transaction() as sess:
             self.assertIsNone(sess.get('user_id'))
 
-        self.assertIn('Logged out', result.data)
-        self.assertNotIn('No user currently logged in.', result.data)
-        self.assertIn('Use your Spotify account', result.data)
+        self.assertIn('Logged out', result.data.decode('utf-8'))
+        self.assertNotIn('No user currently logged in.', result.data.decode('utf-8'))
+        self.assertIn('Use your Spotify account', result.data.decode('utf-8'))
 
-        self.assertIn('Register', result.data)
-        self.assertIn('Login', result.data)
-        self.assertNotIn('My Profile', result.data)
-        self.assertNotIn('Logout', result.data)
+        self.assertIn('Register', result.data.decode('utf-8'))
+        self.assertIn('Login', result.data.decode('utf-8'))
+        self.assertNotIn('My Profile', result.data.decode('utf-8'))
+        self.assertNotIn('Logout', result.data.decode('utf-8'))
 
     def test_display_registration_form(self):
         result = self.client.get('/register', follow_redirects=True)
         self.assertEqual(result.status_code, 200)
-        self.assertNotIn(': Register', result.data)
+        self.assertNotIn(': Register', result.data.decode('utf-8'))
 
-        self.assertNotIn('<form action="/register" method="POST">', result.data)
-        self.assertIn('already logged in', result.data)
-        self.assertIn('Use your Spotify account', result.data)
+        self.assertNotIn('<form action="/register" method="POST">', result.data.decode('utf-8'))
+        self.assertIn('already logged in', result.data.decode('utf-8'))
+        self.assertIn('Use your Spotify account', result.data.decode('utf-8'))
 
     def test_profile_with_no_concerts(self):
         with self.client.session_transaction() as sess:
@@ -489,13 +489,13 @@ class TestServerLoggedIn(unittest.TestCase):
         result = self.client.get('/my-profile')
 
         self.assertEqual(result.status_code, 200)
-        self.assertIn(': Your Profile', result.data)
+        self.assertIn(': Your Profile', result.data.decode('utf-8'))
 
-        self.assertIn('<h1>Your profile</h1>', result.data)
-        self.assertIn('Email: no@one', result.data)
+        self.assertIn('<h1>Your profile</h1>', result.data.decode('utf-8'))
+        self.assertIn('Email: no@one', result.data.decode('utf-8'))
 
-        self.assertNotIn('<h3>Your saved concerts</h3>', result.data)
-        self.assertIn('<h3>You have no saved concerts</h3>', result.data)
+        self.assertNotIn('<h3>Your saved concerts</h3>', result.data.decode('utf-8'))
+        self.assertIn('<h3>You have no saved concerts</h3>', result.data.decode('utf-8'))
 
     def test_add_saved_concert(self):
         success_form = {'songkick-id': u'4',
@@ -505,7 +505,7 @@ class TestServerLoggedIn(unittest.TestCase):
                         'start-datetime': u'Sat, 06 May 2017 21:00:00 GMT'}
         success = self.client.post('/add-concert.json', data=success_form)
         self.assertEqual(success.status_code, 200)
-        self.assertEqual(success.data, 'true\n')
+        self.assertEqual(success.data.decode('utf-8'), 'true\n')
 
         user = model.User.query.get(2)
         self.assertEqual(user.concerts[1].artist, 'Princess Nokia')
@@ -513,12 +513,12 @@ class TestServerLoggedIn(unittest.TestCase):
         failure_form = {'songkick-id': u'99'}
         failure = self.client.post('/add-concert.json', data=failure_form)
         self.assertEqual(failure.status_code, 200)
-        self.assertEqual(failure.data, 'false\n')
+        self.assertEqual(failure.data.decode('utf-8'), 'false\n')
 
     def test_remove_saved_concert(self):
         result = self.client.post('/remove-concert.json', data={'songkick-id': '2'})
         self.assertEqual(result.status_code, 200)
-        self.assertEqual(result.data, 'true\n')
+        self.assertEqual(result.data.decode('utf-8'), 'true\n')
 
         user = model.User.query.get(2)
         self.assertEqual(len(user.concerts), 1)
@@ -565,39 +565,39 @@ class TestFrozenMid(unittest.TestCase):
     def test_profile(self):
         result = self.client.get('/my-profile')
         self.assertEqual(result.status_code, 200)
-        self.assertIn(': Your Profile', result.data)
+        self.assertIn(': Your Profile', result.data.decode('utf-8'))
 
-        self.assertIn('<h1>Your profile</h1>', result.data)
-        self.assertIn('Email: kiko@creat.er', result.data)
+        self.assertIn('<h1>Your profile</h1>', result.data.decode('utf-8'))
+        self.assertIn('Email: kiko@creat.er', result.data.decode('utf-8'))
 
-        self.assertIn('<h4>Sleigh Bells</h4>', result.data)
-        self.assertIn('Outside Lands', result.data)
-        self.assertIn('<input type="hidden" class="map-lat" value="35.0">', result.data)
-        self.assertIn('<input type="hidden" class="map-lng" value="-123.0">', result.data)
-        self.assertIn('<input type="hidden" class="songkick-id" value="3">', result.data)
-        self.assertRegexpMatches(result.data, 'Fri Aug 11, 2017\s+to Sun Aug 13, 2017')
-        self.assertIn('View this event on Songkick', result.data)
+        self.assertIn('<h4>Sleigh Bells</h4>', result.data.decode('utf-8'))
+        self.assertIn('Outside Lands', result.data.decode('utf-8'))
+        self.assertIn('<input type="hidden" class="map-lat" value="35.0">', result.data.decode('utf-8'))
+        self.assertIn('<input type="hidden" class="map-lng" value="-123.0">', result.data.decode('utf-8'))
+        self.assertIn('<input type="hidden" class="songkick-id" value="3">', result.data.decode('utf-8'))
+        self.assertRegexpMatches(result.data.decode('utf-8'), 'Fri Aug 11, 2017\s+to Sun Aug 13, 2017')
+        self.assertIn('View this event on Songkick', result.data.decode('utf-8'))
 
-        self.assertNotIn('<h4>Cakes Da Killa</h4>', result.data)
-        self.assertNotIn('Mykki Blanco &amp; Cakes Da Killa', result.data)
+        self.assertNotIn('<h4>Cakes Da Killa</h4>', result.data.decode('utf-8'))
+        self.assertNotIn('Mykki Blanco &amp; Cakes Da Killa', result.data.decode('utf-8'))
 
     def test_past(self):
         result = self.client.get('/my-profile/past')
         self.assertEqual(result.status_code, 200)
-        self.assertIn(': Your Past Concerts', result.data)
+        self.assertIn(': Your Past Concerts', result.data.decode('utf-8'))
 
-        self.assertIn('<h1>Your past concerts</h1>', result.data)
-        self.assertIn('Email: kiko@creat.er', result.data)
+        self.assertIn('<h1>Your past concerts</h1>', result.data.decode('utf-8'))
+        self.assertIn('Email: kiko@creat.er', result.data.decode('utf-8'))
 
-        self.assertIn('<h4>Cakes Da Killa</h4>', result.data)
-        self.assertIn('Mykki Blanco &amp; Cakes Da Killa', result.data)
-        self.assertIn('The New Parish', result.data)
-        self.assertIn('src="https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791"', result.data)
-        self.assertRegexpMatches(result.data, 'Fri Mar 03, 2017\s+at 8:00 PM')
-        self.assertIn('View this event on Songkick', result.data)
+        self.assertIn('<h4>Cakes Da Killa</h4>', result.data.decode('utf-8'))
+        self.assertIn('Mykki Blanco &amp; Cakes Da Killa', result.data.decode('utf-8'))
+        self.assertIn('The New Parish', result.data.decode('utf-8'))
+        self.assertIn('src="https://i.scdn.co/image/0aee878e922c97b73cbef3aa590781a615313791"', result.data.decode('utf-8'))
+        self.assertRegexpMatches(result.data.decode('utf-8'), 'Fri Mar 03, 2017\s+at 8:00 PM')
+        self.assertIn('View this event on Songkick', result.data.decode('utf-8'))
 
-        self.assertNotIn('<h4>Sleigh Bells</h4>', result.data)
-        self.assertNotIn('Outside Lands', result.data)
+        self.assertNotIn('<h4>Sleigh Bells</h4>', result.data.decode('utf-8'))
+        self.assertNotIn('Outside Lands', result.data.decode('utf-8'))
 
 
 class TestFrozenEarly(unittest.TestCase):
